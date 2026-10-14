@@ -14,3 +14,4 @@ Sitio estático (HTML + Bootstrap 5.3.3 por CDN). Abre `index.html` en el navega
 - El formulario de login es solo demostración visual.
 - La carta incluye cortes, postres y vinos nuevos con "Consultar precio": completar los precios reales en `menu.html`.
 - La portada tiene una galería "Brasas & Ambiente".
+- `css/style-original.css`: la hoja `style.css` original, solo de referencia (no se carga en ninguna página).

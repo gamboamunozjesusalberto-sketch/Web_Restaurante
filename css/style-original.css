@@ -1,0 +1,521 @@
+/* ==========================================================================
+   STYLE.CSS ORIGINAL (SOLO REFERENCIA)
+   Hoja de estilos base con la que empezó el proyecto. YA NO SE CARGA en
+   ninguna página: su contenido se repartió en
+   - css/variables.css   (colores y tipografía)
+   - css/components.css  (menú y pie de página)
+   - css/paginas.css     (encabezado, secciones y franja final)
+   - un CSS por página   (landing, menu, contacto, nosotros, login)
+   Se conserva para poder explicar cómo evolucionó el diseño.
+   ========================================================================== */
+
+/* ==========================================================================
+   PUNTO ASADO - HOJA DE ESTILOS CENTRAL
+   Importa variables globales y mantiene los estilos de páginas secundarias
+   (nosotros.html, contacto.html, menu.html).
+   ========================================================================== */
+@import url('css/variables.css');
+
+/* PUNTO ASADO - Estilo basico */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #000000;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+header {
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  padding: 15px;
+  border-bottom: 3px solid #87CEEB;
+}
+
+.header-contenido {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2em;
+  color: #ffffff;
+}
+
+header p {
+  margin: 5px 0 0;
+  color: #87CEEB;
+}
+
+/* Logo */
+.logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+}
+
+/* ========================================
+   NAVEGACION
+   ======================================== */
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+nav ul li {
+  display: inline;
+  margin: 0 15px;
+}
+
+nav ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Cambio de color y subrayado al pasar el mouse */
+nav ul li a:hover,
+nav ul li a.activo {
+  color: #87CEEB;
+  text-decoration: underline;
+}
+
+/* ========================================
+   MAIN
+   ======================================== */
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 25px 20px;
+}
+
+/* Subrayado al pasar el mouse sobre los enlaces generales dentro del contenido */
+main a {
+  color: #87CEEB;
+  text-decoration: none;
+}
+
+main a:hover {
+  text-decoration: underline;
+}
+
+h2 {
+  color: #87CEEB;
+  border-bottom: 3px solid #87CEEB;
+  padding-bottom: 8px;
+  margin-top: 40px;
+}
+
+p {
+  line-height: 1.8;
+}
+
+/* ========================================
+   TABLAS (Horario de atención)
+   ======================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td {
+  border: 1px solid #87CEEB;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #1a1a1a;
+  color: #87CEEB;
+}
+
+td {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Cambio de color al pasar el mouse por las filas de la tabla */
+tbody tr:hover td {
+  background-color: #1a1a1a;
+  color: #87CEEB;
+  cursor: pointer;
+}
+
+td.cerrado {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+td.precio {
+  font-weight: bold;
+  color: #87CEEB;
+  text-align: right;
+}
+
+caption {
+  color: #87CEEB;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* ========================================
+   LISTAS
+   ======================================== */
+
+ul.lista-comidas {
+  line-height: 1.8;
+  padding-left: 25px;
+}
+
+ul.lista-comidas li {
+  padding: 5px 0;
+  color: #ffffff;
+}
+
+/* ========================================
+   FORMULARIOS
+   ======================================== */
+
+form {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border: 1px solid #87CEEB;
+}
+
+fieldset {
+  border: 2px solid #87CEEB;
+  padding: 15px;
+}
+
+legend {
+  color: #87CEEB;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+label {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  border: 1px solid #87CEEB;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+input[type="radio"], input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+input[type="submit"], input[type="reset"] {
+  width: auto;
+  background-color: #87CEEB;
+  color: #000000;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+input[type="submit"]:hover, input[type="reset"]:hover {
+  background-color: #6bb5d9;
+}
+
+/* ========================================
+   IMAGENES EN TABLAS (para menu.html)
+   ======================================== */
+
+.foto-mini {
+  width: 50px;
+  height: 50px;
+  vertical-align: middle;
+  margin-right: 10px;
+  border: none;
+}
+
+/* ========================================
+   GALERIA DE HISTORIA (para nosotros.html)
+   ======================================== */
+
+.galeria-historia img {
+  width: 100%;
+  max-width: 400px;
+  border: none;
+}
+
+.galeria-historia figcaption {
+  color: #87CEEB;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* ========================================
+   LOGROS (para nosotros.html)
+   ======================================== */
+
+.logro-item {
+  border-left: 5px solid #87CEEB;
+  background-color: #1a1a1a;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.logro-item h3 {
+  color: #87CEEB;
+}
+
+.logro-item img {
+  width: 200px;
+  border: none;
+}
+
+.logro-destacados li {
+  color: #ffffff;
+  padding: 5px 0;
+}
+
+.logro-destacados li strong {
+  color: #87CEEB;
+}
+
+/* ========================================
+   ESTILOS PARA INDEX.HTML
+   ======================================== */
+
+.tabla-inicio {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 20px;
+  margin-top: 20px;
+}
+
+.tabla-inicio td {
+  border: none;
+  padding: 0;
+  vertical-align: middle;
+}
+
+.texto-inicio {
+  width: 50%;
+  text-align: justify;
+}
+
+.imagen-inicio {
+  width: 50%;
+}
+
+.imagen-inicio img {
+  width: 100%;
+  height: 280px;
+  border: none;
+}
+
+.tabla-galeria {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 15px;
+  margin-top: 20px;
+}
+
+.tabla-galeria td {
+  border: none;
+  padding: 0;
+  width: 33.33%;
+  background-color: transparent;
+}
+
+.tabla-galeria img {
+  width: 100%;
+  height: 190px;
+  border: none;
+}
+
+.tabla-clientes {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 20px;
+  margin-top: 20px;
+}
+
+.tabla-clientes td {
+  border: none;
+  padding: 0;
+  width: 50%;
+  background-color: transparent;
+}
+
+.tabla-clientes img {
+  width: 100%;
+  height: 250px;
+  border: none;
+}
+
+/* ========================================
+   BANNER (para menu.html)
+   ======================================== */
+
+.banner {
+  background-color: #1a1a1a;
+  padding: 30px;
+  border: 2px solid #87CEEB;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.banner h2 {
+  border-bottom: none;
+  margin-top: 0;
+}
+
+.banner h2 span {
+  color: #ffffff;
+}
+
+.banner p {
+  max-width: 700px;
+  margin: 15px auto;
+}
+
+.pill-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.pill-list li {
+  display: inline;
+  margin: 0 10px;
+  background-color: #87CEEB;
+  color: #000000;
+  padding: 8px 20px;
+  font-weight: bold;
+  border: none;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+footer {
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  padding: 15px;
+  margin-top: 30px;
+  border-top: 3px solid #87CEEB;
+}
+
+/* EFECTO HOVER PARA LAS IMÁGENES */
+
+.imagen-inicio img,
+.tabla-galeria img,
+.tabla-clientes img,
+.galeria-historia img,
+.logro-item img,
+.foto-mini {
+  transition: transform 0.3s ease;
+}
+
+.imagen-inicio img:hover,
+.tabla-galeria img:hover,
+.tabla-clientes img:hover,
+.galeria-historia img:hover,
+.logro-item img:hover,
+.foto-mini:hover {
+  transform: translateY(-10px);
+}
+
+/* ========================================
+   SECCIÓN MAPA / UBICACIÓN
+   ======================================== */
+.map-section {
+  position: relative;
+  background-color: #0c0908;
+  margin: 25px 0 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 380px;
+  border: 0;
+  display: block;
+  filter: contrast(102%) brightness(95%);
+}
+
+.map-overlay-badge {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(14, 11, 9, 0.94);
+  border: 1px solid #75c5f0;
+  padding: 10px 22px;
+  border-radius: 25px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.btn-map-link {
+  background-color: #75c5f0;
+  color: #000000;
+  padding: 5px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  transition: all 0.25s ease;
+  display: inline-block;
+}
+
+.btn-map-link:hover {
+  background-color: #92d4f8;
+  transform: translateY(-2px);
+  color: #000000;
+}
+
+@media (max-width: 650px) {
+  .map-overlay-badge {
+    position: static;
+    transform: none;
+    border-radius: 0;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 14px;
+    gap: 8px;
+    white-space: normal;
+  }
+}
