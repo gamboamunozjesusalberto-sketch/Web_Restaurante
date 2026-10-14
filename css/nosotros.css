@@ -1,0 +1,295 @@
+/* ==========================================================================
+   NOSOTROS - Punto Asado
+   Todo va con el prefijo .pagina-nosotros.
+   Depende de: variables.css, components.css (navbar y footer compartidos)
+   y paginas.css (hero con migas de pan). Ya no usa style.css.
+   ========================================================================== */
+
+/* ===== SEMANA 6: Personalización con CSS (tipografía, fuentes, imágenes, íconos) ===== */
+
+/* Regla AT @font-face: respaldo local de la fuente externa (Google Fonts) */
+@font-face {
+  font-family: "Montserrat Respaldo";
+  src: local("Arial");
+  size-adjust: 112%;
+}
+
+.pagina-nosotros {
+  font-family: "Montserrat", "Montserrat Respaldo", Arial, sans-serif;
+  background: var(--arg-dark-carbon) radial-gradient(circle at 50% 0, var(--arg-dark-charcoal), var(--arg-dark-carbon) 65%) no-repeat;
+  color: var(--arg-white);
+}
+
+.pagina-nosotros main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 25px 20px;
+}
+
+.pagina-nosotros h2 {
+  margin-top: 40px;
+  padding-bottom: 8px;
+  font-size: clamp(1.4rem, 1rem + 2vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: .03em;
+  color: var(--arg-white);
+  border-bottom: 3px solid var(--arg-celeste);
+}
+.pagina-nosotros h3 { font-weight: 600; color: var(--arg-white); }
+.pagina-nosotros p  { line-height: 1.8; color: var(--arg-text-light); }
+.pagina-nosotros strong { color: var(--arg-celeste); }
+
+/* Íconos vectoriales (SVG sprite) */
+.pagina-nosotros .icono {
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+  color: var(--arg-celeste);
+  transition: transform .4s ease, color .3s ease;
+}
+
+/* Sprite SVG oculto */
+.pagina-nosotros .sprite-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* ===== SEMANA 7: Animaciones, transiciones y transformaciones ===== */
+
+@keyframes subir-y-aparecer {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes entra-izq {
+  from { opacity: 0; transform: translateX(-60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes entra-der {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.pagina-nosotros main section { animation: subir-y-aparecer .8s ease-out both; }
+.pagina-nosotros main section:nth-of-type(2) { animation-delay: .15s; }
+.pagina-nosotros main section:nth-of-type(3) { animation-delay: .3s; }
+.pagina-nosotros main section:nth-of-type(4) { animation-delay: .45s; }
+
+/* Datos clave y tarjetas de valores */
+.pagina-nosotros .datos-clave li,
+.pagina-nosotros .valor {
+  background: #171310;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.pagina-nosotros .datos-clave li:hover { transform: translateY(-5px) scale(1.04); border-color: rgba(117, 197, 240, 0.5); }
+.pagina-nosotros .valor:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--glow-celeste);
+  border-color: rgba(117, 197, 240, 0.5);
+}
+.pagina-nosotros .valor:hover .icono,
+.pagina-nosotros .datos-clave li:hover .icono { transform: scale(1.2) rotate(-8deg); color: var(--arg-celeste-light); }
+.pagina-nosotros .valor:first-child .icono { animation: flotar 3s ease-in-out infinite; }
+
+/* Galería: zoom, brillo y leyenda que sube */
+.pagina-nosotros .galeria-historia figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background-color: #0E0B09;
+}
+.pagina-nosotros .galeria-historia img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(.85) saturate(.9);
+  transition: transform .5s ease, filter .5s ease;
+}
+.pagina-nosotros .galeria-historia figure:hover img,
+.pagina-nosotros .galeria-historia figure:focus-within img { transform: scale(1.1); filter: brightness(1) saturate(1.1); }
+.pagina-nosotros .galeria-historia figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 24px 10px 10px;
+  font-size: .85rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--arg-celeste);
+  background: linear-gradient(transparent, rgba(0, 0, 0, .88));
+  transform: translateY(100%);
+  transition: transform .35s ease;
+}
+.pagina-nosotros .galeria-historia figure:hover figcaption,
+.pagina-nosotros .galeria-historia figure:focus-within figcaption { transform: translateY(0); }
+
+/* Logros: imagen con giro, insignia inclinada, lista que se desplaza */
+.pagina-nosotros .logro-item {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin: 25px 0 20px;
+  padding: 20px;
+  background-color: #171310;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 5px solid var(--arg-celeste);
+  border-radius: 12px;
+}
+.pagina-nosotros .logro-secundario { flex-direction: row-reverse; }
+.pagina-nosotros .logro-imagen { position: relative; flex: 0 0 200px; }
+.pagina-nosotros .logro-texto { flex: 1; }
+.pagina-nosotros .logro-item img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .7));
+  transition: transform .4s ease, filter .4s ease;
+}
+.pagina-nosotros .logro-item img:hover {
+  transform: rotate(-3deg) scale(1.05);
+  filter: drop-shadow(0 8px 20px rgba(117, 197, 240, .5));
+}
+.pagina-nosotros .insignia {
+  position: absolute;
+  bottom: -12px;
+  left: 8px;
+  padding: 4px 12px;
+  background: var(--arg-celeste);
+  color: #000;
+  font-size: .7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  transform: rotate(12deg) skewX(-8deg);
+  transition: transform .3s ease;
+}
+.pagina-nosotros .logro-imagen:hover .insignia { transform: rotate(0) skewX(0) scale(1.15); }
+.pagina-nosotros .logro-destacados li {
+  padding: 5px 0;
+  color: var(--arg-white);
+  transition: transform .3s ease, color .3s ease;
+}
+.pagina-nosotros .logro-destacados li::marker { color: var(--arg-celeste); }
+.pagina-nosotros .logro-destacados li:hover { transform: translateX(8px); }
+
+/* Regla AT @supports: aparecen al hacer scroll solo si el navegador lo permite */
+@supports (animation-timeline: view()) {
+  .pagina-nosotros .logro-item {
+    animation: entra-izq linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+  .pagina-nosotros .logro-secundario { animation-name: entra-der; }
+}
+
+/* Botones */
+.pagina-nosotros .cta { text-align: center; }
+.pagina-nosotros .boton {
+  display: inline-block;
+  margin: 6px;
+  padding: 12px 28px;
+  border: 2px solid var(--arg-celeste);
+  border-radius: 30px;
+  background-color: var(--arg-celeste);
+  color: #000;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform .3s ease, box-shadow .3s ease, background-color .3s ease, color .3s ease;
+}
+.pagina-nosotros .boton:hover {
+  text-decoration: none;
+  transform: translateY(-3px) scale(1.05);
+  background-color: var(--arg-celeste-light);
+  color: #000;
+  box-shadow: var(--glow-celeste);
+}
+.pagina-nosotros .boton:active { transform: scale(.97); }
+.pagina-nosotros .boton-claro { background-color: transparent; color: var(--arg-celeste); }
+.pagina-nosotros .boton-claro:hover { background-color: var(--arg-celeste); color: #000; }
+
+/* ===== SEMANA 9: Flexbox y Grid ===== */
+
+/* Flexbox: valores y logros */
+.pagina-nosotros .valores { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 25px; }
+.pagina-nosotros .valor { flex: 1 1 220px; padding: 22px; text-align: center; box-shadow: var(--shadow-sm); }
+.pagina-nosotros .valor h3 { margin: .7em 0 .3em; }
+.pagina-nosotros .valor p { margin: 0; font-size: .92rem; line-height: 1.6; color: var(--arg-text-muted); }
+
+/* Grid: datos clave (auto-fit) y galería con áreas explícitas */
+.pagina-nosotros .datos-clave {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  margin: 30px 0;
+  padding: 0;
+  list-style: none;
+}
+.pagina-nosotros .datos-clave li { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 18px 10px; text-align: center; }
+.pagina-nosotros .datos-clave .icono { width: 32px; height: 32px; }
+.pagina-nosotros .datos-clave strong { font-size: 1.25rem; color: var(--arg-white); }
+.pagina-nosotros .datos-clave span { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--arg-text-muted); }
+
+.pagina-nosotros .galeria-historia {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 190px;
+  gap: 14px;
+  margin-top: 25px;
+}
+.pagina-nosotros .galeria-historia picture { display: block; height: 100%; }
+.pagina-nosotros .galeria-historia figure:nth-child(3) { grid-column: 1 / 3; grid-row: 1 / 3; }
+.pagina-nosotros .galeria-historia figure:nth-child(1) { grid-column: 3; grid-row: 1; }
+.pagina-nosotros .galeria-historia figure:nth-child(2) { grid-column: 4; grid-row: 1; }
+.pagina-nosotros .galeria-historia figure:nth-child(4) { grid-column: 3 / 5; grid-row: 2; }
+
+/* ===== SEMANA 8: Diseño responsivo (reglas @media) ===== */
+
+@media (min-width: 1200px) {
+  .pagina-nosotros main { max-width: 1000px; }
+  .pagina-nosotros .galeria-historia { grid-auto-rows: 210px; }
+}
+
+@media (max-width: 768px) {
+  /* Evita el scroll horizontal: el logro secundario entra desde la derecha (translateX) */
+  .pagina-nosotros main { overflow-x: clip; }
+  .pagina-nosotros .logro-item,
+  .pagina-nosotros .logro-secundario { flex-direction: column; text-align: center; }
+  .pagina-nosotros .logro-imagen { flex-basis: auto; width: 60%; }
+  .pagina-nosotros .logro-destacados { text-align: left; }
+  .pagina-nosotros .galeria-historia { grid-template-columns: repeat(2, 1fr); }
+  .pagina-nosotros .galeria-historia figure:nth-child(n) { grid-column: auto; grid-row: auto; }
+  .pagina-nosotros .galeria-historia figure:nth-child(3) { order: -1; grid-column: 1 / -1; grid-row: span 2; }
+}
+
+@media (max-width: 500px) {
+  .pagina-nosotros .galeria-historia { grid-template-columns: 1fr; grid-auto-rows: 180px; }
+  .pagina-nosotros .galeria-historia figure:nth-child(3) { grid-row: span 1; }
+  .pagina-nosotros .logro-imagen { width: 100%; }
+  .pagina-nosotros .valor { flex-basis: 100%; }
+  .pagina-nosotros .boton { display: block; margin: 10px 0; }
+}
+
+/* Dispositivos táctiles: la leyenda queda siempre visible */
+@media (hover: none) {
+  .pagina-nosotros .galeria-historia figcaption { transform: none; }
+}
+
+/* Accesibilidad: sin movimiento si el usuario lo pide */
+@media (prefers-reduced-motion: reduce) {
+  .pagina-nosotros *,
+  .pagina-nosotros *::before,
+  .pagina-nosotros *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

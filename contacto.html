@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contacto y reservas de Punto Asado: dirección, teléfono, horarios, mapa y formulario para reservar tu mesa en Ica." />
+  <title>Contacto - Punto Asado (Ica)</title>
+  <link rel="icon" href="images/logo.jpeg" />
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <!-- Estilos: variables, componentes y base de páginas internas + css propio de contacto -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/paginas.css" />
+  <link rel="stylesheet" href="css/contacto.css" />
+</head>
+<body class="inner-page page-contacto">
+
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- ========== NAVBAR (igual en todas las páginas) ========== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-rustic sticky-top">
+    <div class="container-fluid px-3 px-md-4 px-lg-5">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="images/logo_blanco.png" alt="Logo Punto Asado" class="brand-logo-nav" />
+        <span class="brand-slogan-nav">Auténticas<br> Parrillas Argentinas</span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navPuntoAsado" aria-controls="navPuntoAsado" aria-expanded="false" aria-label="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navPuntoAsado">
+        <ul class="navbar-nav align-items-lg-center gap-lg-3">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="menu.html">Carta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="nosotros.html">Nosotros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="contacto.html">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-login-nav" href="login.html"><i class="bi bi-person-circle me-1"></i>Ingresar</a>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <a href="#reserva" class="btn btn-celeste btn-sm px-4 py-2 text-uppercase">Reservar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- hero -->
+  <header class="page-hero">
+    <div class="page-hero-bg" style="background-image: url('images/restaurante_salon_ica_1788925429542.jpg');"></div>
+    <div class="page-hero-inner">
+      <ol class="breadcrumb-pa">
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Contacto</li>
+      </ol>
+      <span class="page-kicker">Te esperamos con las brasas encendidas</span>
+      <h1 class="page-title">Contacto &amp; <span>Reservas</span></h1>
+      <p class="page-lead">Escríbenos, llámanos o ven a visitarnos a Ica. Reserva tu mesa en un minuto y nosotros nos encargamos del resto.</p>
+      <div class="hero-actions">
+        <a href="#reserva" class="btn btn-celeste px-4 py-2">Reservar mesa</a>
+        <a href="https://wa.me/51919293435" target="_blank" rel="noopener noreferrer" class="btn btn-outline-pill-celeste px-4 py-2"><i class="bi bi-whatsapp me-1"></i> WhatsApp</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- ubicacion y contacto -->
+    <section class="section-pa" id="ubicacion" aria-labelledby="titulo-ubicacion">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="section-heading" id="titulo-ubicacion">Nuestra información y ubicación</h2>
+          <p class="section-sub">Estamos en Residencial La Angostura, Ica. Elige la vía que te quede más cómoda.</p>
+        </div>
+
+        <ul class="contact-grid">
+          <li class="contact-card reveal" style="--delay: .05s">
+            <span class="contact-icon"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span>
+            <h3>Dirección</h3>
+            <p>Av. La Angostura 396<br>Residencial La Angostura, Ica</p>
+            <a href="https://maps.google.com/maps?q=Av.+La+Angostura+396,+Ica,+Peru" target="_blank" rel="noopener noreferrer">Cómo llegar</a>
+          </li>
+          <li class="contact-card reveal" style="--delay: .12s">
+            <span class="contact-icon"><i class="bi bi-telephone-fill" aria-hidden="true"></i></span>
+            <h3>Teléfono</h3>
+            <p>+51 919 293 435</p>
+            <a href="tel:+51919293435">Llamar ahora</a>
+          </li>
+          <li class="contact-card reveal" style="--delay: .19s">
+            <span class="contact-icon"><i class="bi bi-whatsapp" aria-hidden="true"></i></span>
+            <h3>WhatsApp</h3>
+            <p>Respuesta rápida para reservas y consultas.</p>
+            <a href="https://wa.me/51919293435" target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>
+          </li>
+          <li class="contact-card reveal" style="--delay: .26s">
+            <span class="contact-icon"><i class="bi bi-envelope-fill" aria-hidden="true"></i></span>
+            <h3>Correo</h3>
+            <p>puntoasado@hotmail.com</p>
+            <a href="mailto:puntoasado@hotmail.com">Enviar correo</a>
+          </li>
+        </ul>
+
+        <!-- Redes sociales -->
+        <div class="social-row reveal">
+          <span class="social-label">Síguenos</span>
+          <a href="https://instagram.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-chip"><i class="bi bi-instagram" aria-hidden="true"></i> @puntoasadoica</a>
+          <a href="https://facebook.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-chip"><i class="bi bi-facebook" aria-hidden="true"></i> @puntoasadoica</a>
+        </div>
+
+        <!-- Mapa -->
+        <div class="map-section reveal">
+          <div class="map-container">
+            <iframe
+              title="Ubicación de Punto Asado en Google Maps"
+              src="https://maps.google.com/maps?q=Av.+La+Angostura+396,+Ica,+Peru&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <div class="map-overlay-badge">
+            <span><strong>Punto Asado Ica:</strong> Av. La Angostura 396, Residencial La Angostura</span>
+            <a href="https://maps.google.com/maps?q=Av.+La+Angostura+396,+Ica,+Peru" target="_blank" rel="noopener noreferrer" class="btn-map-link">Abrir en Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- horarios -->
+    <section class="section-pa section-pa-alt" id="horarios" aria-labelledby="titulo-horarios">
+      <div class="container">
+        <div class="row g-4 g-lg-5 align-items-center">
+          <div class="col-lg-5">
+            <div class="section-head reveal mb-0">
+              <h2 class="section-heading" id="titulo-horarios">Horario de atención</h2>
+              <p class="section-sub">Abrimos todos los días. Los fines de semana empezamos al mediodía para que almuerces con la familia.</p>
+              <p class="hoy-estado" id="hoy-estado" hidden></p>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="table-wrap-dark reveal">
+              <table class="tabla-horario">
+                <caption class="visually-hidden">Horario de atención por día</caption>
+                <thead>
+                  <tr><th scope="col">Día</th><th scope="col">Horario</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-dia="1"><th scope="row">Lunes</th><td>6:00 p. m. - 11:00 p. m.</td></tr>
+                  <tr data-dia="2"><th scope="row">Martes</th><td>6:00 p. m. - 11:00 p. m.</td></tr>
+                  <tr data-dia="3"><th scope="row">Miércoles</th><td>6:00 p. m. - 11:00 p. m.</td></tr>
+                  <tr data-dia="4"><th scope="row">Jueves</th><td>6:00 p. m. - 11:00 p. m.</td></tr>
+                  <tr data-dia="5"><th scope="row">Viernes</th><td>6:00 p. m. - 11:00 p. m.</td></tr>
+                  <tr data-dia="6"><th scope="row">Sábado</th><td>12:00 p. m. - 11:00 p. m.</td></tr>
+                  <tr data-dia="0"><th scope="row">Domingo</th><td>12:00 p. m. - 11:00 p. m.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- reservas -->
+    <section class="section-pa" id="reserva" aria-labelledby="titulo-reserva">
+      <div class="container">
+        <div class="row g-4 g-lg-5">
+          <div class="col-lg-4">
+            <div class="section-head reveal">
+              <h2 class="section-heading" id="titulo-reserva">Reserva una mesa</h2>
+              <p class="section-sub">Completa el formulario y se abrirá WhatsApp con tu solicitud lista para enviar. Te confirmaremos la reserva por ese mismo medio.</p>
+            </div>
+            <ul class="reserva-notas reveal">
+              <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Confirmación por WhatsApp</li>
+              <li><i class="bi bi-people-fill" aria-hidden="true"></i> Hasta 10 personas por reserva; para grupos mayores, llámanos</li>
+              <li><i class="bi bi-cake2-fill" aria-hidden="true"></i> Cuéntanos si celebras algo especial</li>
+            </ul>
+          </div>
+
+          <div class="col-lg-8">
+            <form class="formulario-reserva reveal" id="form-reserva" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="r-nombre">Nombre completo</label>
+                  <input type="text" id="r-nombre" name="nombre" autocomplete="name" placeholder="Ej. María Pérez" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="r-telefono">Celular</label>
+                  <input type="tel" id="r-telefono" name="telefono" autocomplete="tel" inputmode="tel" placeholder="Ej. 919 293 435" pattern="[0-9+\s\-]{7,15}" required>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="r-fecha">Fecha</label>
+                  <input type="date" id="r-fecha" name="fecha" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="r-hora">Hora</label>
+                  <input type="time" id="r-hora" name="hora" min="12:00" max="22:30" step="900" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="r-personas">Número de personas</label>
+                  <input type="number" id="r-personas" name="personas" min="1" max="10" value="2" required>
+                </div>
+
+                <div class="col-md-6">
+                  <fieldset>
+                    <legend>Tipo de reserva</legend>
+                    <div class="opciones">
+                      <label class="opcion"><input type="radio" name="tipo" value="Cena" checked> <span>Cena</span></label>
+                      <label class="opcion"><input type="radio" name="tipo" value="Aniversario"> <span>Aniversario</span></label>
+                      <label class="opcion"><input type="radio" name="tipo" value="Cumpleaños"> <span>Cumpleaños</span></label>
+                    </div>
+                  </fieldset>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="r-ubicacion">Ubicación</label>
+                  <select id="r-ubicacion" name="ubicacion">
+                    <option>Primer piso</option>
+                    <option>Segundo piso</option>
+                  </select>
+                  <fieldset class="mt-3">
+                    <legend>Preferencias</legend>
+                    <div class="opciones">
+                      <label class="opcion"><input type="checkbox" name="preferencia" value="Cerca de una ventana"> <span>Cerca de una ventana</span></label>
+                      <label class="opcion"><input type="checkbox" name="preferencia" value="Cerca de la puerta"> <span>Cerca de la puerta</span></label>
+                    </div>
+                  </fieldset>
+                </div>
+
+                <div class="col-12">
+                  <label for="r-mensaje">¿Algún mensaje que desees dejarnos?</label>
+                  <textarea id="r-mensaje" name="mensaje" rows="4" placeholder="Alergias, celebración, silla para bebé…"></textarea>
+                </div>
+
+                <div class="col-12">
+                  <button type="submit" class="btn btn-celeste btn-reservar"><i class="bi bi-whatsapp me-2" aria-hidden="true"></i>Enviar reserva por WhatsApp</button>
+                  <p class="form-feedback" id="form-feedback" role="status" aria-live="polite"></p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <h2>¿Prefieres ver la carta primero?</h2>
+      <p>Cortes Angus, entradas para compartir y la mejor parrillada de Ica.</p>
+      <a href="menu.html" class="btn btn-celeste px-4 py-2">Ver la carta</a>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER (igual en todas las páginas) ========== -->
+  <footer class="footer-rustic">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Columna 1: Marca y dirección -->
+        <div class="col-lg-4 col-md-6">
+          <h5>Punto Asado Parrilla Argentina</h5>
+          <p class="mb-2">
+            Av. La Angostura 396<br />
+            Residencial La Angostura &bull; Ica, Perú
+          </p>
+          <p class="small text-secondary">
+            Tradición, técnica y pasión por el asado argentino al carbón. Cortes seleccionados para compartir en familia y con amigos.
+          </p>
+        </div>
+
+        <!-- Columna 2: Enlaces rápidos -->
+        <div class="col-lg-2 col-md-6">
+          <h5>Navegación</h5>
+          <ul>
+            <li class="mb-1"><a href="index.html">Inicio</a></li>
+            <li class="mb-1"><a href="menu.html">Nuestra Carta</a></li>
+            <li class="mb-1"><a href="nosotros.html">Sobre Nosotros</a></li>
+            <li class="mb-1"><a href="contacto.html">Contacto y Reservas</a></li>
+            <li class="mb-1"><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Información y horarios (mismos horarios que contacto.html) -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Contacto &amp; Horarios</h5>
+          <p class="mb-1">
+            <i class="bi bi-telephone-fill topbar-icon"></i>
+            <a href="tel:+51919293435">+51 919 293 435</a>
+          </p>
+          <p class="mb-1">
+            <i class="bi bi-envelope-fill topbar-icon"></i>
+            <a href="mailto:puntoasado@hotmail.com">puntoasado@hotmail.com</a>
+          </p>
+          <p class="small text-secondary mt-2">
+            <strong>Lun a Vie:</strong> 6:00 p. m. - 11:00 p. m.<br />
+            <strong>Sáb y Dom:</strong> 12:00 p. m. - 11:00 p. m.
+          </p>
+        </div>
+
+        <!-- Columna 4: Redes sociales -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Síguenos</h5>
+          <p class="small text-secondary mb-3">
+            Conoce nuestras promociones de la semana y nuevos cortes a la parrilla:
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://facebook.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Facebook Punto Asado">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Instagram Punto Asado">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/51919293435" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="WhatsApp Punto Asado">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+            <a href="contacto.html#ubicacion" class="social-circle-btn" aria-label="Ubicación y Horarios">
+              <i class="bi bi-geo-alt-fill"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de copyright -->
+      <div class="footer-bottom-bar">
+        <p class="mb-0">
+          &copy; <span data-year>2026</span> Restaurante Punto Asado (Ica). Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- JavaScript externo modular (sin JavaScript en línea) -->
+  <script src="js/main.js"></script>
+  <script src="js/contacto.js"></script>
+
+</body>
+</html>

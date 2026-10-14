@@ -1,0 +1,63 @@
+/* ==========================================================================
+   PUNTO ASADO - VARIABLES DE DISEÑO (DESIGN TOKENS)
+   Modifica aquí los colores, fuentes y sombras de todo el sistema web.
+   Cualquier cambio aquí se reflejará automáticamente en todas las páginas.
+   ========================================================================== */
+
+:root {
+  /* ====================================================
+     1. PALETA DE IDENTIDAD (PARRILLAS ARGENTINAS)
+     ==================================================== */
+  /* Color de Acento: Celeste Argentino */
+  --arg-celeste: #75c5f0;
+  --arg-celeste-hover: #54b3e7;
+  --arg-celeste-light: #a6dcfa;
+  --arg-celeste-dark: #3a97cf;
+
+  /* Fondos Base: Negro Carbón y Madera Rústica */
+  --arg-dark-carbon: #0a0807;
+  --arg-dark-charcoal: #14110e;
+  --arg-dark-wood: #181411;
+  --arg-dark-card: #181614;
+
+  /* Bordes y Líneas Separadoras */
+  --arg-border: rgba(117, 197, 240, 0.32);
+  --arg-border-subtle: rgba(255, 255, 255, 0.1);
+
+  /* Contrastes y Textos */
+  --arg-white: #ffffff;
+  --arg-text-light: #e8e8e8;
+  --arg-text-muted: #b0a8a0;
+
+  /* ====================================================
+     2. TIPOGRAFÍA SANS-SERIF
+     ==================================================== */
+  /* Títulos contundentes y modernos */
+  --font-title: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Párrafos limpios y legibles */
+  --font-text: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* ====================================================
+     3. SOMBRAS Y EFECTOS
+     ==================================================== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.8);
+  --shadow-drop: 0 12px 35px rgba(0, 0, 0, 0.9);
+  --glow-celeste: 0 0 25px rgba(117, 197, 240, 0.45);
+
+  /* ====================================================
+     4. PAPEL CREMA (secciones claras de las páginas internas)
+     Antes cada página tenía su propia copia (--menu-*, --ct-*).
+     ==================================================== */
+  --pa-cream: #f7f3eb;
+  --pa-cream-soft: #faf8f2;
+  --pa-cream-deep: #ece4d6;
+  --pa-cream-line: #e2d7c5;
+  --pa-paper: #fffdfa;
+  --pa-ink: #1a1613;
+  --pa-ink-warm: #2a1c13;
+  --pa-ink-soft: #4a3e36;
+  --pa-muted: #807267;
+  --pa-blue-ink: #0284c7; /* celeste legible sobre fondo crema */
+  --pa-gold: #d5a15d;
+}

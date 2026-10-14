@@ -1,0 +1,281 @@
+/* ==========================================================================
+   PUNTO ASADO - COMPONENTES REUTILIZABLES (COMPONENTS.CSS)
+   Elementos compartidos entre TODAS las páginas: Navbar, Botones y Footer.
+   ========================================================================== */
+
+/* ========================================================
+   1. TOPBAR DE CONTACTO RÁPIDO
+   ======================================================== */
+.topbar-rustic {
+  background-color: #060505;
+  color: #b5b5b5;
+  font-size: 0.85rem;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--arg-border-subtle);
+}
+
+.topbar-rustic a {
+  color: #c5c5c5;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.topbar-rustic a:hover {
+  color: var(--arg-celeste);
+}
+
+.topbar-icon {
+  color: var(--arg-celeste);
+  margin-right: 6px;
+}
+
+/* ========================================================
+   2. NAVBAR PRINCIPAL (FONDO OSCURO FIJO)
+   ======================================================== */
+.navbar-rustic {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1050;
+  background-color: #0c0a09 !important;
+  border-bottom: 1px solid var(--arg-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  padding: 12px 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-rustic .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-rustic .brand-logo-nav {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  background: transparent !important;
+  border: none !important;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.9));
+  transition: transform 0.3s ease;
+}
+
+.navbar-rustic .brand-logo-nav:hover {
+  transform: scale(1.05);
+}
+
+.navbar-rustic .brand-slogan-nav {
+  font-family: var(--font-title);
+  color: var(--arg-celeste);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-left: 2px solid var(--arg-border);
+  padding-left: 14px;
+  line-height: 1.25;
+}
+
+@media (max-width: 576px) {
+  .navbar-rustic .brand-logo-nav {
+    width: 58px;
+    height: 58px;
+  }
+  .navbar-rustic .brand-slogan-nav {
+    font-size: 0.78rem;
+    padding-left: 10px;
+    letter-spacing: 1px;
+  }
+}
+
+.navbar-rustic .nav-link {
+  color: #e2e2e2 !important;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 8px 16px !important;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.navbar-rustic .nav-link:hover,
+.navbar-rustic .nav-link.active {
+  color: var(--arg-celeste) !important;
+}
+
+.navbar-rustic .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background-color: var(--arg-celeste);
+}
+
+/* Botón "Ingresar" de la barra de navegación */
+.btn-login-nav {
+  border: 1px solid var(--arg-border);
+  color: #fff !important;
+  border-radius: 25px;
+  padding: 6px 16px !important;
+  transition: all 0.3s ease;
+}
+.btn-login-nav:hover,
+.btn-login-nav.active {
+  background: rgba(117, 197, 240, 0.15);
+  border-color: var(--arg-celeste);
+  color: var(--arg-celeste) !important;
+}
+
+/* En login.html el botón "Ingresar" ya es una píldora: sin subrayado extra */
+.navbar-rustic .nav-link.btn-login-nav.active::after {
+  display: none;
+}
+
+/* Menú desplegable en pantallas móviles */
+@media (max-width: 991.98px) {
+  .navbar-rustic .navbar-collapse {
+    background: rgba(10, 8, 7, 0.97);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--arg-border);
+    margin-top: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+  }
+}
+
+/* ========================================================
+   3. BOTONES DE ACCIÓN (CTA)
+   ======================================================== */
+/* Botón principal relleno (Celeste + Texto Oscuro) */
+.btn-celeste {
+  background-color: var(--arg-celeste);
+  border: 1px solid var(--arg-celeste);
+  color: #000000 !important;
+  font-family: var(--font-title);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border-radius: 25px;
+}
+
+.btn-celeste:hover {
+  background-color: var(--arg-celeste-hover);
+  border-color: var(--arg-celeste-hover);
+  color: #000000 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(117, 197, 240, 0.5);
+}
+
+/* Botón secundario con borde píldora */
+.btn-outline-pill-celeste {
+  background-color: rgba(10, 8, 7, 0.65);
+  border: 2px solid var(--arg-celeste);
+  color: #ffffff !important;
+  font-family: var(--font-title);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-pill-celeste:hover {
+  background-color: var(--arg-celeste);
+  color: #000000 !important;
+  box-shadow: 0 6px 20px rgba(117, 197, 240, 0.45);
+  transform: translateY(-2px);
+}
+
+/* ========================================================
+   4. FOOTER RÚSTICO Y REDES SOCIALES
+   ======================================================== */
+.footer-rustic {
+  position: relative;
+  background-color: #0c0908 !important;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(28, 22, 18, 0.9) 0%, rgba(12, 9, 8, 0.98) 100%),
+    url('../images/bife_chorizo_steak_1788923227184.jpg') !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  color: #cfc7c0;
+  padding: 60px 0 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left !important;
+}
+
+.footer-rustic h5 {
+  font-family: var(--font-title);
+  color: var(--arg-celeste);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.footer-rustic p,
+.footer-rustic li {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: #b8b0a8;
+}
+
+.footer-rustic ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-rustic ul li a {
+  color: #cfc7c0;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.footer-rustic ul li a:hover {
+  color: var(--arg-celeste);
+  transform: translateX(4px);
+}
+
+.social-circle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(117, 197, 240, 0.45);
+  background: rgba(20, 16, 13, 0.8);
+  color: var(--arg-celeste);
+  font-size: 1.1rem;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none !important;
+}
+
+.social-circle-btn:hover {
+  background: var(--arg-celeste);
+  color: #000000;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(117, 197, 240, 0.45);
+}
+
+.footer-bottom-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 45px;
+  padding-top: 20px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #88817b;
+}
