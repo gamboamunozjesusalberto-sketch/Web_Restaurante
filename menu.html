@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Carta de Punto Asado: entradas, cortes a la parrilla Angus y platos principales en Ica." />
+  <title>Carta - Punto Asado (Ica)</title>
+  <link rel="icon" href="images/logo.jpeg" />
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <!-- Estilos: variables, componentes y base de páginas internas + css propio de la carta -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/paginas.css" />
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body class="inner-page page-menu">
+
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- ========== NAVBAR (igual en todas las páginas) ========== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-rustic sticky-top">
+    <div class="container-fluid px-3 px-md-4 px-lg-5">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="images/logo_blanco.png" alt="Logo Punto Asado" class="brand-logo-nav" />
+        <span class="brand-slogan-nav">Auténticas<br> Parrillas Argentinas</span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navPuntoAsado" aria-controls="navPuntoAsado" aria-expanded="false" aria-label="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navPuntoAsado">
+        <ul class="navbar-nav align-items-lg-center gap-lg-3">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="menu.html">Carta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="nosotros.html">Nosotros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contacto.html">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-login-nav" href="login.html"><i class="bi bi-person-circle me-1"></i>Ingresar</a>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <a href="contacto.html#reserva" class="btn btn-celeste btn-sm px-4 py-2 text-uppercase">Reservar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="page-hero-bg" style="background-image: url('images/parrillada.jpg');"></div>
+    <div class="page-hero-inner">
+      <ol class="breadcrumb-pa">
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Carta</li>
+      </ol>
+      <span class="page-kicker">Sabores de brasa</span>
+      <h1 class="page-title">Carta &amp; <span>Galería de Platos</span></h1>
+      <p class="page-lead">Cortes seleccionados de raza Angus, cocidos a fuego lento con leña de quebracho y carbón de algarrobo. Disfruta de la mejor experiencia parrillera en Ica.</p>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- Distintivos de la casa -->
+    <section class="highlights" aria-label="Distintivos">
+      <div class="container">
+        <ul class="pill-list">
+          <li><i class="bi bi-patch-check-fill"></i> 100% Angus Certificado</li>
+          <li><i class="bi bi-fire"></i> Brasas al Quebracho</li>
+          <li><i class="bi bi-cup-straw"></i> Vinos &amp; Maridaje</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Filtros de categoría (js/menu.js) -->
+    <nav class="menu-filters" aria-label="Filtrar la carta">
+      <div class="container">
+        <div class="filters-row" role="group" aria-label="Categorías">
+          <button type="button" class="filter-btn active" data-filter="todo">Toda la carta</button>
+          <button type="button" class="filter-btn" data-filter="entradas">Para comenzar</button>
+          <button type="button" class="filter-btn" data-filter="parrilla">A la parrilla</button>
+          <button type="button" class="filter-btn" data-filter="platos">Nuestros platos</button>
+          <button type="button" class="filter-btn" data-filter="postres">Postres</button>
+          <button type="button" class="filter-btn" data-filter="vinos">Vinos</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- PARA COMENZAR -->
+    <section class="section-pa menu-block" id="entradas" data-category="entradas">
+      <div class="container">
+        <div class="menu-block-head reveal">
+          <h2 class="section-heading">Para Comenzar</h2>
+          <p class="section-sub">Entradas para abrir el apetito y compartir en la mesa.</p>
+        </div>
+      <div class="table-wrap">
+        <table class="tabla-carta">
+          <caption>Entradas - Punto Asado</caption>
+          <thead>
+            <tr>
+              <th scope="col">Plato</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Porción</th>
+              <th scope="col">Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/empanadasArgentinas.jpeg" alt="Empanadas Argentinas" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Empanadas Argentinas</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Fritas, de carne molida clásica.</td>
+            <td data-label="Porción">2 und</td>
+            <td data-label="Precio" class="precio">S/. 19.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/empanadasAngus.jpeg" alt="Empanadas Angus" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Empanadas Angus</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Carne Angus picada a cuchillo con cebolla y especias.</td>
+            <td data-label="Porción">2 und</td>
+            <td data-label="Precio" class="precio">S/. 26.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/provoleta.jpg" alt="Provoleta a la parrilla" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Provoleta Perfecta</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Queso provoleta a la parrilla con orégano y pan de la casa.</td>
+            <td data-label="Porción">Individual</td>
+            <td data-label="Precio" class="precio">S/. 35.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/papasPatagonia.jpeg" alt="Papas Patagonia" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Papas Patagonia</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Papas fritas con queso cheddar, tocino y cebolla china.</td>
+            <td data-label="Porción">Para compartir</td>
+            <td data-label="Precio" class="precio">S/. 32.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/mollejas_de_Res.jpeg" alt="Mollejas de res" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Mollejas de Res</span>
+              </div>
+            </td>
+            <td data-label="Descripción">300 gr al limón asadas a fuego vivo en parrilla.</td>
+            <td data-label="Porción">300 gr</td>
+            <td data-label="Precio" class="precio">S/. 42.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/trilogia_chorizo.jpeg" alt="Trilogía de chorizos" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Trilogía de Chorizos</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Chorizo clásico, de ají limo y ají charapita.</td>
+            <td data-label="Porción">3 und surtidas</td>
+            <td data-label="Precio" class="precio">S/. 39.00</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </section>
+
+    <!-- A LA PARRILLA -->
+    <section class="section-pa section-pa-alt menu-block" id="parrilla" data-category="parrilla">
+      <div class="container">
+        <div class="menu-block-head reveal">
+          <h2 class="section-heading">A la Parrilla</h2>
+          <p class="section-sub">Nuestros cortes insignia, madurados y asados a fuego vivo con sal marina.</p>
+        </div>
+        <div class="parrilla-grid">
+        <article class="parrilla-card reveal" style="--delay: 0.00s">
+          <div class="parrilla-media">
+            <img src="images/bife_chorizo_angus_1788925448379.jpg" alt="Bife de Chorizo Angus Argentino" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Angus</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Bife de Chorizo</h3>
+            <p>Corte noble con marmoleado uniforme, madurado 21 días y asado con sal marina.</p>
+            <div class="parrilla-price">S/. 68.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.08s">
+          <div class="parrilla-media">
+            <img src="images/entrana_a_la_parrilla_1788925735942.jpg" alt="Entraña Fina al Quebracho" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Angus</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Entraña Fina</h3>
+            <p>El corte más jugoso y tradicional de las brasas argentinas, asado con quebracho blanco.</p>
+            <div class="parrilla-price">S/. 75.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.16s">
+          <div class="parrilla-media">
+            <img src="images/tomahawk_angus.jpg" alt="Tomahawk Angus Steak" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Angus</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Tomahawk Angus</h3>
+            <p>Imponente corte con hueso largo, textura tierna y sabor concentrado al fuego vivo.</p>
+            <div class="parrilla-price">S/. 115.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.24s">
+          <div class="parrilla-media">
+            <img src="images/gran_parrillada_mesa_1788925458012.jpg" alt="Gran Parrillada Argentina Punto Asado" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Angus</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Gran Parrillada</h3>
+            <p>Bife angus, entraña fina, chorizos parrilleros, morcilla, papas rústicas y chimichurri.</p>
+            <div class="parrilla-price">S/. 125.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.00s">
+          <div class="parrilla-media">
+            <img src="images/picana_Angus.jpeg" alt="Picaña Angus" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Angus</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Picaña Angus</h3>
+            <p>Corte con capa de grasa, jugoso y de gran sabor, asado lento sobre las brasas.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.08s">
+          <div class="parrilla-media">
+            <img src="images/colita_angus.jpeg" alt="Colita de Cuadril" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Angus</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Colita de Cuadril</h3>
+            <p>Tierna y magra, cortada en lonjas y asada al punto con sal marina.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.16s">
+          <div class="parrilla-media">
+            <img src="images/bife_ancho_angus.jpeg" alt="Bife Ancho" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Angus</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Bife Ancho</h3>
+            <p>Corte con hueso y marmoleado intenso, acompañado de papas rústicas.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.24s">
+          <div class="parrilla-media">
+            <img src="images/matambrito.jpeg" alt="Matambrito a la Parrilla" loading="lazy" width="600" height="448" />
+          </div>
+          <div class="parrilla-info">
+            <h3>Matambrito a la Parrilla</h3>
+            <p>Matambrito glaseado a fuego lento, con limón y chimichurri de la casa.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.00s">
+          <div class="parrilla-media">
+            <img src="images/inicio_cortes.jpg" alt="Costillar a la Leña" loading="lazy" width="600" height="448" />
+          </div>
+          <div class="parrilla-info">
+            <h3>Costillar a la Leña</h3>
+            <p>Costillar largo cocido lentamente con hierbas aromáticas hasta quedar tierno.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.08s">
+          <div class="parrilla-media">
+            <img src="images/inicio_lamb.jpg" alt="Cordero a las Brasas" loading="lazy" width="600" height="448" />
+          </div>
+          <div class="parrilla-info">
+            <h3>Cordero a las Brasas</h3>
+            <p>Cortes de cordero con romero, dorados a la parrilla y servidos con limón.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.24s">
+          <div class="parrilla-media">
+            <img src="images/parrilla_para_dos.jpg" alt="Parrilla para Dos" loading="lazy" width="600" height="448" />
+          </div>
+          <div class="parrilla-info">
+            <h3>Parrilla para Dos</h3>
+            <p>Selección de carnes, chorizo y morcilla para compartir en pareja.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.00s">
+          <div class="parrilla-media">
+            <img src="images/parrilla_para_cuatro.jpeg" alt="Parrilla para Cuatro" loading="lazy" width="600" height="448" />
+          </div>
+          <div class="parrilla-info">
+            <h3>Parrilla para Cuatro</h3>
+            <p>Bifes, achuras y embutidos en bandeja, ideal para la mesa familiar.</p>
+            <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+          </div>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUESTROS PLATOS -->
+    <section class="section-pa menu-block" id="platos" data-category="platos">
+      <div class="container">
+        <div class="menu-block-head reveal">
+          <h2 class="section-heading">Nuestros Platos</h2>
+          <p class="section-sub">Clásicos argentinos de la casa para quienes prefieren algo distinto a la parrilla.</p>
+        </div>
+      <div class="table-wrap">
+        <table class="tabla-carta">
+          <caption>Platos Principales - Punto Asado</caption>
+          <thead>
+            <tr>
+              <th scope="col">Plato</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Porción</th>
+              <th scope="col">Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/milanesa_argentina.webp" alt="Milanesa Argentina" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Milanesa Argentina</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Carne de res empanizada crocante al estilo argentino.</td>
+            <td data-label="Porción">Individual</td>
+            <td data-label="Precio" class="precio">S/. 52.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/milanesa_napolitana.jpeg" alt="Milanesa Napolitana" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Milanesa Napolitana</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Carne empanizada con salsa de tomate casera y queso fundido.</td>
+            <td data-label="Porción">Individual</td>
+            <td data-label="Precio" class="precio">S/. 62.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/suprema_napolitana.webp" alt="Suprema de Pollo Napolitana" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Suprema de Pollo Napolitana</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Pechuga empanizada con salsa de tomate y queso gratinado.</td>
+            <td data-label="Porción">Individual</td>
+            <td data-label="Precio" class="precio">S/. 58.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/pastel_de_papa.jpg" alt="Pastel de Papa" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Pastel de Papa</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Al estilo argentino, relleno de carne Angus y queso.</td>
+            <td data-label="Porción">Porción</td>
+            <td data-label="Precio" class="precio">S/. 45.00</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/pollo_punto_Asado.jpg" alt="Pollo Punto Asado" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Pollo Punto Asado</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Pechuga a la parrilla con chimichurri, ensalada fresca y papas doradas.</td>
+            <td data-label="Porción">Individual</td>
+            <td data-label="Precio" class="precio">Consultar</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/pollo_limon.jpg" alt="Pollo al Limón" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Pollo al Limón</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Pechuga jugosa en salsa cítrica de limón.</td>
+            <td data-label="Porción">Individual</td>
+            <td data-label="Precio" class="precio">Consultar</td>
+          </tr>
+          <tr>
+            <td data-label="Plato">
+              <div class="dish-cell">
+                <img src="images/panceta.jpeg" alt="Panceta Braseada" class="foto-mini" loading="lazy" width="72" height="72" />
+                <span class="dish-name">Panceta Braseada</span>
+              </div>
+            </td>
+            <td data-label="Descripción">Panceta cocida lentamente, servida en su jugo con guarnición.</td>
+            <td data-label="Porción">Individual</td>
+            <td data-label="Precio" class="precio">Consultar</td>
+          </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3"><strong>Precios sujetos a cambio sin previo aviso</strong></td>
+              <td class="precio">---</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      </div>
+    </section>
+
+    <!-- POSTRES -->
+    <section class="section-pa section-pa-alt menu-block" id="postres" data-category="postres">
+      <div class="container">
+        <div class="menu-block-head reveal">
+          <h2 class="section-heading">Postres</h2>
+          <p class="section-sub">El cierre dulce de la parrilla.</p>
+        </div>
+        <div class="parrilla-grid parrilla-grid-solo">
+          <article class="parrilla-card reveal">
+            <div class="parrilla-media">
+              <img src="images/panqueque_dulce_leche_1788925769110.jpg" alt="Panqueque de dulce de leche con helado" loading="lazy" width="600" height="448" />
+            </div>
+            <div class="parrilla-info">
+              <h3>Panqueque de Dulce de Leche</h3>
+              <p>Panqueque casero relleno de dulce de leche, acompañado de una bola de helado.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- VINOS -->
+    <section class="section-pa menu-block" id="vinos" data-category="vinos">
+      <div class="container">
+        <div class="menu-block-head reveal">
+          <h2 class="section-heading">Vinos &amp; Maridaje</h2>
+          <p class="section-sub">Selección de tintos argentinos y peruanos para acompañar tu parrilla.</p>
+        </div>
+        <div class="vino-grid">
+          <article class="vino-card reveal">
+            <div class="vino-media"><img src="images/vacaSagrada.jpeg" alt="Botella de Vaca Sagrada" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Vaca Sagrada</h3>
+              <p>Tinto argentino de cuerpo medio, ideal con cortes a la parrilla.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+          <article class="vino-card reveal">
+            <div class="vino-media"><img src="images/zapa.jpeg" alt="Botella de Zapa" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Zapa</h3>
+              <p>Tinto con carácter y taninos suaves, acompaña carnes rojas.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+          <article class="vino-card reveal">
+            <div class="vino-media"><img src="images/minimalista.webp" alt="Botella de Minimalista Malbec" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Minimalista Malbec</h3>
+              <p>Malbec fresco y frutado, fácil de maridar con cualquier plato.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+          <article class="vino-card reveal">
+            <div class="vino-media"><img src="images/durigutti.jpeg" alt="Botella de Durigutti" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Durigutti</h3>
+              <p>Malbec de bodega argentina, intenso y de final largo.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+          <article class="vino-card reveal">
+            <div class="vino-media"><img src="images/malbec_pampas.webp" alt="Botella de Malbec Pampas" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Malbec Pampas</h3>
+              <p>Malbec de la línea Pampas, sabroso y redondo.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+          <article class="vino-card reveal">
+            <div class="vino-media"><img src="images/nostrum_tacama.jpeg" alt="Botella de Nostrum Tacama" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Nostrum Tacama</h3>
+              <p>Tinto ícono de la bodega Tacama, de los valles de Ica.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+          <article class="vino-card reveal">
+            <div class="vino-media"><img src="images/tonuz_tacama.png" alt="Botella de Tonuz Tacama" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Tonuz Tacama</h3>
+              <p>Tinto de la bodega Tacama, para acompañar parrilladas.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+          <article class="vino-card reveal">
+            <div class="vino-media vino-media-dark"><img src="images/bodega_pampas.png" alt="Logo de Bodega Pampas, Los Aquijes - Ica" loading="lazy" /></div>
+            <div class="vino-info">
+              <h3>Bodega Pampas</h3>
+              <p>Bodega de Los Aquijes, Ica: vinos locales para brindar con la parrilla.</p>
+              <div class="parrilla-price parrilla-consultar">Consultar precio</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <h2>¿Listo para la parrilla?</h2>
+      <p>Reserva tu mesa y vive la experiencia Punto Asado con tu familia y amigos.</p>
+      <a href="contacto.html#reserva" class="btn btn-celeste px-4 py-3 text-uppercase fs-6">
+        <i class="bi bi-calendar-event me-2"></i> Reservar mesa
+      </a>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER (igual en todas las páginas) ========== -->
+  <footer class="footer-rustic">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Columna 1: Marca y dirección -->
+        <div class="col-lg-4 col-md-6">
+          <h5>Punto Asado Parrilla Argentina</h5>
+          <p class="mb-2">
+            Av. La Angostura 396<br />
+            Residencial La Angostura &bull; Ica, Perú
+          </p>
+          <p class="small text-secondary">
+            Tradición, técnica y pasión por el asado argentino al carbón. Cortes seleccionados para compartir en familia y con amigos.
+          </p>
+        </div>
+
+        <!-- Columna 2: Enlaces rápidos -->
+        <div class="col-lg-2 col-md-6">
+          <h5>Navegación</h5>
+          <ul>
+            <li class="mb-1"><a href="index.html">Inicio</a></li>
+            <li class="mb-1"><a href="menu.html">Nuestra Carta</a></li>
+            <li class="mb-1"><a href="nosotros.html">Sobre Nosotros</a></li>
+            <li class="mb-1"><a href="contacto.html">Contacto y Reservas</a></li>
+            <li class="mb-1"><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Información y horarios (mismos horarios que contacto.html) -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Contacto &amp; Horarios</h5>
+          <p class="mb-1">
+            <i class="bi bi-telephone-fill topbar-icon"></i>
+            <a href="tel:+51919293435">+51 919 293 435</a>
+          </p>
+          <p class="mb-1">
+            <i class="bi bi-envelope-fill topbar-icon"></i>
+            <a href="mailto:puntoasado@hotmail.com">puntoasado@hotmail.com</a>
+          </p>
+          <p class="small text-secondary mt-2">
+            <strong>Lun a Vie:</strong> 6:00 p. m. - 11:00 p. m.<br />
+            <strong>Sáb y Dom:</strong> 12:00 p. m. - 11:00 p. m.
+          </p>
+        </div>
+
+        <!-- Columna 4: Redes sociales -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Síguenos</h5>
+          <p class="small text-secondary mb-3">
+            Conoce nuestras promociones de la semana y nuevos cortes a la parrilla:
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://facebook.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Facebook Punto Asado">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Instagram Punto Asado">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/51919293435" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="WhatsApp Punto Asado">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+            <a href="contacto.html#ubicacion" class="social-circle-btn" aria-label="Ubicación y Horarios">
+              <i class="bi bi-geo-alt-fill"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de copyright -->
+      <div class="footer-bottom-bar">
+        <p class="mb-0">
+          &copy; <span data-year>2026</span> Restaurante Punto Asado (Ica). Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- JavaScript externo modular (sin JavaScript en línea) -->
+  <script src="js/main.js"></script>
+  <script src="js/menu.js"></script>
+
+</body>
+</html>

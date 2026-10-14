@@ -1,0 +1,491 @@
+/* ==========================================================================
+   PUNTO ASADO - CARTA (MENU.CSS)
+   Estilos exclusivos de menu.html. No afecta a ninguna otra página.
+   Depende de: variables.css, components.css (navbar, botones, footer)
+   y paginas.css (hero, secciones, banda final).
+
+   Temas aplicados: tablas con CSS (S04), selectores (S06),
+   transiciones/transformaciones (S07), responsive (S08), Flexbox y Grid (S09).
+
+   ÍNDICE
+   1. Distintivos (Flexbox)
+   2. Filtros de categoría
+   3. Bloques de la carta
+   4. Tablas (S04)
+   5. Parrilla: tarjetas con CSS Grid (S09)
+   6. Responsive (S08)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. DISTINTIVOS (Flexbox)
+   ========================================================================== */
+.highlights {
+  background: var(--arg-dark-charcoal);
+  padding: 22px 0;
+  border-bottom: 1px solid var(--arg-border-subtle);
+}
+
+.pill-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pill-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 1px solid var(--arg-border);
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #e8e8e8;
+  background: rgba(117, 197, 240, 0.06);
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.pill-list li i {
+  color: var(--arg-celeste);
+  transition: color 0.3s ease;
+}
+
+.pill-list li:hover {
+  transform: translateY(-3px);
+  background: var(--arg-celeste);
+  color: #000;
+}
+
+.pill-list li:hover i {
+  color: #000;
+}
+
+/* ==========================================================================
+   2. FILTROS DE CATEGORÍA (los activa js/menu.js)
+   ========================================================================== */
+.menu-filters {
+  position: sticky;
+  top: 94px; /* alto aproximado del navbar */
+  z-index: 100;
+  background: rgba(10, 8, 7, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--arg-border);
+  padding: 14px 0;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.filter-btn {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 9px 20px;
+  border-radius: 30px;
+  border: 1px solid var(--arg-border);
+  background: transparent;
+  color: #e2e2e2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--arg-celeste);
+  color: var(--arg-celeste);
+  transform: translateY(-2px);
+}
+
+.filter-btn.active {
+  background: var(--arg-celeste);
+  border-color: var(--arg-celeste);
+  color: #000;
+}
+
+/* ==========================================================================
+   3. BLOQUES DE LA CARTA
+   ========================================================================== */
+.menu-block {
+  scroll-margin-top: 170px; /* navbar + barra de filtros */
+}
+
+.menu-block[hidden] {
+  display: none;
+}
+
+.menu-block.fade-in {
+  animation: fadeUp 0.6s ease both;
+}
+
+.menu-block-head {
+  margin-bottom: 34px;
+}
+
+/* ==========================================================================
+   4. TABLAS (S04) - sobre fondo crema, cabecera oscura con celeste
+   ========================================================================== */
+.table-wrap {
+  border: 1px solid var(--pa-cream-line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--pa-paper);
+  box-shadow: 0 12px 32px rgba(60, 40, 20, 0.14);
+}
+
+.tabla-carta {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  color: var(--pa-ink-warm);
+}
+
+.tabla-carta caption {
+  caption-side: top;
+  padding: 14px 20px;
+  text-align: left;
+  font-family: var(--font-title);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--arg-celeste);
+  background: #14110e;
+}
+
+.tabla-carta thead th {
+  background: #1c1815;
+  color: var(--arg-celeste);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 14px 20px;
+  border-bottom: 2px solid var(--arg-celeste);
+}
+
+.tabla-carta tbody td,
+.tabla-carta tfoot td {
+  padding: 14px 20px;
+  vertical-align: middle;
+  border-bottom: 1px solid #ebe2d4;
+  font-size: 0.93rem;
+  line-height: 1.5;
+  color: var(--pa-ink-soft);
+}
+
+.tabla-carta tbody tr {
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.tabla-carta tbody tr:nth-child(even) {
+  background: rgba(236, 228, 214, 0.35);
+}
+
+.tabla-carta tbody tr:hover {
+  background: rgba(117, 197, 240, 0.16);
+}
+
+.tabla-carta tfoot td {
+  font-size: 0.82rem;
+  color: var(--pa-muted);
+  border-bottom: none;
+  background: #f1e9df;
+}
+
+.dish-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dish-name {
+  font-family: var(--font-title);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 0.92rem;
+  color: var(--pa-ink);
+}
+
+.foto-mini {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--pa-cream-line);
+  flex-shrink: 0;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.tabla-carta tbody tr:hover .foto-mini {
+  transform: scale(1.12) rotate(-2deg);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.28);
+}
+
+.tabla-carta .precio {
+  font-family: var(--font-title);
+  font-weight: 900;
+  font-size: 1.05rem;
+  color: var(--pa-blue-ink);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.tabla-carta thead th:last-child {
+  text-align: right;
+}
+
+/* ==========================================================================
+   5. PARRILLA: TARJETAS CON CSS GRID (S09) - sección oscura
+   ========================================================================== */
+.parrilla-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 26px;
+}
+
+.parrilla-card {
+  display: flex;
+  flex-direction: column;
+  background: #171310;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.parrilla-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(117, 197, 240, 0.5);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), 0 0 22px rgba(117, 197, 240, 0.2);
+}
+
+.parrilla-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.parrilla-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.parrilla-card:hover .parrilla-media img {
+  transform: scale(1.08);
+}
+
+.parrilla-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  color: var(--arg-celeste);
+  border: 1px solid var(--arg-border);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 11px;
+  border-radius: 20px;
+}
+
+.parrilla-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 18px;
+}
+
+.parrilla-info h3 {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.parrilla-info p {
+  font-size: 0.86rem;
+  color: #9e968f;
+  line-height: 1.55;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.parrilla-price {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--arg-celeste);
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+/* Precio "consultar" y bloque de postres */
+.parrilla-consultar {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--arg-celeste-light);
+}
+
+.parrilla-grid-solo {
+  grid-template-columns: minmax(240px, 380px);
+  justify-content: center;
+}
+
+/* Vinos: botellas sobre fondo claro */
+.vino-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.vino-card {
+  display: flex;
+  flex-direction: column;
+  background: #171310;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+.vino-media {
+  background: #fff;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+
+.vino-media-dark { background: #000; }
+
+.vino-media img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.vino-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.vino-info h3 {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.vino-info p {
+  font-size: 0.82rem;
+  color: #9e968f;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  flex-grow: 1;
+}
+
+/* ==========================================================================
+   6. RESPONSIVE (S08)
+   ========================================================================== */
+@media (max-width: 991.98px) { .vino-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 767.98px) { .vino-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+@media (max-width: 991.98px) {
+  .menu-filters {
+    position: static; /* en móvil la barra de filtros deja de ser fija */
+  }
+
+  .menu-block {
+    scroll-margin-top: 100px;
+  }
+}
+
+/* En móviles, cada fila de la tabla se convierte en una tarjeta apilada */
+@media (max-width: 700px) {
+  .tabla-carta thead {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .tabla-carta caption {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-carta,
+  .tabla-carta tbody,
+  .tabla-carta tfoot,
+  .tabla-carta tr,
+  .tabla-carta td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-carta tbody tr {
+    padding: 14px 6px;
+    border-bottom: 1px solid var(--pa-cream-line);
+  }
+
+  .tabla-carta tbody td {
+    border-bottom: none;
+    padding: 6px 16px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: right;
+  }
+
+  .tabla-carta tbody td::before {
+    content: attr(data-label);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--pa-blue-ink);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  .tabla-carta tbody td[data-label="Plato"] {
+    justify-content: flex-start;
+  }
+
+  .tabla-carta tbody td[data-label="Plato"]::before {
+    display: none;
+  }
+
+  .tabla-carta tfoot td[colspan] {
+    text-align: center;
+  }
+
+  .tabla-carta tfoot td.precio {
+    display: none;
+  }
+}

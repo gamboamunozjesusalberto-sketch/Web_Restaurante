@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Punto Asado: auténtica parrilla argentina en Ica. Cortes Angus, brasas al quebracho y reservas de mesa." />
+  <title>Punto Asado - Auténtica Parrilla Argentina (Ica)</title>
+  <link rel="icon" href="images/logo.jpeg" />
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <!-- Arquitectura modular: variables, componentes compartidos y landing -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+</head>
+<body class="landing-page">
+
+  <!-- ========== NAVBAR (igual en todas las páginas) ========== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-rustic sticky-top">
+    <div class="container-fluid px-3 px-md-4 px-lg-5">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="images/logo_blanco.png" alt="Logo Punto Asado" class="brand-logo-nav" />
+        <span class="brand-slogan-nav">Auténticas<br> Parrillas Argentinas</span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navPuntoAsado" aria-controls="navPuntoAsado" aria-expanded="false" aria-label="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navPuntoAsado">
+        <ul class="navbar-nav align-items-lg-center gap-lg-3">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="menu.html">Carta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="nosotros.html">Nosotros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contacto.html">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-login-nav" href="login.html"><i class="bi bi-person-circle me-1"></i>Ingresar</a>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <a href="#reserva" class="btn btn-celeste btn-sm px-4 py-2 text-uppercase">Reservar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ========================================================
+         HERO SECTION
+         ======================================================== -->
+    <section class="hero-section" id="hero">
+
+      <!-- Carrusel de fotos en el fondo -->
+      <div id="heroBgCarousel" class="carousel slide carousel-fade hero-carrusel" data-bs-ride="carousel" data-bs-interval="4500">
+        <div class="carousel-inner h-100">
+          <!-- Foto 1: Brasas y cortes al carbón -->
+          <div class="carousel-item active h-100">
+            <div class="hero-fondo" style="background-image: url('images/punto_asado_grill_1788923212478.jpg');"></div>
+          </div>
+          <!-- Foto 2: Bife de chorizo a fuego vivo -->
+          <div class="carousel-item h-100">
+            <div class="hero-fondo" style="background-image: url('images/bife_chorizo_steak_1788923227184.jpg');"></div>
+          </div>
+          <!-- Foto 3: Maestro asador en las brasas -->
+          <div class="carousel-item h-100">
+            <div class="hero-fondo" style="background-image: url('images/maestro_asador_brasas_1788925439021.jpg');"></div>
+          </div>
+          <!-- Foto 4: Entraña fina a la parrilla -->
+          <div class="carousel-item h-100">
+            <div class="hero-fondo" style="background-image: url('images/entrana_a_la_parrilla_1788925735942.jpg');"></div>
+          </div>
+          <!-- Foto 5: Gran parrillada argentina a la mesa -->
+          <div class="carousel-item h-100">
+            <div class="hero-fondo" style="background-image: url('images/gran_parrillada_mesa_1788925458012.jpg');"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Capa de superposición de contraste -->
+      <div class="hero-capa"></div>
+
+      <!-- Flechas para pasar las 5 fotos -->
+      <button class="hero-flecha hero-flecha-izq" type="button" data-bs-target="#heroBgCarousel" data-bs-slide="prev" aria-label="Foto anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button class="hero-flecha hero-flecha-der" type="button" data-bs-target="#heroBgCarousel" data-bs-slide="next" aria-label="Foto siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+
+      <!-- Indicadores de fotos -->
+      <div class="hero-indicadores d-flex justify-content-center gap-2">
+        <button type="button" data-bs-target="#heroBgCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Foto 1"></button>
+        <button type="button" data-bs-target="#heroBgCarousel" data-bs-slide-to="1" aria-label="Foto 2"></button>
+        <button type="button" data-bs-target="#heroBgCarousel" data-bs-slide-to="2" aria-label="Foto 3"></button>
+        <button type="button" data-bs-target="#heroBgCarousel" data-bs-slide-to="3" aria-label="Foto 4"></button>
+        <button type="button" data-bs-target="#heroBgCarousel" data-bs-slide-to="4" aria-label="Foto 5"></button>
+      </div>
+
+      <!-- Contenido central superpuesto -->
+      <div class="hero-contenido">
+        <!-- Logotipo grande -->
+        <div class="hero-logo-caja">
+          <img src="images/logo_blanco.png" alt="Logotipo Punto Asado Parrillas Argentinas" class="hero-logo" />
+        </div>
+
+        <!-- Slogan / Propuesta de valor -->
+        <p class="hero-subtitulo">Ofrecemos la mejor experiencia de brasas al</p>
+        <h1 class="hero-titulo">Mejor Valor &amp; <span>Sabor Argentino</span></h1>
+
+        <!-- Botones de acción -->
+        <div class="hero-botones">
+          <a href="menu.html" class="btn btn-celeste px-4 py-2 text-uppercase fs-6">
+            Explorar Carta
+          </a>
+          <a href="#reserva" class="btn btn-outline-pill-celeste px-4 py-2 text-uppercase fs-6">
+            Reservar Mesa
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECCIÓN BIENVENIDOS: FONDO CREMA CON FOTOGRAFÍAS LATERALES DEGRADADAS
+         ======================================================== -->
+    <section class="section-bienvenidos" id="bienvenidos">
+      <!-- Imagen lateral izquierda (Parrilla interior) -->
+      <div class="bienvenidos-imagen-lado bienvenidos-imagen-izq d-none d-lg-block">
+        <img src="images/parrila interior.png" alt="Parrilla artesanal interior - Punto Asado Ica" class="bienvenidos-imagen" loading="lazy" />
+        <div class="bienvenidos-degradado-izq"></div>
+      </div>
+
+      <!-- Imagen lateral derecha (Salón y mesas) -->
+      <div class="bienvenidos-imagen-lado bienvenidos-imagen-der d-none d-lg-block">
+        <img src="images/mesas interior.png" alt="Salón rústico y mesas - Punto Asado Ica" class="bienvenidos-imagen" loading="lazy" />
+        <div class="bienvenidos-degradado-der"></div>
+      </div>
+
+      <div class="container position-relative" style="z-index: 2;">
+        <div class="row justify-content-center">
+          <!-- Columna central: historia, bienvenida y botón -->
+          <div class="col-12 col-lg-8 col-xl-7 text-center py-4 py-lg-5">
+            <span class="bienvenidos-subtitulo mb-2">NUESTRA TRADICIÓN</span>
+            <h2 class="bienvenidos-titulo mb-3">Bienvenidos a Punto Asado</h2>
+            <p class="bienvenidos-destacado">
+              Auténtica pasión por las brasas argentinas en la soleada ciudad de <strong>Ica</strong>.
+            </p>
+            <p class="bienvenidos-texto">
+              Desde el año <strong>2019</strong> en <em>La Angostura</em>, encendemos el fuego con el firme propósito de rendir tributo a la tradición parrillera argentina: cortes Angus madurados, técnica maestra de cocción lenta y el calor exacto del quebracho y carbón.
+            </p>
+            <p class="bienvenidos-texto">
+              Te invitamos a vivir una experiencia gastronómica donde el aroma a brasas, el ambiente rústico y el sabor inconfundible de nuestras carnes te harán sentir en casa.
+            </p>
+            <div class="mt-4 pt-1">
+              <a href="nosotros.html" class="btn btn-bienvenidos text-uppercase">
+                Conoce Nuestra Historia <i class="bi bi-arrow-right ms-2"></i>
+              </a>
+            </div>
+
+            <!-- Móviles/Tablets: ambas fotos con degradado superior -->
+            <div class="bienvenidos-mobile-grid d-lg-none mt-4 pt-2">
+              <div class="row g-3">
+                <div class="col-6">
+                  <div class="bienvenidos-mobile-caja">
+                    <img src="images/parrila interior.png" alt="Parrilla artesanal interior" class="bienvenidos-mobile-imagen" loading="lazy" />
+                    <div class="bienvenidos-mobile-degradado"></div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bienvenidos-mobile-caja">
+                    <img src="images/mesas interior.png" alt="Salón rústico y mesas" class="bienvenidos-mobile-imagen" loading="lazy" />
+                    <div class="bienvenidos-mobile-degradado"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECCIÓN MENÚ: RECOMENDACIONES DEL CHEF
+         ======================================================== -->
+    <section class="section-menu text-center" id="menu-destacado">
+      <div class="menu-capa"></div>
+
+      <div class="container menu-contenido">
+        <!-- Encabezado de sección -->
+        <h2 class="menu-titulo mb-2">Recomendaciones del Chef</h2>
+        <p class="menu-subtitulo mx-auto mb-4">
+          Auténticos cortes Angus madurados, asados a la leña de quebracho y especialidades maestras al fuego lento.
+        </p>
+
+        <!-- Fila de platos destacados -->
+        <div class="row g-4 justify-content-center text-start">
+
+          <!-- Plato 1: Bife de Chorizo -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="plato-tarjeta">
+              <div class="plato-foto">
+                <img src="images/bife_chorizo_angus_1788925448379.jpg" alt="Bife de Chorizo Angus Argentino" class="plato-imagen" loading="lazy" />
+              </div>
+              <div class="plato-info">
+                <h3 class="plato-nombre">Bife de Chorizo</h3>
+                <div class="plato-precio">S/. 68.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plato 2: Entraña Fina -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="plato-tarjeta">
+              <div class="plato-foto">
+                <img src="images/entrana_a_la_parrilla_1788925735942.jpg" alt="Entraña Fina al Quebracho" class="plato-imagen" loading="lazy" />
+              </div>
+              <div class="plato-info">
+                <h3 class="plato-nombre">Entraña Fina</h3>
+                <div class="plato-precio">S/. 75.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plato 3: Tomahawk Angus -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="plato-tarjeta">
+              <div class="plato-foto">
+                <img src="images/tomahawk_angus.jpg" alt="Tomahawk Angus Steak" class="plato-imagen" loading="lazy" />
+              </div>
+              <div class="plato-info">
+                <h3 class="plato-nombre">Tomahawk Angus</h3>
+                <div class="plato-precio">S/. 115.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plato 4: Gran Parrillada -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="plato-tarjeta">
+              <div class="plato-foto">
+                <img src="images/gran_parrillada_mesa_1788925458012.jpg" alt="Gran Parrillada Argentina Punto Asado" class="plato-imagen" loading="lazy" />
+              </div>
+              <div class="plato-info">
+                <h3 class="plato-nombre">Gran Parrillada</h3>
+                <div class="plato-precio">S/. 125.00</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Botón Ver Carta Completa -->
+        <div class="text-center mt-4 pt-1">
+          <a href="menu.html" class="btn btn-outline-pill-celeste px-5 py-3 text-uppercase fs-6">
+            Ver Carta Completa <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECCIÓN GALERÍA: AMBIENTE Y BRASAS
+         ======================================================== -->
+    <section class="section-galeria" id="galeria">
+      <div class="container text-center">
+        <h2 class="galeria-titulo">Brasas &amp; Ambiente</h2>
+        <p class="galeria-lead">Un vistazo a nuestra parrilla, nuestros cortes y el salón donde compartimos la mesa.</p>
+      </div>
+      <div class="container galeria-grid">
+        <figure class="galeria-item g-wide"><img src="images/asador.jpg" alt="Maestro asador junto a las brasas" loading="lazy" /></figure>
+        <figure class="galeria-item "><img src="images/inicio_parrilla.jpg" alt="Cortes y chorizos sobre la parrilla" loading="lazy" /></figure>
+        <figure class="galeria-item "><img src="images/salon.jpg" alt="Salón de Punto Asado con bodega" loading="lazy" /></figure>
+        <figure class="galeria-item g-wide"><img src="images/inicio_mesas.jpg" alt="Mesas al aire libre de noche" loading="lazy" /></figure>
+        <figure class="galeria-item "><img src="images/inicio_empanadas.jpg" alt="Empanadas argentinas con limón" loading="lazy" /></figure>
+        <figure class="galeria-item g-wide"><img src="images/inicio_cortecarne.jpg" alt="Cortes de carne a la parrilla" loading="lazy" /></figure>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECCIÓN RESERVA: FONDO CREMA CON FOTOGRAFÍA LATERAL
+         ======================================================== -->
+    <section class="section-reserva" id="reserva">
+      <!-- Imagen lateral que cubre el alto de la sección -->
+      <div class="reserva-imagen-lado">
+        <img src="images/parrilla-reserva.jpg" alt="Parrillada Punto Asado servida en mesa" class="reserva-imagen" loading="lazy" />
+        <div class="reserva-degradado"></div>
+      </div>
+
+      <div class="container position-relative" style="z-index: 2;">
+        <div class="row align-items-center">
+          <!-- Columna izquierda: título, texto y botón de reserva -->
+          <div class="col-lg-6 text-start py-5">
+            <span class="reserva-subtitulo">EXPERIENCIA GASTRONÓMICA</span>
+            <h2 class="reserva-titulo">Reserva Tu Mesa</h2>
+            <p class="reserva-destacado">
+              Asegura tu lugar y vive una auténtica experiencia parrillera con los mejores cortes Angus, cocción lenta al quebracho y el ambiente más acogedor de Ica.
+            </p>
+            <p class="reserva-texto">
+              Atendemos reservas para almuerzos familiares, cenas especiales y celebraciones.
+            </p>
+            <div class="pt-2">
+              <a href="contacto.html#reserva" class="btn btn-celeste px-4 py-3 text-uppercase fs-6">
+                Reservar Mesa <i class="bi bi-arrow-right ms-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER (igual en todas las páginas) ========== -->
+  <footer class="footer-rustic">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Columna 1: Marca y dirección -->
+        <div class="col-lg-4 col-md-6">
+          <h5>Punto Asado Parrilla Argentina</h5>
+          <p class="mb-2">
+            Av. La Angostura 396<br />
+            Residencial La Angostura &bull; Ica, Perú
+          </p>
+          <p class="small text-secondary">
+            Tradición, técnica y pasión por el asado argentino al carbón. Cortes seleccionados para compartir en familia y con amigos.
+          </p>
+        </div>
+
+        <!-- Columna 2: Enlaces rápidos -->
+        <div class="col-lg-2 col-md-6">
+          <h5>Navegación</h5>
+          <ul>
+            <li class="mb-1"><a href="index.html">Inicio</a></li>
+            <li class="mb-1"><a href="menu.html">Nuestra Carta</a></li>
+            <li class="mb-1"><a href="nosotros.html">Sobre Nosotros</a></li>
+            <li class="mb-1"><a href="contacto.html">Contacto y Reservas</a></li>
+            <li class="mb-1"><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Información y horarios (mismos horarios que contacto.html) -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Contacto &amp; Horarios</h5>
+          <p class="mb-1">
+            <i class="bi bi-telephone-fill topbar-icon"></i>
+            <a href="tel:+51919293435">+51 919 293 435</a>
+          </p>
+          <p class="mb-1">
+            <i class="bi bi-envelope-fill topbar-icon"></i>
+            <a href="mailto:puntoasado@hotmail.com">puntoasado@hotmail.com</a>
+          </p>
+          <p class="small text-secondary mt-2">
+            <strong>Lun a Vie:</strong> 6:00 p. m. - 11:00 p. m.<br />
+            <strong>Sáb y Dom:</strong> 12:00 p. m. - 11:00 p. m.
+          </p>
+        </div>
+
+        <!-- Columna 4: Redes sociales -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Síguenos</h5>
+          <p class="small text-secondary mb-3">
+            Conoce nuestras promociones de la semana y nuevos cortes a la parrilla:
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://facebook.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Facebook Punto Asado">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Instagram Punto Asado">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/51919293435" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="WhatsApp Punto Asado">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+            <a href="contacto.html#ubicacion" class="social-circle-btn" aria-label="Ubicación y Horarios">
+              <i class="bi bi-geo-alt-fill"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de copyright -->
+      <div class="footer-bottom-bar">
+        <p class="mb-0">
+          &copy; <span data-year>2026</span> Restaurante Punto Asado (Ica). Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- JavaScript externo modular (sin JavaScript en línea) -->
+  <script src="js/main.js"></script>
+  <script src="js/landing.js"></script>
+
+</body>
+</html>

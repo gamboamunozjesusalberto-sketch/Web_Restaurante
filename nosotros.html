@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Conoce la historia, los valores y los logros de Punto Asado, parrilla argentina en Ica." />
+  <title>Nosotros - Punto Asado (Ica)</title>
+  <link rel="icon" href="images/logo.jpeg" />
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Fuente externa (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <!-- Estilos: variables, componentes y base de páginas internas + css propio de nosotros -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/paginas.css" />
+  <link rel="stylesheet" href="css/nosotros.css" />
+</head>
+<body class="inner-page pagina-nosotros">
+
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- Iconos vectoriales (SVG sprite) -->
+  <svg class="sprite-svg" width="0" height="0" aria-hidden="true">
+    <symbol id="i-fuego" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 0.7c.4 3-1 4.9-2.6 6.7C9.2 9.300 8 11 8 13.200c0 1 .3 1.900.9 2.600C7 15.200 6 13.500 6 11.500c-2.300 2.200-3.500 4.700-3.500 7.200C2.500 21.700 6.600 24 12 24s9.500-2.300 9.500-6.300c0-4.700-3.200-6.700-5-9.200-.9-1.300-1.700-3-3-7.800zM12 22c-2 0-3.500-1.300-3.500-3.100 0-1.700 1.200-2.700 2.300-3.800.5-.5 1-1.100 1.300-1.900 2.700 1.700 3.400 3.300 3.400 5.100 0 1.900-1.500 3.700-3.500 3.700z"/></symbol>
+    <symbol id="i-familia" viewBox="0 0 24 24"><path fill="currentColor" d="M8 11a3.500 3.500 0 1 0 0-7 3.500 3.500 0 0 0 0 7zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8 13c-3 0-6 1.500-6 4v3h12v-3c0-2.500-3-4-6-4zm8 0c-.6 0-1.200.1-1.800.2 1.200 1 1.800 2.300 1.800 3.800v3h6v-3c0-2.200-2.700-4-6-4z"/></symbol>
+    <symbol id="i-calidad" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.500l3 6.200 6.800.9-5 4.700 1.300 6.700L12 16.700 5.900 20l1.300-6.700-5-4.700 6.800-.9z"/></symbol>
+    <symbol id="i-trofeo" viewBox="0 0 24 24"><path fill="currentColor" d="M5 2h14v2h3v4c0 2.200-1.800 4-4 4h-.3A6 6 0 0 1 13 15.900V18h3v2H8v-2h3v-2.100A6 6 0 0 1 6.300 12H6c-2.200 0-4-1.800-4-4V4h3zm0 4H4v2c0 1.100.9 2 2 2zm14 0v4c1.100 0 2-.9 2-2V6z"/></symbol>
+    <symbol id="i-reloj" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v5.400l4 2.300-1 1.700-5-2.900V7z"/></symbol>
+    <symbol id="i-mesa" viewBox="0 0 24 24"><path fill="currentColor" d="M3 6h18v3H3zm2 4h2v10H5zm12 0h2v10h-2zM11 10h2v10h-2z"/></symbol>
+  </svg>
+
+  <!-- ========== NAVBAR (igual en todas las páginas) ========== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-rustic sticky-top">
+    <div class="container-fluid px-3 px-md-4 px-lg-5">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="images/logo_blanco.png" alt="Logo Punto Asado" class="brand-logo-nav" />
+        <span class="brand-slogan-nav">Auténticas<br> Parrillas Argentinas</span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navPuntoAsado" aria-controls="navPuntoAsado" aria-expanded="false" aria-label="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navPuntoAsado">
+        <ul class="navbar-nav align-items-lg-center gap-lg-3">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="menu.html">Carta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="nosotros.html">Nosotros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contacto.html">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-login-nav" href="login.html"><i class="bi bi-person-circle me-1"></i>Ingresar</a>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <a href="contacto.html#reserva" class="btn btn-celeste btn-sm px-4 py-2 text-uppercase">Reservar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="page-hero-bg" style="background-image: url('images/zona parrilas aire libre.jpg');"></div>
+    <div class="page-hero-inner">
+      <ol class="breadcrumb-pa">
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Nosotros</li>
+      </ol>
+      <span class="page-kicker">Tradición &amp; pasión por las brasas</span>
+      <h1 class="page-title">Nuestra <span>Historia</span></h1>
+      <p class="page-lead">Desde 2019 encendemos el fuego en Ica para compartir el sabor auténtico de la parrilla con familias y amigos.</p>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- SECCION 1: HISTORIA -->
+    <section>
+      <h2>Historia de Punto Asado</h2>
+
+      <div class="historia-texto">
+        <p>
+          Punto Asado abrió sus puertas en el año <strong>2019</strong>, en la ciudad de Ica,
+          con el objetivo de ofrecer carnes a la parrilla y platos a la brasa preparados con
+          técnicas tradicionales, en un ambiente familiar y acogedor.
+        </p>
+        <p>
+          Desde el inicio, la meta del restaurante ha sido brindar un espacio donde las familias
+          y amigos puedan reunirse a disfrutar de carnes de calidad, cocinadas lentamente al carbón,
+          respetando el sabor auténtico de la parrilla.
+        </p>
+        <p>
+          Ica es una ciudad con una fuerte tradición de reuniones familiares y celebraciones al
+          aire libre, además de un clima cálido durante gran parte del año, ideal para disfrutar
+          de una parrillada. Identificamos que la ciudad no contaba con muchos restaurantes
+          especializados únicamente en parrillas y brasas, por lo que decidimos traer esta
+          propuesta gastronómica a la comunidad iqueña.
+        </p>
+      </div>
+
+      <!-- Datos clave (CSS Grid) -->
+      <ul class="datos-clave">
+        <li><svg class="icono" aria-hidden="true"><use href="#i-reloj"/></svg><strong>2019</strong><span>Año de apertura</span></li>
+        <li><svg class="icono" aria-hidden="true"><use href="#i-trofeo"/></svg><strong>1.er puesto</strong><span>Clasificatorio a Texas</span></li>
+        <li><svg class="icono" aria-hidden="true"><use href="#i-mesa"/></svg><strong>Ica, Perú</strong><span>Ambiente familiar</span></li>
+      </ul>
+
+      <!-- Galería de 4 imágenes (Grid + imágenes responsivas) -->
+      <div class="galeria-historia">
+        <figure>
+          <img src="images/mesas interior 2.png" width="347" height="451" loading="lazy" alt="Mesas interiores de Punto Asado" />
+          <figcaption>Mesas en el interior del Restaurante</figcaption>
+        </figure>
+        <figure>
+          <img src="images/mesas interior.png" width="331" height="448" loading="lazy" alt="Ambiente interior de Punto Asado" />
+          <figcaption>Ambiente acogedor en el interior</figcaption>
+        </figure>
+        <figure>
+          <picture>
+            <source type="image/webp"
+                    srcset="images/nosotros/zona-parrillas-480.webp 480w, images/nosotros/zona-parrillas-960.webp 960w"
+                    sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, 450px" />
+            <img src="images/zona parrilas aire libre.jpg" width="1440" height="1440" loading="lazy" alt="Zona de parrillas al aire libre" />
+          </picture>
+          <figcaption>Zona de parrillas al aire libre</figcaption>
+        </figure>
+        <figure>
+          <img src="images/restaurante exterior.png" width="337" height="401" loading="lazy" alt="Vista exterior del restaurante" />
+          <figcaption>Nuestro local en Ica</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- SECCION: VALORES (Flexbox + iconos SVG) -->
+    <section>
+      <h2>Lo que nos define</h2>
+      <div class="valores">
+        <article class="valor">
+          <svg class="icono" aria-hidden="true"><use href="#i-fuego"/></svg>
+          <h3>Pasión por las brasas</h3>
+          <p>Carnes cocinadas lentamente al carbón, respetando el sabor auténtico de la parrilla.</p>
+        </article>
+        <article class="valor">
+          <svg class="icono" aria-hidden="true"><use href="#i-familia"/></svg>
+          <h3>Ambiente familiar</h3>
+          <p>Un espacio acogedor para que familias y amigos se reúnan a celebrar.</p>
+        </article>
+        <article class="valor">
+          <svg class="icono" aria-hidden="true"><use href="#i-calidad"/></svg>
+          <h3>Calidad</h3>
+          <p>Técnica, cuidado en cada corte y búsqueda constante de la perfección.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECCION 2: LOGROS -->
+    <section>
+      <h2>Nuestros Logros</h2>
+
+      <!-- LOGRO 1 -->
+      <div class="logro-item">
+        <div class="logro-imagen">
+          <picture>
+            <source type="image/webp"
+                    srcset="images/nosotros/premio-open-fire-400.webp 400w, images/nosotros/premio-open-fire-800.webp 800w"
+                    sizes="(max-width: 768px) 60vw, 200px" />
+            <img src="images/premio open fire.png" width="825" height="838" loading="lazy" alt="Premio Open Fire Meat Up" />
+          </picture>
+          <span class="insignia">Campeón</span>
+        </div>
+        <div class="logro-texto">
+          <h3>PUNTO ASADO ES CAMPEÓN</h3>
+          <p>
+            Con mucho orgullo felicitamos a <strong>Punto Asado</strong> por quedarse con el
+            <strong>1.er puesto del Clasificatorio Equipo Perú a Texas</strong>.
+          </p>
+          <ul class="logro-destacados">
+            <li><strong>S/ 1,000</strong> de premio</li>
+            <li>La plaza para ir a <strong>Texas</strong> a competir representando al Perú en el <strong>Open Fire Meat Up</strong></li>
+          </ul>
+          <p>
+            Una competencia de alto nivel, mucho fuego, técnica y pasión por la parrilla.
+            <strong>Ahora toca llevar el sabor peruano a Texas</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- LOGRO 2 -->
+      <div class="logro-item logro-secundario">
+        <div class="logro-imagen">
+          <img src="images/Fotoo premio ahumado.png" width="342" height="417" loading="lazy" alt="Premio Ahumado" />
+        </div>
+        <div class="logro-texto">
+          <h3>Reconocimiento en Ahumado</h3>
+          <p>
+            Además de nuestro triunfo en el Clasificatorio a Texas, Punto Asado ha sido
+            reconocido por su excelente técnica en <strong>ahumado de carnes</strong>,
+            destacando entre los mejores parrilleros del país.
+          </p>
+          <p>
+            La pasión por el fuego y la búsqueda constante de la perfección nos han llevado
+            a alcanzar estos importantes logros que compartimos con toda nuestra comunidad.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- LLAMADA A LA ACCION -->
+    <section class="cta">
+      <h2>Ven a vivir la experiencia</h2>
+      <p>Te esperamos con la parrilla encendida.</p>
+      <a class="boton" href="contacto.html#reserva">Reserva tu mesa</a>
+      <a class="boton boton-claro" href="menu.html">Ver la carta</a>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER (igual en todas las páginas) ========== -->
+  <footer class="footer-rustic">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Columna 1: Marca y dirección -->
+        <div class="col-lg-4 col-md-6">
+          <h5>Punto Asado Parrilla Argentina</h5>
+          <p class="mb-2">
+            Av. La Angostura 396<br />
+            Residencial La Angostura &bull; Ica, Perú
+          </p>
+          <p class="small text-secondary">
+            Tradición, técnica y pasión por el asado argentino al carbón. Cortes seleccionados para compartir en familia y con amigos.
+          </p>
+        </div>
+
+        <!-- Columna 2: Enlaces rápidos -->
+        <div class="col-lg-2 col-md-6">
+          <h5>Navegación</h5>
+          <ul>
+            <li class="mb-1"><a href="index.html">Inicio</a></li>
+            <li class="mb-1"><a href="menu.html">Nuestra Carta</a></li>
+            <li class="mb-1"><a href="nosotros.html">Sobre Nosotros</a></li>
+            <li class="mb-1"><a href="contacto.html">Contacto y Reservas</a></li>
+            <li class="mb-1"><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Información y horarios (mismos horarios que contacto.html) -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Contacto &amp; Horarios</h5>
+          <p class="mb-1">
+            <i class="bi bi-telephone-fill topbar-icon"></i>
+            <a href="tel:+51919293435">+51 919 293 435</a>
+          </p>
+          <p class="mb-1">
+            <i class="bi bi-envelope-fill topbar-icon"></i>
+            <a href="mailto:puntoasado@hotmail.com">puntoasado@hotmail.com</a>
+          </p>
+          <p class="small text-secondary mt-2">
+            <strong>Lun a Vie:</strong> 6:00 p. m. - 11:00 p. m.<br />
+            <strong>Sáb y Dom:</strong> 12:00 p. m. - 11:00 p. m.
+          </p>
+        </div>
+
+        <!-- Columna 4: Redes sociales -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Síguenos</h5>
+          <p class="small text-secondary mb-3">
+            Conoce nuestras promociones de la semana y nuevos cortes a la parrilla:
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://facebook.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Facebook Punto Asado">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Instagram Punto Asado">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/51919293435" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="WhatsApp Punto Asado">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+            <a href="contacto.html#ubicacion" class="social-circle-btn" aria-label="Ubicación y Horarios">
+              <i class="bi bi-geo-alt-fill"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de copyright -->
+      <div class="footer-bottom-bar">
+        <p class="mb-0">
+          &copy; <span data-year>2026</span> Restaurante Punto Asado (Ica). Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- JavaScript externo modular (sin JavaScript en línea) -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>
