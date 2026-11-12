@@ -29,10 +29,10 @@
 
   // ---------- A dónde ir después de entrar ----------
   // Solo se aceptan páginas propias (ej. "contacto.html#reserva"), nunca otra web.
-  function paginaDeRegreso() {
+  function paginaDeRegreso(perfil) {
     const volver = new URLSearchParams(location.search).get('volver') || '';
     if (/^[a-z0-9_-]+\.html(#[a-z0-9_-]+)?$/i.test(volver)) return volver;
-    return 'cuenta.html'; // (el panel de admin llega en la siguiente fase)
+    return perfil && perfil.rol === 'admin' ? 'admin.html' : 'cuenta.html';
   }
 
   function mostrar(texto, tipo = '') {

@@ -209,7 +209,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     notificaciones.forEach((n) => {
       const li = crear('li', 'notif-item' + (n.leida ? '' : ' no-leida'));
-      const icono = crear('i', 'bi bi-megaphone');
+      // promoción = megáfono · aviso de reserva = calendario
+      const icono = crear('i', n.promocion_id ? 'bi bi-megaphone' : 'bi bi-calendar-check');
       icono.setAttribute('aria-hidden', 'true');
       const texto = crear('div');
       const fecha = crear('time', '', new Date(n.creado_en).toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' }));

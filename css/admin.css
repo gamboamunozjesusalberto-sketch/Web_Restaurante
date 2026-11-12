@@ -1,0 +1,187 @@
+/* ==========================================================================
+   PUNTO ASADO | PANEL DE ADMINISTRADOR (admin.html)
+   Reutiliza las tarjetas y formularios de cuenta.css; aquí va lo propio:
+   pestañas, tabla de reservas (que en celular se vuelve tarjetas),
+   lista de platos y de promociones.
+   ========================================================================== */
+
+/* ---------- 1. PESTAÑAS (Flexbox) ---------- */
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 34px 0 20px;
+  padding: 6px;
+  background: var(--pa-cream-deep);
+  border-radius: 12px;
+}
+.admin-tab {
+  flex: 1 1 160px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--pa-ink-soft);
+  font: 700 0.9rem var(--font-text);
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+.admin-tab:hover { transform: translateY(-2px); color: var(--pa-ink-warm); }
+.admin-tab.active { background: #14110e; color: var(--arg-celeste); box-shadow: var(--shadow-sm); }
+.admin-tab i { margin-right: 6px; }
+.tab-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: #e5484d;
+  color: #fff;
+  font-size: 0.7rem;
+}
+.admin-panel { animation: fadeUp 0.4s ease both; }
+
+/* ---------- 2. TABLA DE RESERVAS ---------- */
+.filtro-fecha { display: flex; align-items: center; gap: 8px; color: var(--pa-ink-soft); font-size: 0.8rem; font-weight: 700; }
+.filtro-fecha input,
+.buscador {
+  padding: 7px 12px;
+  border: 1px solid #ddd2c5;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--pa-ink-warm);
+  font: 500 0.85rem var(--font-text);
+}
+.tabla-scroll { overflow-x: auto; }
+.tabla-admin { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.tabla-admin thead th {
+  padding: 12px 14px;
+  background: #14110e;
+  color: var(--arg-celeste);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-align: left;
+  text-transform: uppercase;
+}
+.tabla-admin thead th:first-child { border-radius: 10px 0 0 0; }
+.tabla-admin thead th:last-child { border-radius: 0 10px 0 0; }
+.tabla-admin tbody td { padding: 14px; border-bottom: 1px solid var(--pa-cream-line); color: var(--pa-ink-soft); vertical-align: top; }
+.tabla-admin tbody tr { transition: background 0.2s ease; }
+.tabla-admin tbody tr:nth-child(even) { background: var(--pa-cream-soft); }
+.tabla-admin tbody tr:hover { background: rgba(117, 197, 240, 0.08); }
+.tabla-admin strong { color: var(--pa-ink-warm); }
+.tabla-admin small { display: block; color: var(--pa-muted); }
+.tabla-admin .cargando, .tabla-admin .vacio { border: 0; }
+.acciones-reserva { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn-accion {
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font: 700 0.75rem var(--font-text);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-accion:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); }
+.btn-accion:disabled { opacity: 0.5; cursor: wait; transform: none; }
+.btn-confirmar { background: #16a34a; color: #fff; }
+.btn-rechazar { background: #fff; border-color: #dc2626; color: #dc2626; }
+.btn-eliminar { background: none; color: #b91c1c; padding: 6px 8px; }
+
+/* ---------- 3. LISTA DE PLATOS ---------- */
+.lista-platos, .lista-promos { display: grid; gap: 10px; max-height: 640px; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.plato-item {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--pa-cream-line);
+  border-radius: 12px;
+  background: #fff;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+.plato-item:hover { border-color: var(--arg-celeste-dark); }
+.plato-item.oculto { opacity: 0.55; }
+.plato-item img, .plato-sin-foto { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; background: var(--pa-cream-deep); }
+.plato-sin-foto { display: grid; place-items: center; color: var(--pa-muted); font-size: 1.3rem; }
+.plato-item h3 { margin: 0; color: var(--pa-ink-warm); font-size: 0.95rem; font-weight: 800; }
+.plato-item p { margin: 2px 0 0; color: var(--pa-muted); font-size: 0.75rem; text-transform: capitalize; }
+.plato-controles { display: flex; align-items: center; gap: 8px; }
+.plato-controles input[type="number"] { width: 86px; padding: 6px 8px; border: 1px solid #ddd2c5; border-radius: 8px; font: 600 0.85rem var(--font-text); }
+.plato-controles input.guardado { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2); transition: box-shadow 0.3s ease; }
+.preview-foto { width: 100%; max-height: 160px; margin-top: 10px; border-radius: 10px; object-fit: cover; }
+
+/* Interruptor (switch) hecho solo con CSS */
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 1; }
+.switch span { position: absolute; inset: 0; border-radius: 22px; background: #cfc6bb; transition: background 0.25s ease; }
+.switch span::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.25s ease;
+}
+.switch input:checked + span { background: var(--arg-celeste-dark); }
+.switch input:checked + span::before { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--arg-celeste-dark); outline-offset: 2px; }
+
+/* ---------- 4. PROMOCIONES ---------- */
+.form-cuenta select,
+.form-cuenta textarea,
+.form-cuenta input[type="number"],
+.form-cuenta input[type="date"] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid #ddd2c5;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--pa-ink-warm);
+  font: 500 0.9rem var(--font-text);
+}
+.form-cuenta textarea { resize: vertical; }
+.nota-promo { margin: 14px 0; padding: 10px 12px; border-radius: 8px; background: rgba(117, 197, 240, 0.12); color: var(--pa-ink-soft); font-size: 0.8rem; }
+.nota-promo i { color: var(--pa-blue-ink); margin-right: 4px; }
+.promo-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  border: 1px solid var(--pa-cream-line);
+  border-left: 4px solid var(--arg-celeste);
+  border-radius: 12px;
+  background: #fff;
+}
+.promo-item.inactiva { border-left-color: #cfc6bb; opacity: 0.6; }
+.promo-item > div { flex: 1; }
+.promo-item h3 { margin: 0 0 4px; color: var(--pa-ink-warm); font-size: 1rem; font-weight: 800; }
+.promo-item p { margin: 0; color: var(--pa-ink-soft); font-size: 0.85rem; }
+.promo-item small { display: block; margin-top: 6px; color: var(--pa-muted); font-size: 0.72rem; }
+
+/* ---------- 5. RESPONSIVE: la tabla se vuelve tarjetas (data-label) ---------- */
+@media (max-width: 767.98px) {
+  .tabla-admin thead { position: absolute; left: -9999px; }
+  .tabla-admin, .tabla-admin tbody, .tabla-admin tr, .tabla-admin td { display: block; width: 100%; }
+  .tabla-admin tbody tr { margin-bottom: 14px; border: 1px solid var(--pa-cream-line); border-radius: 12px; overflow: hidden; }
+  .tabla-admin tbody td { display: grid; grid-template-columns: 96px 1fr; gap: 10px; padding: 10px 14px; }
+  .tabla-admin tbody td::before {
+    content: attr(data-label);
+    color: var(--pa-ink-warm);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .tabla-admin tbody td.cargando, .tabla-admin tbody td.vacio { display: block; }
+  .tabla-admin tbody td.cargando::before, .tabla-admin tbody td.vacio::before { content: none; }
+  .plato-item { grid-template-columns: 48px 1fr; }
+  .plato-controles { grid-column: 1 / -1; justify-content: space-between; }
+}

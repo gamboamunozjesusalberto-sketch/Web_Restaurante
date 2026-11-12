@@ -6,10 +6,11 @@ https://gamboamunozjesusalberto-sketch.github.io/Web_Restaurante/
 Las cuentas, las reservas y las notificaciones usan **Supabase** (base de datos PostgreSQL + login), conectado directo desde el JavaScript.
 
 ## Estructura
-- `index.html`, `menu.html`, `nosotros.html`, `contacto.html`, `login.html`, `cuenta.html` (perfil del cliente)
+- `index.html`, `menu.html`, `nosotros.html`, `contacto.html`, `login.html`, `cuenta.html` (perfil del cliente), `admin.html` (panel de administrador)
 - `css/variables.css` (colores y tokens) · `components.css` (navbar y footer compartidos) · `paginas.css` (capa común de páginas internas) · un CSS por página
-- `js/supabase-config.js` (URL y clave pública de Supabase) · `sesion.js` (sesión y menú de la cuenta en la barra) · `main.js` (común) · `landing.js` · `menu.js` · `contacto.js` (reservas) · `login.js` (login y registro) · `cuenta.js` (mi cuenta)
+- `js/supabase-config.js` (URL y clave pública de Supabase) · `sesion.js` (sesión y menú de la cuenta en la barra) · `main.js` (común) · `landing.js` · `menu.js` · `contacto.js` (reservas) · `login.js` (login y registro) · `cuenta.js` (mi cuenta) · `admin.js` (panel de administrador)
 - `supabase/esquema.sql` → tablas, reglas de seguridad (RLS) y triggers de la base de datos
+- `supabase/02-avisos-reservas.sql` → aviso al cliente cuando se confirma o rechaza su reserva (ya incluido en esquema.sql para proyectos nuevos)
 - `images/` → todas las fotos del proyecto (incluye `images/nosotros/`)
 
 ## Notas

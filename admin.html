@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Panel de administrador de Punto Asado: reservas, carta y promociones." />
+  <meta name="robots" content="noindex" />
+  <title>Panel de administrador - Punto Asado (Ica)</title>
+  <link rel="icon" href="images/logo.jpeg" />
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <!-- Estilos: variables, componentes y base de páginas internas + css de la cuenta (tarjetas) + css propio del admin -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/paginas.css" />
+  <link rel="stylesheet" href="css/cuenta.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="inner-page page-cuenta page-admin">
+
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- ========== NAVBAR (igual en todas las páginas) ========== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-rustic sticky-top">
+    <div class="container-fluid px-3 px-md-4 px-lg-5">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="images/logo_blanco.png" alt="Logo Punto Asado" class="brand-logo-nav" />
+        <span class="brand-slogan-nav">Auténticas<br> Parrillas Argentinas</span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navPuntoAsado" aria-controls="navPuntoAsado" aria-expanded="false" aria-label="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navPuntoAsado">
+        <ul class="navbar-nav align-items-lg-center gap-lg-3">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="menu.html">Carta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="nosotros.html">Nosotros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contacto.html">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-login-nav" href="login.html"><i class="bi bi-person-circle me-1"></i>Ingresar</a>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <a href="contacto.html#reserva" class="btn btn-celeste btn-sm px-4 py-2 text-uppercase">Reservar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- hero -->
+  <header class="page-hero page-hero-corto">
+    <div class="page-hero-bg" style="background-image: url('images/maestro_asador_brasas_1788925439021.jpg');"></div>
+    <div class="page-hero-inner">
+      <ol class="breadcrumb-pa">
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Panel de administrador</li>
+      </ol>
+      <span class="page-kicker">Solo personal de Punto Asado</span>
+      <h1 class="page-title">Panel de <span>administrador</span></h1>
+      <p class="page-lead">Confirma reservas, actualiza la carta y publica promociones para tus clientes.</p>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="section-pa" aria-label="Gestión del restaurante">
+      <div class="container">
+
+        <!-- RESUMEN -->
+        <ul class="resumen-grid">
+          <li class="resumen-item reveal" style="--delay: .05s"><i class="bi bi-hourglass-split" aria-hidden="true"></i><strong id="r-pendientes">0</strong><span>Reservas por confirmar</span></li>
+          <li class="resumen-item reveal" style="--delay: .1s"><i class="bi bi-calendar-day" aria-hidden="true"></i><strong id="r-hoy">0</strong><span>Reservas para hoy</span></li>
+          <li class="resumen-item reveal" style="--delay: .15s"><i class="bi bi-people" aria-hidden="true"></i><strong id="r-personas">0</strong><span>Personas esperadas hoy</span></li>
+          <li class="resumen-item reveal" style="--delay: .2s"><i class="bi bi-person-check" aria-hidden="true"></i><strong id="r-clientes">0</strong><span>Clientes registrados</span></li>
+        </ul>
+
+        <!-- PESTAÑAS -->
+        <div class="admin-tabs" role="tablist" aria-label="Secciones del panel">
+          <button class="admin-tab active" role="tab" aria-selected="true" aria-controls="panel-reservas" id="tab-reservas" type="button"><i class="bi bi-calendar-check"></i> Reservas <span class="tab-badge" id="tab-badge-reservas" hidden></span></button>
+          <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-carta" id="tab-carta" type="button"><i class="bi bi-journal-text"></i> Carta</button>
+          <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-promos" id="tab-promos" type="button"><i class="bi bi-megaphone"></i> Promociones</button>
+        </div>
+
+        <!-- ========== RESERVAS ========== -->
+        <div class="tarjeta-cuenta admin-panel" id="panel-reservas" role="tabpanel" aria-labelledby="tab-reservas">
+          <div class="tarjeta-cabecera">
+            <h2 class="tarjeta-titulo"><i class="bi bi-calendar3" aria-hidden="true"></i> Reservas</h2>
+            <label class="filtro-fecha">Día <input type="date" id="filtro-dia"></label>
+          </div>
+          <div class="filtro-reservas" role="group" aria-label="Filtrar por estado">
+            <button type="button" class="filtro-btn active" data-estado="pendiente">Pendientes</button>
+            <button type="button" class="filtro-btn" data-estado="confirmada">Confirmadas</button>
+            <button type="button" class="filtro-btn" data-estado="rechazada">Rechazadas</button>
+            <button type="button" class="filtro-btn" data-estado="cancelada">Canceladas</button>
+            <button type="button" class="filtro-btn" data-estado="todas">Todas</button>
+          </div>
+          <div class="tabla-scroll">
+            <table class="tabla-admin">
+              <caption class="visually-hidden">Reservas de los clientes</caption>
+              <thead>
+                <tr><th scope="col">Fecha</th><th scope="col">Cliente</th><th scope="col">Personas</th><th scope="col">Detalle</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr>
+              </thead>
+              <tbody id="tabla-reservas">
+                <tr><td colspan="6" class="cargando">Cargando reservas…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ========== CARTA ========== -->
+        <div class="admin-panel" id="panel-carta" role="tabpanel" aria-labelledby="tab-carta" hidden>
+          <div class="row g-4">
+            <div class="col-lg-4">
+              <form class="tarjeta-cuenta form-cuenta" id="form-plato">
+                <h2 class="tarjeta-titulo"><i class="bi bi-plus-circle" aria-hidden="true"></i> Nuevo plato</h2>
+                <label for="p-nombre">Nombre</label>
+                <input type="text" id="p-nombre" name="nombre" minlength="2" maxlength="80" required placeholder="Ej. Bife de chorizo">
+                <label for="p-categoria">Categoría</label>
+                <select id="p-categoria" name="categoria">
+                  <option value="entradas">Entradas</option>
+                  <option value="parrilla" selected>Parrilla</option>
+                  <option value="platos">Nuestros platos</option>
+                  <option value="postres">Postres</option>
+                  <option value="vinos">Vinos</option>
+                  <option value="bebidas">Bebidas</option>
+                </select>
+                <label for="p-precio">Precio (S/)</label>
+                <input type="number" id="p-precio" name="precio" min="0" step="0.5" placeholder="Vacío = consultar precio">
+                <label for="p-descripcion">Descripción</label>
+                <textarea id="p-descripcion" name="descripcion" rows="3" maxlength="300"></textarea>
+                <label for="p-imagen">Foto</label>
+                <input type="text" id="p-imagen" name="imagen" list="lista-imagenes" placeholder="images/...">
+                <datalist id="lista-imagenes">
+          <option value="images/Fotoo premio ahumado.png"></option>
+          <option value="images/asador.jpg"></option>
+          <option value="images/bife.jpg"></option>
+          <option value="images/bife_ancho_angus.jpeg"></option>
+          <option value="images/bife_chorizo_angus_1788925448379.jpg"></option>
+          <option value="images/bife_chorizo_steak_1788923227184.jpg"></option>
+          <option value="images/bodega_pampas.png"></option>
+          <option value="images/colita_angus.jpeg"></option>
+          <option value="images/durigutti.jpeg"></option>
+          <option value="images/empanadasAngus.jpeg"></option>
+          <option value="images/empanadasArgentinas.jpeg"></option>
+          <option value="images/entrana.jpg"></option>
+          <option value="images/entrana_a_la_parrilla_1788925735942.jpg"></option>
+          <option value="images/gran_parrillada_mesa_1788925458012.jpg"></option>
+          <option value="images/inicio_clienta.jpg"></option>
+          <option value="images/inicio_clientes.jpg"></option>
+          <option value="images/inicio_cortecarne.jpg"></option>
+          <option value="images/inicio_cortes.jpg"></option>
+          <option value="images/inicio_empanadas.jpg"></option>
+          <option value="images/inicio_lamb.jpg"></option>
+          <option value="images/inicio_mesas.jpg"></option>
+          <option value="images/inicio_parrilla.jpg"></option>
+          <option value="images/inicio_pollo.jpg"></option>
+          <option value="images/maestro_asador_brasas_1788925439021.jpg"></option>
+          <option value="images/malbec_pampas.webp"></option>
+          <option value="images/matambrito.jpeg"></option>
+          <option value="images/mesas interior 2.png"></option>
+          <option value="images/mesas interior.png"></option>
+          <option value="images/milanesa_argentina.webp"></option>
+          <option value="images/milanesa_napolitana.jpeg"></option>
+          <option value="images/minimalista.webp"></option>
+          <option value="images/mollejas_de_Res.jpeg"></option>
+          <option value="images/nostrum_tacama.jpeg"></option>
+          <option value="images/panceta.jpeg"></option>
+          <option value="images/panqueque_dulce_leche_1788925769110.jpg"></option>
+          <option value="images/papasPatagonia.jpeg"></option>
+          <option value="images/parrila interior.png"></option>
+          <option value="images/parrilla-reserva.jpg"></option>
+          <option value="images/parrilla_para_cuatro.jpeg"></option>
+          <option value="images/parrilla_para_dos.jpg"></option>
+          <option value="images/parrillada.jpg"></option>
+          <option value="images/pastel_de_papa.jpg"></option>
+          <option value="images/picana_Angus.jpeg"></option>
+          <option value="images/pollo_limon.jpg"></option>
+          <option value="images/pollo_punto_Asado.jpg"></option>
+          <option value="images/postre.jpg"></option>
+          <option value="images/premio open fire.png"></option>
+          <option value="images/provoleta.jpg"></option>
+          <option value="images/provoleta_parrillera_1788925752716.jpg"></option>
+          <option value="images/punto_asado_grill_1788923212478.jpg"></option>
+          <option value="images/restaurante exterior.png"></option>
+          <option value="images/restaurante_salon_ica_1788925429542.jpg"></option>
+          <option value="images/salon.jpg"></option>
+          <option value="images/suprema_napolitana.webp"></option>
+          <option value="images/tomahawk_angus.jpg"></option>
+          <option value="images/tonuz_tacama.png"></option>
+          <option value="images/trilogia_chorizo.jpeg"></option>
+          <option value="images/vacaSagrada.jpeg"></option>
+          <option value="images/zapa.jpeg"></option>
+          <option value="images/zona parrilas aire libre.jpg"></option>
+                </datalist>
+                <img class="preview-foto" id="preview-foto" alt="Vista previa" hidden>
+                <button type="submit" class="btn btn-celeste px-4 py-2 mt-3 w-100">Agregar a la carta</button>
+                <p class="form-feedback" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+            <div class="col-lg-8">
+              <div class="tarjeta-cuenta">
+                <div class="tarjeta-cabecera">
+                  <h2 class="tarjeta-titulo"><i class="bi bi-journal-text" aria-hidden="true"></i> Platos en la carta</h2>
+                  <input type="search" class="buscador" id="buscar-plato" placeholder="Buscar plato…" aria-label="Buscar plato">
+                </div>
+                <ul class="lista-platos" id="lista-platos"><li class="cargando">Cargando carta…</li></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== PROMOCIONES ========== -->
+        <div class="admin-panel" id="panel-promos" role="tabpanel" aria-labelledby="tab-promos" hidden>
+          <div class="row g-4">
+            <div class="col-lg-5">
+              <form class="tarjeta-cuenta form-cuenta" id="form-promo">
+                <h2 class="tarjeta-titulo"><i class="bi bi-megaphone" aria-hidden="true"></i> Nueva promoción</h2>
+                <label for="pr-titulo">Título</label>
+                <input type="text" id="pr-titulo" name="titulo" minlength="3" maxlength="80" required placeholder="Ej. 2x1 en Bife de Chorizo">
+                <label for="pr-descripcion">Descripción</label>
+                <textarea id="pr-descripcion" name="descripcion" rows="3" maxlength="400" required placeholder="Ej. Solo este sábado de 12 a 4 p. m."></textarea>
+                <label for="pr-hasta">Válida hasta (opcional)</label>
+                <input type="date" id="pr-hasta" name="hasta">
+                <p class="nota-promo"><i class="bi bi-bell"></i> Al publicarla, todos los clientes que aceptaron promociones reciben una notificación.</p>
+                <button type="submit" class="btn btn-celeste px-4 py-2 w-100">Publicar promoción</button>
+                <p class="form-feedback" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+            <div class="col-lg-7">
+              <div class="tarjeta-cuenta">
+                <h2 class="tarjeta-titulo"><i class="bi bi-list-stars" aria-hidden="true"></i> Promociones publicadas</h2>
+                <ul class="lista-promos" id="lista-promos"><li class="cargando">Cargando…</li></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER (igual en todas las páginas) ========== -->
+  <footer class="footer-rustic">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Columna 1: Marca y dirección -->
+        <div class="col-lg-4 col-md-6">
+          <h5>Punto Asado Parrilla Argentina</h5>
+          <p class="mb-2">
+            Av. La Angostura 396<br />
+            Residencial La Angostura &bull; Ica, Perú
+          </p>
+          <p class="small text-secondary">
+            Tradición, técnica y pasión por el asado argentino al carbón. Cortes seleccionados para compartir en familia y con amigos.
+          </p>
+        </div>
+
+        <!-- Columna 2: Enlaces rápidos -->
+        <div class="col-lg-2 col-md-6">
+          <h5>Navegación</h5>
+          <ul>
+            <li class="mb-1"><a href="index.html">Inicio</a></li>
+            <li class="mb-1"><a href="menu.html">Nuestra Carta</a></li>
+            <li class="mb-1"><a href="nosotros.html">Sobre Nosotros</a></li>
+            <li class="mb-1"><a href="contacto.html">Contacto y Reservas</a></li>
+            <li class="mb-1"><a href="login.html">Ingresar</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Información y horarios (mismos horarios que contacto.html) -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Contacto &amp; Horarios</h5>
+          <p class="mb-1">
+            <i class="bi bi-telephone-fill topbar-icon"></i>
+            <a href="tel:+51919293435">+51 919 293 435</a>
+          </p>
+          <p class="mb-1">
+            <i class="bi bi-envelope-fill topbar-icon"></i>
+            <a href="mailto:puntoasado@hotmail.com">puntoasado@hotmail.com</a>
+          </p>
+          <p class="small text-secondary mt-2">
+            <strong>Lun a Vie:</strong> 6:00 p. m. - 11:00 p. m.<br />
+            <strong>Sáb y Dom:</strong> 12:00 p. m. - 11:00 p. m.
+          </p>
+        </div>
+
+        <!-- Columna 4: Redes sociales -->
+        <div class="col-lg-3 col-md-6">
+          <h5>Síguenos</h5>
+          <p class="small text-secondary mb-3">
+            Conoce nuestras promociones de la semana y nuevos cortes a la parrilla:
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://facebook.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Facebook Punto Asado">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com/puntoasadoica" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Instagram Punto Asado">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/51919293435" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="WhatsApp Punto Asado">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+            <a href="contacto.html#ubicacion" class="social-circle-btn" aria-label="Ubicación y Horarios">
+              <i class="bi bi-geo-alt-fill"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de copyright -->
+      <div class="footer-bottom-bar">
+        <p class="mb-0">
+          &copy; <span data-year>2026</span> Restaurante Punto Asado (Ica). Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- JavaScript externo modular (sin JavaScript en línea) -->
+  <!-- Supabase (cuentas y base de datos) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/admin.js"></script>
+
+</body>
+</html>

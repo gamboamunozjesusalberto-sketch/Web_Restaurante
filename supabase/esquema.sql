@@ -177,6 +177,33 @@ create trigger al_publicar_promocion
   for each row execute function public.notificar_promocion();
 
 
+-- Aviso al cliente cuando el admin confirma o rechaza su reserva
+create or replace function public.avisar_estado_reserva()
+returns trigger
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if new.estado is distinct from old.estado and new.estado in ('confirmada', 'rechazada') then
+    insert into public.notificaciones (usuario_id, titulo, mensaje)
+    values (
+      new.usuario_id,
+      case when new.estado = 'confirmada' then 'Tu reserva está confirmada' else 'Tu reserva no pudo confirmarse' end,
+      format('Reserva del %s a las %s para %s %s: %s',
+             to_char(new.fecha, 'DD/MM/YYYY'), to_char(new.hora, 'HH24:MI'),
+             new.personas, case when new.personas = 1 then 'persona' else 'personas' end,
+             case when new.estado = 'confirmada' then '¡te esperamos!' else 'escríbenos por WhatsApp para buscar otro horario.' end)
+    );
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists al_cambiar_estado_reserva on public.reservas;
+create trigger al_cambiar_estado_reserva
+  after update of estado on public.reservas
+  for each row execute function public.avisar_estado_reserva();
+
+
 -- ---------- 3. SEGURIDAD: RLS Y PERMISOS ----------
 
 alter table public.perfiles       enable row level security;
