@@ -40,17 +40,65 @@ document.addEventListener('DOMContentLoaded', () => {
   const feedback = document.getElementById('form-feedback');
   if (!form) return;
 
-  // no permitir fechas pasadas ni más de 60 días adelante //
+  // fecha y hora son campos ocultos: se llenan al tocar los botones de día y hora
   const fechaInput = form.elements.fecha;
   const horaInput = form.elements.hora;
-  const hoy = new Date(ahora.getTime() - ahora.getTimezoneOffset() * 60000);
-  const limite = new Date(hoy.getTime() + 60 * 86400000);
-  fechaInput.min = hoy.toISOString().split('T')[0];
-  fechaInput.max = limite.toISOString().split('T')[0];
+  const DIAS_A_MOSTRAR = 30; // la base de datos acepta hasta 60 días adelante
+
+  // fecha local en formato AAAA-MM-DD (sin pasar por UTC)
+  const aISO = (f) => `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
+  const hoyISO = aISO(ahora);
+
+  // ---------- días en tarjetas (en vez del calendario del navegador) ----------
+  const contenedorDias = document.getElementById('dias-reserva');
+
+  function pintarDias() {
+    contenedorDias.innerHTML = '';
+    for (let i = 0; i < DIAS_A_MOSTRAR; i++) {
+      const f = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate() + i, 12);
+      const boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'dia';
+      boton.dataset.fecha = aISO(f);
+      boton.setAttribute('role', 'radio');
+      boton.setAttribute('aria-checked', 'false');
+      const nombre = i === 0 ? 'Hoy' : i === 1 ? 'Mañana' : f.toLocaleDateString('es-PE', { weekday: 'short' }).replace('.', '');
+      const mes = f.toLocaleDateString('es-PE', { month: 'short' }).replace('.', '');
+      boton.innerHTML = `<span class="dia-nombre">${nombre}</span><strong>${f.getDate()}</strong><span class="dia-mes">${mes}</span>`;
+      boton.setAttribute('aria-label', f.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' }));
+      // hoy se apaga si ya no quedan horas
+      if (i === 0 && !horariosDelDia(boton.dataset.fecha).some((h) => !horaPasada(h))) boton.disabled = true;
+      contenedorDias.append(boton);
+    }
+  }
+
+  contenedorDias.addEventListener('click', (e) => {
+    const boton = e.target.closest('.dia');
+    if (!boton || boton.disabled) return;
+    contenedorDias.querySelectorAll('.dia').forEach((b) => {
+      b.classList.toggle('activo', b === boton);
+      b.setAttribute('aria-checked', b === boton);
+    });
+    fechaInput.value = boton.dataset.fecha;
+    contenedorDias.classList.remove('campo-error');
+    pintarHorarios();
+  });
+
+  // flechas para desplazar la fila de días
+  document.querySelectorAll('.dias-flecha').forEach((flecha) => {
+    flecha.addEventListener('click', () => {
+      contenedorDias.scrollBy({ left: Number(flecha.dataset.mover) * contenedorDias.clientWidth * 0.8, behavior: 'smooth' });
+    });
+  });
+
+  function horaPasada(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m <= ahora.getHours() * 60 + ahora.getMinutes();
+  }
 
   // ---------- horarios en botones (en vez del reloj del navegador) ----------
   // Lunes a viernes de 18:00 a 22:30 · sábado y domingo de 12:00 a 22:30, cada 30 minutos.
-  const contenedorHoras = document.getElementById('horarios');
+  const contenedorHoras = document.getElementById('horas-reserva');
 
   function horariosDelDia(fechaISO) {
     const dia = new Date(fechaISO + 'T12:00').getDay();
@@ -71,11 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
     horaInput.value = '';
     contenedorHoras.innerHTML = '';
     if (!fechaInput.value) {
-      contenedorHoras.innerHTML = '<p class="horarios-vacio"><i class="bi bi-calendar-event" aria-hidden="true"></i> Primero elige la fecha para ver los horarios.</p>';
+      contenedorHoras.innerHTML = '<p class="horarios-vacio"><i class="bi bi-calendar-event" aria-hidden="true"></i> Primero elige el día para ver los horarios.</p>';
       return;
     }
-    const esHoy = fechaInput.value === fechaInput.min;
-    const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
+    const esHoy = fechaInput.value === hoyISO;
     horariosDelDia(fechaInput.value).forEach((hhmm) => {
       const [h, m] = hhmm.split(':').map(Number);
       const boton = document.createElement('button');
@@ -86,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
       boton.setAttribute('aria-checked', 'false');
       boton.dataset.hora = hhmm;
       // si es hoy, las horas que ya pasaron no se pueden elegir
-      if (esHoy && h * 60 + m <= minutosAhora) boton.disabled = true;
+      if (esHoy && horaPasada(hhmm)) boton.disabled = true;
       contenedorHoras.append(boton);
     });
     if (!contenedorHoras.querySelector('.horario:not(:disabled)')) {
@@ -108,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     contenedorHoras.classList.remove('campo-error');
   });
 
-  fechaInput.addEventListener('change', pintarHorarios);
+  pintarDias();
 
   // contador de personas con botones − y +
   document.querySelectorAll('[data-contador]').forEach((contador) => {
@@ -131,13 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // validación nativa con mensaje propio //
   function formularioValido() {
     form.querySelectorAll('.campo-error').forEach((el) => el.classList.remove('campo-error'));
-    // mensajes propios en español para la fecha
-    fechaInput.setCustomValidity(
-      fechaInput.validity.rangeUnderflow ? 'No se puede reservar en una fecha pasada'
-        : fechaInput.validity.rangeOverflow ? 'Solo se puede reservar hasta 60 días antes' : ''
-    );
-    // la hora es un campo oculto: se revisa a mano
-    if (fechaInput.validity.valid && !horaInput.value) {
+    // día y hora son campos ocultos: se revisan a mano
+    if (!fechaInput.value) {
+      contenedorDias.classList.add('campo-error');
+      contenedorDias.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      mostrar('Elige el día de tu reserva.');
+      return false;
+    }
+    if (!horaInput.value) {
       contenedorHoras.classList.add('campo-error');
       contenedorHoras.scrollIntoView({ behavior: 'smooth', block: 'center' });
       mostrar('Elige una hora para tu reserva.');
@@ -237,6 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     form.elements.fecha.value = '';
+    pintarDias();
     pintarHorarios();
     form.elements.mensaje.value = '';
     feedback.classList.add('ok');

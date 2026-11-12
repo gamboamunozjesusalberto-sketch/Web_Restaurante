@@ -361,6 +361,57 @@
 .page-contacto .formulario-reserva input[readonly] { background: var(--pa-cream-soft); color: var(--pa-muted); cursor: not-allowed; }
 .page-contacto .form-feedback a { color: inherit; text-decoration: underline; }
 
+/* días en tarjetas (versión final: reemplaza al calendario del navegador).
+   Fila que se desliza con el dedo o con las flechas */
+.page-contacto .dias-wrap { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; gap: 6px; }
+.page-contacto .dias {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+.page-contacto .dias::-webkit-scrollbar { display: none; }
+.page-contacto .dias.campo-error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12); }
+.page-contacto .dia {
+  flex: 0 0 74px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  border: 1px solid #ddd2c5;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--pa-ink-soft);
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.page-contacto .dia strong { font-size: 1.35rem; line-height: 1.1; color: var(--pa-ink-warm); }
+.page-contacto .dia-nombre,
+.page-contacto .dia-mes { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.page-contacto .dia:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--arg-celeste-dark); }
+.page-contacto .dia.activo { background: #14110e; border-color: #14110e; color: var(--arg-celeste); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18); }
+.page-contacto .dia.activo strong { color: #fff; }
+.page-contacto .dia:disabled { opacity: 0.35; cursor: not-allowed; }
+.page-contacto .dias-flecha {
+  width: 36px; height: 36px;
+  border: 1px solid #ddd2c5;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--pa-ink-soft);
+  cursor: pointer;
+}
+.page-contacto .dias-flecha:hover { background: #14110e; color: var(--arg-celeste); }
+@media (max-width: 575.98px) {
+  .page-contacto .dias-wrap { grid-template-columns: 1fr; }
+  .page-contacto .dias-flecha { display: none; }
+}
+
 /* horarios en botones (versión final: reemplaza al reloj del navegador) */
 .page-contacto .horarios {
   display: grid;
@@ -385,6 +436,7 @@
 }
 .page-contacto .horario:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--arg-celeste-dark); color: var(--pa-ink-warm); }
 .page-contacto .horario.activo { background: #14110e; border-color: #14110e; color: var(--arg-celeste); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18); }
+.page-contacto .horario.activo:hover { color: var(--arg-celeste); }
 .page-contacto .horario:disabled { opacity: 0.35; text-decoration: line-through; cursor: not-allowed; }
 
 /* contador de personas: botones − y + */

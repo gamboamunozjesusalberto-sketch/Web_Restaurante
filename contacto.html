@@ -17,10 +17,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css propio de contacto -->
-  <link rel="stylesheet" href="css/variables.css?v=4" />
-  <link rel="stylesheet" href="css/components.css?v=4" />
-  <link rel="stylesheet" href="css/paginas.css?v=4" />
-  <link rel="stylesheet" href="css/contacto.css?v=4" />
+  <link rel="stylesheet" href="css/variables.css?v=5" />
+  <link rel="stylesheet" href="css/components.css?v=5" />
+  <link rel="stylesheet" href="css/paginas.css?v=5" />
+  <link rel="stylesheet" href="css/contacto.css?v=5" />
 </head>
 <body class="inner-page page-contacto">
 
@@ -219,10 +219,30 @@
                   <input type="tel" id="r-telefono" name="telefono" autocomplete="tel" inputmode="tel" placeholder="Ej. 919 293 435" pattern="[0-9+\s\-]{7,15}" required>
                 </div>
 
-                <div class="col-md-6">
-                  <label for="r-fecha">Fecha</label>
-                  <input type="date" id="r-fecha" name="fecha" required>
+                <!-- Día: tarjetas con los próximos días (las crea js/contacto.js). Reemplaza al calendario del navegador -->
+                <div class="col-12">
+                  <fieldset>
+                    <legend>Día</legend>
+                    <input type="hidden" id="r-fecha" name="fecha">
+                    <div class="dias-wrap">
+                      <button type="button" class="dias-flecha" data-mover="-1" aria-label="Días anteriores"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+                      <div class="dias" id="dias-reserva" role="radiogroup" aria-label="Días disponibles"></div>
+                      <button type="button" class="dias-flecha" data-mover="1" aria-label="Días siguientes"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+                    </div>
+                  </fieldset>
                 </div>
+
+                <!-- Hora: botones con los horarios del día elegido (los crea js/contacto.js) -->
+                <div class="col-12">
+                  <fieldset>
+                    <legend>Hora</legend>
+                    <input type="hidden" id="r-hora" name="hora">
+                    <div class="horarios" id="horas-reserva" role="radiogroup" aria-label="Horarios disponibles">
+                      <p class="horarios-vacio"><i class="bi bi-calendar-event" aria-hidden="true"></i> Primero elige el día para ver los horarios.</p>
+                    </div>
+                  </fieldset>
+                </div>
+
                 <div class="col-md-6">
                   <label for="r-personas">Número de personas</label>
                   <div class="contador" data-contador>
@@ -231,17 +251,7 @@
                     <button type="button" class="contador-btn" data-paso="1" aria-label="Una persona más">+</button>
                   </div>
                 </div>
-
-                <!-- Hora: botones con los horarios del día elegido (los crea js/contacto.js) -->
-                <div class="col-12">
-                  <fieldset>
-                    <legend>Hora</legend>
-                    <input type="hidden" id="r-hora" name="hora">
-                    <div class="horarios" id="horarios" role="radiogroup" aria-label="Horarios disponibles">
-                      <p class="horarios-vacio"><i class="bi bi-calendar-event" aria-hidden="true"></i> Primero elige la fecha para ver los horarios.</p>
-                    </div>
-                  </fieldset>
-                </div>
+                <div class="col-md-6"></div>
 
                 <div class="col-md-6">
                   <fieldset>
@@ -376,10 +386,10 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=4"></script>
-  <script src="js/sesion.js?v=4"></script>
-  <script src="js/main.js?v=4"></script>
-  <script src="js/contacto.js?v=4"></script>
+  <script src="js/supabase-config.js?v=5"></script>
+  <script src="js/sesion.js?v=5"></script>
+  <script src="js/main.js?v=5"></script>
+  <script src="js/contacto.js?v=5"></script>
 
 </body>
 </html>
