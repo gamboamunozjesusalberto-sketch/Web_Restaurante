@@ -279,3 +279,51 @@
   font-size: 0.82rem;
   color: #88817b;
 }
+
+/* ==========================================================================
+   MENÚ DE LA CUENTA (aparece en lugar de "Ingresar" al iniciar sesión)
+   Lo crea js/sesion.js.
+   ========================================================================== */
+.nav-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #e5484d;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  animation: badge-pulso 2s ease-in-out infinite;
+}
+@keyframes badge-pulso {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.6); }
+  50%      { box-shadow: 0 0 0 6px rgba(229, 72, 77, 0); }
+}
+.dropdown-cuenta {
+  min-width: 220px;
+  padding: 8px;
+  border: 1px solid var(--arg-border);
+  border-radius: 10px;
+  background: var(--arg-dark-charcoal);
+  box-shadow: var(--shadow-md);
+}
+.dropdown-cuenta .dropdown-item {
+  padding: 9px 12px;
+  border-radius: 6px;
+  color: var(--arg-text-light);
+  font-size: 0.85rem;
+  transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+}
+.dropdown-cuenta .dropdown-item:hover,
+.dropdown-cuenta .dropdown-item:focus {
+  padding-left: 16px;
+  background: rgba(117, 197, 240, 0.12);
+  color: var(--arg-celeste);
+}
+.dropdown-cuenta .dropdown-divider { border-color: var(--arg-border-subtle); }
+@media (prefers-reduced-motion: reduce) {
+  .nav-badge { animation: none; }
+}

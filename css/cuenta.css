@@ -1,0 +1,188 @@
+/* ==========================================================================
+   PUNTO ASADO | MI CUENTA (cuenta.html)
+   El encabezado, las secciones y las animaciones vienen de paginas.css.
+   Aquí solo está lo propio del perfil del cliente.
+   ========================================================================== */
+
+.page-cuenta .page-hero-corto { min-height: 340px; }
+
+/* ---------- 1. TARJETAS DE RESUMEN (Grid) ---------- */
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.resumen-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 16px;
+  align-items: center;
+  padding: 22px 24px;
+  background: var(--pa-paper);
+  border: 1px solid var(--pa-cream-line);
+  border-left: 4px solid var(--arg-celeste);
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(60, 40, 20, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.resumen-item:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(60, 40, 20, 0.14); }
+.resumen-item i { grid-row: span 2; font-size: 1.9rem; color: var(--pa-blue-ink); }
+.resumen-item strong { color: var(--pa-ink-warm); font-size: 1.3rem; font-weight: 800; line-height: 1.2; }
+.resumen-item span { color: var(--pa-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+
+/* ---------- 2. TARJETA GENÉRICA ---------- */
+.tarjeta-cuenta {
+  height: 100%;
+  padding: 28px;
+  background: var(--pa-paper);
+  border: 1px solid var(--pa-cream-line);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(60, 40, 20, 0.1);
+  scroll-margin-top: 110px;
+}
+.tarjeta-cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.tarjeta-titulo { margin: 0 0 16px; color: var(--pa-ink-warm); font-size: 1.2rem; font-weight: 800; }
+.tarjeta-cabecera .tarjeta-titulo { margin: 0; }
+.tarjeta-titulo i { color: var(--pa-blue-ink); margin-right: 6px; }
+
+/* ---------- 3. FILTRO DE RESERVAS (Flexbox) ---------- */
+.filtro-reservas { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.filtro-btn {
+  padding: 7px 16px;
+  border: 1px solid #ddd2c5;
+  border-radius: 30px;
+  background: #fff;
+  color: var(--pa-ink-soft);
+  font: 600 0.8rem var(--font-text);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.filtro-btn:hover { border-color: var(--arg-celeste-dark); transform: translateY(-2px); }
+.filtro-btn.active { background: #14110e; border-color: #14110e; color: var(--arg-celeste); }
+
+/* ---------- 4. LISTA DE RESERVAS ---------- */
+.lista-reservas, .lista-notificaciones { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.reserva-item {
+  display: grid;
+  grid-template-columns: 74px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--pa-cream-line);
+  border-radius: 12px;
+  background: #fff;
+  animation: fadeUp 0.45s ease both;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.reserva-item:hover { border-color: var(--arg-celeste-dark); box-shadow: 0 6px 16px rgba(60, 40, 20, 0.08); }
+.reserva-fecha {
+  display: grid;
+  place-items: center;
+  padding: 8px 0;
+  border-radius: 10px;
+  background: #14110e;
+  color: #fff;
+  line-height: 1.1;
+  text-align: center;
+}
+.reserva-fecha b { font-size: 1.5rem; color: var(--arg-celeste); }
+.reserva-fecha small { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.reserva-info h3 { margin: 0 0 4px; color: var(--pa-ink-warm); font-size: 0.98rem; font-weight: 800; }
+.reserva-info p { margin: 0; color: var(--pa-muted); font-size: 0.82rem; }
+.reserva-acciones { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+/* Estado con selector de atributo: [data-estado="..."] */
+.estado {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.estado[data-estado="pendiente"]  { background: #fef3c7; color: #92400e; }
+.estado[data-estado="confirmada"] { background: #dcfce7; color: #166534; }
+.estado[data-estado="rechazada"]  { background: #fee2e2; color: #991b1b; }
+.estado[data-estado="cancelada"]  { background: #e7e5e4; color: #57534e; }
+.btn-cancelar {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #b91c1c;
+  font: 700 0.78rem var(--font-text);
+  cursor: pointer;
+}
+.btn-cancelar:hover { text-decoration: underline; }
+.cargando, .vacio { padding: 18px; border: 1px dashed var(--pa-cream-line); border-radius: 12px; color: var(--pa-muted); text-align: center; font-size: 0.9rem; }
+
+/* ---------- 5. FORMULARIO DE DATOS ---------- */
+.form-cuenta label { display: block; margin: 12px 0 6px; color: var(--pa-ink-warm); font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.form-cuenta input[type="text"],
+.form-cuenta input[type="tel"],
+.form-cuenta input[type="email"],
+.form-cuenta input[type="password"] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid #ddd2c5;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--pa-ink-warm);
+  font: 500 0.9rem var(--font-text);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.form-cuenta input:focus { outline: none; border-color: var(--arg-celeste-dark); box-shadow: 0 0 0 3px rgba(58, 151, 207, 0.2); }
+.form-cuenta input[readonly] { background: var(--pa-cream-soft); color: var(--pa-muted); cursor: not-allowed; }
+.form-cuenta .check-promos { display: flex; align-items: center; gap: 8px; margin: 16px 0 8px; font-size: 0.8rem; text-transform: none; letter-spacing: 0; font-weight: 600; cursor: pointer; }
+.form-cuenta .check-promos input { width: 17px; height: 17px; accent-color: var(--arg-celeste-dark); }
+.page-cuenta .form-feedback { margin: 10px 0 0; font-size: 0.85rem; font-weight: 600; color: #b91c1c; }
+.page-cuenta .form-feedback.ok { color: #15803d; }
+.page-cuenta .form-feedback:empty { display: none; }
+.btn-salir { display: block; width: 100%; margin-top: 16px; padding: 10px; border: 0; border-top: 1px solid var(--pa-cream-line); background: none; color: var(--pa-muted); font: 600 0.85rem var(--font-text); cursor: pointer; transition: color 0.2s ease; }
+.btn-salir:hover { color: #b91c1c; }
+#nueva-clave .tarjeta-cuenta { max-width: 460px; margin: 0 auto; }
+
+/* ---------- 6. NOTIFICACIONES ---------- */
+.notif-item {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--arg-border-subtle);
+  color: var(--arg-text-light);
+  cursor: pointer;
+  animation: fadeUp 0.45s ease both;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+.notif-item:hover { background: rgba(117, 197, 240, 0.08); transform: translateX(4px); }
+.notif-item i { font-size: 1.6rem; color: var(--arg-celeste); }
+.notif-item h3 { margin: 0 0 4px; color: #fff; font-size: 1rem; font-weight: 800; }
+.notif-item p { margin: 0; color: var(--arg-text-muted); font-size: 0.88rem; }
+.notif-item time { display: block; margin-top: 6px; color: var(--arg-text-muted); font-size: 0.72rem; }
+/* no leída: borde celeste y punto que late */
+.notif-item.no-leida { border-color: var(--arg-border); background: rgba(117, 197, 240, 0.06); }
+.notif-item.no-leida::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--arg-celeste);
+  animation: badge-pulso 2s ease-in-out infinite;
+}
+.section-pa-alt .vacio, .section-pa-alt .cargando { border-color: var(--arg-border-subtle); color: var(--arg-text-muted); }
+
+/* ---------- 7. RESPONSIVE ---------- */
+@media (max-width: 575.98px) {
+  .tarjeta-cuenta { padding: 20px 16px; }
+  .reserva-item { grid-template-columns: 62px 1fr; }
+  .reserva-acciones { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
+}

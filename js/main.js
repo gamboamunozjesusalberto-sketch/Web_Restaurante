@@ -15,19 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
     el.textContent = new Date().getFullYear();
   });
 
-  // Cierre automático del menú colapsable de Bootstrap al hacer clic en un enlace (móvil)
+  // Cierre automático del menú colapsable de Bootstrap al hacer clic en un enlace (móvil).
+  // Se usa delegación de eventos para que también funcione con el menú de la cuenta
+  // (creado después por sesion.js). El botón que abre ese desplegable NO cierra el menú.
   const navCollapse = document.getElementById('navPuntoAsado');
   if (navCollapse) {
-    const navLinks = navCollapse.querySelectorAll('.nav-link, .btn');
-    navLinks.forEach((link) => {
-      link.addEventListener('click', () => {
-        if (navCollapse.classList.contains('show')) {
-          const bsCollapse = bootstrap.Collapse.getInstance(navCollapse);
-          if (bsCollapse) {
-            bsCollapse.hide();
-          }
-        }
-      });
+    navCollapse.addEventListener('click', (event) => {
+      const enlace = event.target.closest('.nav-link, .btn, .dropdown-item');
+      if (!enlace || enlace.classList.contains('dropdown-toggle')) return;
+      if (navCollapse.classList.contains('show')) {
+        const bsCollapse = bootstrap.Collapse.getInstance(navCollapse);
+        if (bsCollapse) bsCollapse.hide();
+      }
     });
   }
 });

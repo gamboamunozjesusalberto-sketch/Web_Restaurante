@@ -42,6 +42,12 @@
 .client-form { padding: 0; border: 0; background: transparent; }
 .login-page .field-group { margin-bottom: 17px; }
 .login-page .field-group label { display: block; margin-bottom: 8px; color: #3d2d22; font-size: .72rem; font-weight: 700; }
+/* DNI y celular lado a lado (registro) */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.login-page .field-group input:user-invalid { border-color: #c2453d; box-shadow: 0 0 0 3px rgba(194,69,61,.12); }
+.form-feedback.ok { color: #2f7a3f; }
+.form-feedback.error { color: #b23a32; }
+.submit-button:disabled { opacity: .65; cursor: wait; transform: none; }
 .label-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .login-page .forgot-link { margin-bottom: 8px; color: #9a6b39; font-size: .68rem; font-weight: 600; text-decoration: none; }
 .login-page .forgot-link:hover { text-decoration: underline; }
@@ -82,6 +88,7 @@
   .back-home { margin-bottom: 20px; }
 }
 @media (max-width: 390px) {
+  .field-row { grid-template-columns: 1fr; }
   .login-showcase { min-height: 280px; }
   .eyebrow { font-size: .57rem; letter-spacing: .12em; }
   .form-heading h2 { font-size: 1.9rem; }

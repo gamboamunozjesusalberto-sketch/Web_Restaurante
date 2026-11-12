@@ -90,6 +90,16 @@
           <label for="client-name">Nombre completo</label>
           <input id="client-name" name="nombre" type="text" placeholder="Escribe tu nombre" autocomplete="name">
         </div>
+        <div class="field-row register-only" hidden>
+          <div class="field-group">
+            <label for="client-dni">DNI</label>
+            <input id="client-dni" name="dni" type="text" inputmode="numeric" placeholder="8 dígitos" pattern="[0-9]{8}" maxlength="8" title="El DNI tiene 8 dígitos">
+          </div>
+          <div class="field-group">
+            <label for="client-phone">Celular</label>
+            <input id="client-phone" name="telefono" type="tel" inputmode="tel" placeholder="Ej. 919 293 435" pattern="[0-9+ \-]{7,15}" autocomplete="tel" title="Solo números, entre 7 y 15 dígitos">
+          </div>
+        </div>
         <div class="field-group">
           <label for="client-email">Correo electrónico</label>
           <input id="client-email" name="email" type="email" placeholder="nombre@correo.com" autocomplete="email" required>
@@ -102,14 +112,13 @@
           <label for="client-confirm">Confirmar contraseña</label>
           <input id="client-confirm" name="confirmar" type="password" placeholder="Repite tu contraseña" minlength="8" autocomplete="new-password">
         </div>
-        <label class="remember-row"><input type="checkbox" name="recordarme"> <span id="remember-text">Recordar mi sesión en este dispositivo</span></label>
-        <button class="submit-button" type="submit"><span id="submit-label">Ingresar a mi cuenta</span><span aria-hidden="true">→</span></button>
+        <label class="remember-row register-only" hidden><input type="checkbox" name="acepta_promos" checked> <span>Quiero recibir las promociones de Punto Asado</span></label>
+        <button class="submit-button" type="submit" id="submit-button"><span id="submit-label">Ingresar a mi cuenta</span><span aria-hidden="true">→</span></button>
         <p class="form-feedback" id="form-feedback" aria-live="polite"></p>
       </form>
 
       <p class="switch-copy"><span id="switch-question">¿Aún no tienes una cuenta?</span> <button type="button" id="switch-mode">Regístrate aquí</button></p>
       <div class="secure-note"><span aria-hidden="true">◈</span> Tu experiencia, siempre más cerca de ti.</div>
-      <p class="design-disclaimer">Demostración visual: el formulario no almacena ni valida cuentas reales.</p>
     </section>
   </main>
 
@@ -119,6 +128,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
+  <!-- Supabase (cuentas y base de datos) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/sesion.js"></script>
   <script src="js/main.js"></script>
   <script src="js/login.js"></script>
 

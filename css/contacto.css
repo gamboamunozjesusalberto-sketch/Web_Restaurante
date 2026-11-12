@@ -340,6 +340,27 @@
 .page-contacto .form-feedback.ok { color: #15803d; }
 .page-contacto .form-feedback:empty { display: none; }
 
+/* reserva con cuenta: aviso para iniciar sesión y campos de la cuenta */
+.page-contacto .aviso-cuenta {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding: 28px;
+  background: #14110e;
+  border: 1px solid var(--arg-border);
+  border-radius: 16px;
+  color: var(--arg-text-light);
+}
+.page-contacto .aviso-cuenta > i { font-size: 2.2rem; color: var(--arg-celeste); }
+.page-contacto .aviso-cuenta h3 { margin: 0 0 6px; color: #fff; font-size: 1.15rem; font-weight: 800; }
+.page-contacto .aviso-cuenta p { margin: 0 0 16px; color: var(--arg-text-muted); font-size: 0.9rem; }
+.page-contacto .aviso-acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.page-contacto .aviso-cuenta .aviso-alterno { margin: 0; font-size: 0.82rem; }
+.page-contacto .aviso-alterno a { color: var(--arg-celeste); }
+.page-contacto .formulario-reserva.bloqueado { opacity: 0.45; pointer-events: none; filter: grayscale(0.4); }
+.page-contacto .formulario-reserva input[readonly] { background: var(--pa-cream-soft); color: var(--pa-muted); cursor: not-allowed; }
+.page-contacto .form-feedback a { color: inherit; text-decoration: underline; }
+
 /* ==========================================================================
    5. RESPONSIVE
    ========================================================================== */
@@ -363,4 +384,5 @@
   .page-contacto .tabla-horario tbody th,
   .page-contacto .tabla-horario tbody td { padding: 13px 16px; font-size: 0.88rem; }
   .page-contacto .btn-reservar { width: 100%; }
+  .page-contacto .aviso-cuenta { flex-direction: column; padding: 22px 18px; }
 }
