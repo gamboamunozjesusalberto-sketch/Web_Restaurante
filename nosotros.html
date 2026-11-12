@@ -17,10 +17,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css propio de nosotros -->
-  <link rel="stylesheet" href="css/variables.css?v=5" />
-  <link rel="stylesheet" href="css/components.css?v=5" />
-  <link rel="stylesheet" href="css/paginas.css?v=5" />
-  <link rel="stylesheet" href="css/nosotros.css?v=5" />
+  <link rel="stylesheet" href="css/variables.css?v=6" />
+  <link rel="stylesheet" href="css/components.css?v=6" />
+  <link rel="stylesheet" href="css/paginas.css?v=6" />
+  <link rel="stylesheet" href="css/nosotros.css?v=6" />
 </head>
 <body class="inner-page pagina-nosotros">
 
@@ -275,6 +275,44 @@
     </section>
 
     <!-- LLAMADA A LA ACCION -->
+    <!-- SECCION: MARCAS ALIADAS (versión final): proveedores con los que trabajamos -->
+    <section class="aliados" id="aliados">
+      <h2>Marcas aliadas</h2>
+      <p class="aliados-intro">Trabajamos con proveedores de confianza para que cada plato y cada copa estén a la altura.</p>
+
+      <div class="aliados-grupo">
+        <h3><svg class="icono" aria-hidden="true"><use href="#i-calidad"/></svg> Vinos</h3>
+        <div class="aliados-lista">
+          <div class="aliado">
+            <img src="images/bodega_pampas.png" alt="Logo de Bodega Pampas" loading="lazy" />
+            <div>
+              <strong>Bodega Pampas</strong>
+              <span>Los Aquijes, Ica</span>
+            </div>
+          </div>
+          <div class="aliado">
+            <span class="aliado-logo-texto" aria-hidden="true">TACAMA</span>
+            <div>
+              <strong>Tacama</strong>
+              <span>Valle de Ica</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carnes: falta confirmar las marcas con el restaurante. Copiar un .aliado por marca.
+      <div class="aliados-grupo">
+        <h3><svg class="icono" aria-hidden="true"><use href="#i-fuego"/></svg> Carnes</h3>
+        <div class="aliados-lista">
+          <div class="aliado">
+            <span class="aliado-logo-texto" aria-hidden="true">MARCA</span>
+            <div><strong>Nombre de la marca</strong><span>Origen</span></div>
+          </div>
+        </div>
+      </div>
+      -->
+    </section>
+
     <section class="cta">
       <h2>Ven a vivir la experiencia</h2>
       <p>Te esperamos con la parrilla encendida.</p>
@@ -367,11 +405,11 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=5"></script>
-  <script src="js/sesion.js?v=5"></script>
-  <script src="js/main.js?v=5"></script>
-  <script src="js/lightbox.js?v=5"></script>
-  <script src="js/nosotros.js?v=5"></script>
+  <script src="js/supabase-config.js?v=6"></script>
+  <script src="js/sesion.js?v=6"></script>
+  <script src="js/main.js?v=6"></script>
+  <script src="js/lightbox.js?v=6"></script>
+  <script src="js/nosotros.js?v=6"></script>
 
 </body>
 </html>

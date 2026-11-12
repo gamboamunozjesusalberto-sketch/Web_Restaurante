@@ -354,6 +354,65 @@
   .pagina-nosotros .ambiente-tab { flex: 0 0 auto; padding: 9px 14px; font-size: .9rem; }
 }
 
+/* ==========================================================================
+   VERSIÓN FINAL: MARCAS ALIADAS (proveedores de vino y carne)
+   Logos en gris que toman color al pasar el mouse.
+   ========================================================================== */
+.pagina-nosotros .aliados-intro { margin: 12px 0 20px; color: var(--arg-text-muted); }
+.pagina-nosotros .aliados-grupo { margin-bottom: 22px; }
+.pagina-nosotros .aliados-grupo h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--arg-celeste);
+}
+.pagina-nosotros .aliados-grupo h3 .icono { width: 18px; height: 18px; margin: 0; }
+.pagina-nosotros .aliados-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+.pagina-nosotros .aliado {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: var(--arg-dark-card);
+  border: 1px solid var(--arg-border-subtle);
+  border-radius: 14px;
+  transition: border-color .3s ease, transform .3s ease;
+}
+.pagina-nosotros .aliado img,
+.pagina-nosotros .aliado-logo-texto {
+  flex: 0 0 88px;
+  width: 88px;
+  height: 62px;
+  border-radius: 10px;
+  background: #000;
+  filter: grayscale(1);
+  opacity: .8;
+  transition: filter .3s ease, opacity .3s ease;
+}
+.pagina-nosotros .aliado img { object-fit: contain; }
+.pagina-nosotros .aliado-logo-texto {
+  display: grid;
+  place-items: center;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: .85rem;
+  letter-spacing: .12em;
+  color: #e9d9b0;
+}
+.pagina-nosotros .aliado strong { display: block; color: var(--arg-white); }
+.pagina-nosotros .aliado span { font-size: .85rem; color: var(--arg-text-muted); }
+.pagina-nosotros .aliado:hover { border-color: var(--arg-celeste); transform: translateY(-3px); }
+.pagina-nosotros .aliado:hover img,
+.pagina-nosotros .aliado:hover .aliado-logo-texto { filter: none; opacity: 1; }
+
 /* ===== SEMANA 8: Diseño responsivo (reglas @media) ===== */
 
 @media (min-width: 1200px) {

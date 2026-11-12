@@ -80,9 +80,34 @@ document.addEventListener('DOMContentLoaded', () => {
       b.setAttribute('aria-checked', b === boton);
     });
     fechaInput.value = boton.dataset.fecha;
+    calendario.value = boton.dataset.fecha;
     contenedorDias.classList.remove('campo-error');
     pintarHorarios();
   });
+
+  // también se puede marcar la fecha en el calendario del navegador
+  const calendario = document.getElementById('r-calendario');
+  const limite = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate() + 60, 12);
+  calendario.min = hoyISO;
+  calendario.max = aISO(limite);
+
+  function elegirDelCalendario() {
+    const valor = calendario.value;
+    if (!valor || valor < calendario.min || valor > calendario.max) return;
+    fechaInput.value = valor;
+    let tarjeta = null;
+    contenedorDias.querySelectorAll('.dia').forEach((b) => {
+      const es = b.dataset.fecha === valor;
+      b.classList.toggle('activo', es);
+      b.setAttribute('aria-checked', es);
+      if (es) tarjeta = b;
+    });
+    if (tarjeta) tarjeta.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    contenedorDias.classList.remove('campo-error');
+    pintarHorarios();
+  }
+  calendario.addEventListener('change', elegirDelCalendario);
+  calendario.addEventListener('input', elegirDelCalendario);
 
   // flechas para desplazar la fila de días
   document.querySelectorAll('.dias-flecha').forEach((flecha) => {
@@ -285,6 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     form.elements.fecha.value = '';
+    calendario.value = '';
     pintarDias();
     pintarHorarios();
     form.elements.mensaje.value = '';

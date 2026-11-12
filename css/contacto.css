@@ -412,6 +412,20 @@
   .page-contacto .dias-flecha { display: none; }
 }
 
+.page-contacto .formulario-reserva .otra-fecha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--pa-muted);
+}
+.page-contacto .formulario-reserva .otra-fecha input { width: auto !important; flex: 0 1 200px; padding: 8px 12px !important; }
+
 /* horarios en botones (versión final: reemplaza al reloj del navegador) */
 .page-contacto .horarios {
   display: grid;
