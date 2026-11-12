@@ -361,6 +361,49 @@
 .page-contacto .formulario-reserva input[readonly] { background: var(--pa-cream-soft); color: var(--pa-muted); cursor: not-allowed; }
 .page-contacto .form-feedback a { color: inherit; text-decoration: underline; }
 
+/* horarios en botones (versión final: reemplaza al reloj del navegador) */
+.page-contacto .horarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: border-color 0.25s ease;
+}
+.page-contacto .horarios.campo-error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12); }
+.page-contacto .horarios-vacio { grid-column: 1 / -1; margin: 0; padding: 14px; border: 1px dashed #ddd2c5; border-radius: 10px; color: var(--pa-muted); font-size: 0.88rem; text-align: center; }
+.page-contacto .horario {
+  padding: 10px 6px;
+  border: 1px solid #ddd2c5;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--pa-ink-soft);
+  font: 700 0.85rem var(--font-text);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.page-contacto .horario:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--arg-celeste-dark); color: var(--pa-ink-warm); }
+.page-contacto .horario.activo { background: #14110e; border-color: #14110e; color: var(--arg-celeste); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18); }
+.page-contacto .horario:disabled { opacity: 0.35; text-decoration: line-through; cursor: not-allowed; }
+
+/* contador de personas: botones − y + */
+.page-contacto .contador { display: grid; grid-template-columns: 48px 1fr 48px; gap: 8px; }
+.page-contacto .contador input { text-align: center; font-weight: 800 !important; -moz-appearance: textfield; }
+.page-contacto .contador input::-webkit-outer-spin-button,
+.page-contacto .contador input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.page-contacto .contador-btn {
+  border: 1px solid #ddd2c5;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--pa-ink-warm);
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.page-contacto .contador-btn:hover { background: #14110e; color: var(--arg-celeste); }
+
 /* ==========================================================================
    5. RESPONSIVE
    ========================================================================== */

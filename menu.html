@@ -17,10 +17,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css propio de la carta -->
-  <link rel="stylesheet" href="css/variables.css?v=3" />
-  <link rel="stylesheet" href="css/components.css?v=3" />
-  <link rel="stylesheet" href="css/paginas.css?v=3" />
-  <link rel="stylesheet" href="css/menu.css?v=3" />
+  <link rel="stylesheet" href="css/variables.css?v=4" />
+  <link rel="stylesheet" href="css/components.css?v=4" />
+  <link rel="stylesheet" href="css/paginas.css?v=4" />
+  <link rel="stylesheet" href="css/menu.css?v=4" />
 </head>
 <body class="inner-page page-menu">
 
@@ -110,87 +110,74 @@
           <h2 class="section-heading">Para Comenzar</h2>
           <p class="section-sub">Entradas para abrir el apetito y compartir en la mesa.</p>
         </div>
-      <div class="table-wrap">
-        <table class="tabla-carta">
-          <caption>Entradas - Punto Asado</caption>
-          <thead>
-            <tr>
-              <th scope="col">Plato</th>
-              <th scope="col">Descripción</th>
-              <th scope="col">Porción</th>
-              <th scope="col">Precio</th>
-            </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/empanadasArgentinas.jpeg" alt="Empanadas Argentinas" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Empanadas Argentinas</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Fritas, de carne molida clásica.</td>
-            <td data-label="Porción">2 und</td>
-            <td data-label="Precio" class="precio">S/. 19.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/empanadasAngus.jpeg" alt="Empanadas Angus" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Empanadas Angus</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Carne Angus picada a cuchillo con cebolla y especias.</td>
-            <td data-label="Porción">2 und</td>
-            <td data-label="Precio" class="precio">S/. 26.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/provoleta.jpg" alt="Provoleta a la parrilla" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Provoleta Perfecta</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Queso provoleta a la parrilla con orégano y pan de la casa.</td>
-            <td data-label="Porción">Individual</td>
-            <td data-label="Precio" class="precio">S/. 35.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/papasPatagonia.jpeg" alt="Papas Patagonia" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Papas Patagonia</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Papas fritas con queso cheddar, tocino y cebolla china.</td>
-            <td data-label="Porción">Para compartir</td>
-            <td data-label="Precio" class="precio">S/. 32.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/mollejas_de_Res.jpeg" alt="Mollejas de res" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Mollejas de Res</span>
-              </div>
-            </td>
-            <td data-label="Descripción">300 gr al limón asadas a fuego vivo en parrilla.</td>
-            <td data-label="Porción">300 gr</td>
-            <td data-label="Precio" class="precio">S/. 42.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/trilogia_chorizo.jpeg" alt="Trilogía de chorizos" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Trilogía de Chorizos</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Chorizo clásico, de ají limo y ají charapita.</td>
-            <td data-label="Porción">3 und surtidas</td>
-            <td data-label="Precio" class="precio">S/. 39.00</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="parrilla-grid">
+        <article class="parrilla-card reveal" style="--delay: 0.00s">
+          <div class="parrilla-media">
+            <img src="images/empanadasArgentinas.jpeg" alt="Empanadas Argentinas" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">2 und</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Empanadas Argentinas</h3>
+            <p>Fritas, de carne molida clásica.</p>
+            <div class="parrilla-price">S/. 19.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.08s">
+          <div class="parrilla-media">
+            <img src="images/empanadasAngus.jpeg" alt="Empanadas Angus" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">2 und</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Empanadas Angus</h3>
+            <p>Carne Angus picada a cuchillo con cebolla y especias.</p>
+            <div class="parrilla-price">S/. 26.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.16s">
+          <div class="parrilla-media">
+            <img src="images/provoleta.jpg" alt="Provoleta a la parrilla" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Individual</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Provoleta Perfecta</h3>
+            <p>Queso provoleta a la parrilla con orégano y pan de la casa.</p>
+            <div class="parrilla-price">S/. 35.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.24s">
+          <div class="parrilla-media">
+            <img src="images/papasPatagonia.jpeg" alt="Papas Patagonia" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Para compartir</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Papas Patagonia</h3>
+            <p>Papas fritas con queso cheddar, tocino y cebolla china.</p>
+            <div class="parrilla-price">S/. 32.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.32s">
+          <div class="parrilla-media">
+            <img src="images/mollejas_de_Res.jpeg" alt="Mollejas de res" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">300 gr</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Mollejas de Res</h3>
+            <p>300 gr al limón asadas a fuego vivo en parrilla.</p>
+            <div class="parrilla-price">S/. 42.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.40s">
+          <div class="parrilla-media">
+            <img src="images/trilogia_chorizo.jpeg" alt="Trilogía de chorizos" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">3 und surtidas</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Trilogía de Chorizos</h3>
+            <p>Chorizo clásico, de ají limo y ají charapita.</p>
+            <div class="parrilla-price">S/. 39.00</div>
+          </div>
+        </article>
+        </div>
       </div>
     </section>
 
@@ -340,104 +327,85 @@
           <h2 class="section-heading">Nuestros Platos</h2>
           <p class="section-sub">Clásicos argentinos de la casa para quienes prefieren algo distinto a la parrilla.</p>
         </div>
-      <div class="table-wrap">
-        <table class="tabla-carta">
-          <caption>Platos Principales - Punto Asado</caption>
-          <thead>
-            <tr>
-              <th scope="col">Plato</th>
-              <th scope="col">Descripción</th>
-              <th scope="col">Porción</th>
-              <th scope="col">Precio</th>
-            </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/milanesa_argentina.webp" alt="Milanesa Argentina" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Milanesa Argentina</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Carne de res empanizada crocante al estilo argentino.</td>
-            <td data-label="Porción">Individual</td>
-            <td data-label="Precio" class="precio">S/. 52.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/milanesa_napolitana.jpeg" alt="Milanesa Napolitana" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Milanesa Napolitana</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Carne empanizada con salsa de tomate casera y queso fundido.</td>
-            <td data-label="Porción">Individual</td>
-            <td data-label="Precio" class="precio">S/. 62.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/suprema_napolitana.webp" alt="Suprema de Pollo Napolitana" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Suprema de Pollo Napolitana</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Pechuga empanizada con salsa de tomate y queso gratinado.</td>
-            <td data-label="Porción">Individual</td>
-            <td data-label="Precio" class="precio">S/. 58.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/pastel_de_papa.jpg" alt="Pastel de Papa" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Pastel de Papa</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Al estilo argentino, relleno de carne Angus y queso.</td>
-            <td data-label="Porción">Porción</td>
-            <td data-label="Precio" class="precio">S/. 45.00</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/pollo_punto_Asado.jpg" alt="Pollo Punto Asado" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Pollo Punto Asado</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Pechuga a la parrilla con chimichurri, ensalada fresca y papas doradas.</td>
-            <td data-label="Porción">Individual</td>
-            <td data-label="Precio" class="precio">Consultar</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/pollo_limon.jpg" alt="Pollo al Limón" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Pollo al Limón</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Pechuga jugosa en salsa cítrica de limón.</td>
-            <td data-label="Porción">Individual</td>
-            <td data-label="Precio" class="precio">Consultar</td>
-          </tr>
-          <tr>
-            <td data-label="Plato">
-              <div class="dish-cell">
-                <img src="images/panceta.jpeg" alt="Panceta Braseada" class="foto-mini" loading="lazy" width="72" height="72" />
-                <span class="dish-name">Panceta Braseada</span>
-              </div>
-            </td>
-            <td data-label="Descripción">Panceta cocida lentamente, servida en su jugo con guarnición.</td>
-            <td data-label="Porción">Individual</td>
-            <td data-label="Precio" class="precio">Consultar</td>
-          </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="3"><strong>Precios sujetos a cambio sin previo aviso</strong></td>
-              <td class="precio">---</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+        <div class="parrilla-grid">
+        <article class="parrilla-card reveal" style="--delay: 0.00s">
+          <div class="parrilla-media">
+            <img src="images/milanesa_argentina.webp" alt="Milanesa Argentina" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Individual</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Milanesa Argentina</h3>
+            <p>Carne de res empanizada crocante al estilo argentino.</p>
+            <div class="parrilla-price">S/. 52.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.08s">
+          <div class="parrilla-media">
+            <img src="images/milanesa_napolitana.jpeg" alt="Milanesa Napolitana" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Individual</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Milanesa Napolitana</h3>
+            <p>Carne empanizada con salsa de tomate casera y queso fundido.</p>
+            <div class="parrilla-price">S/. 62.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.16s">
+          <div class="parrilla-media">
+            <img src="images/suprema_napolitana.webp" alt="Suprema de Pollo Napolitana" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Individual</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Suprema de Pollo Napolitana</h3>
+            <p>Pechuga empanizada con salsa de tomate y queso gratinado.</p>
+            <div class="parrilla-price">S/. 58.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.24s">
+          <div class="parrilla-media">
+            <img src="images/pastel_de_papa.jpg" alt="Pastel de Papa" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Porción</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Pastel de Papa</h3>
+            <p>Al estilo argentino, relleno de carne Angus y queso.</p>
+            <div class="parrilla-price">S/. 45.00</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.32s">
+          <div class="parrilla-media">
+            <img src="images/pollo_punto_Asado.jpg" alt="Pollo Punto Asado" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Individual</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Pollo Punto Asado</h3>
+            <p>Pechuga a la parrilla con chimichurri, ensalada fresca y papas doradas.</p>
+            <div class="parrilla-price">Consultar</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.40s">
+          <div class="parrilla-media">
+            <img src="images/pollo_limon.jpg" alt="Pollo al Limón" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Individual</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Pollo al Limón</h3>
+            <p>Pechuga jugosa en salsa cítrica de limón.</p>
+            <div class="parrilla-price">Consultar</div>
+          </div>
+        </article>
+        <article class="parrilla-card reveal" style="--delay: 0.48s">
+          <div class="parrilla-media">
+            <img src="images/panceta.jpeg" alt="Panceta Braseada" loading="lazy" width="600" height="448" />
+            <span class="parrilla-badge">Individual</span>
+          </div>
+          <div class="parrilla-info">
+            <h3>Panceta Braseada</h3>
+            <p>Panceta cocida lentamente, servida en su jugo con guarnición.</p>
+            <div class="parrilla-price">Consultar</div>
+          </div>
+        </article>
+        </div>
       </div>
     </section>
 
@@ -632,10 +600,10 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=3"></script>
-  <script src="js/sesion.js?v=3"></script>
-  <script src="js/main.js?v=3"></script>
-  <script src="js/menu.js?v=3"></script>
+  <script src="js/supabase-config.js?v=4"></script>
+  <script src="js/sesion.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
+  <script src="js/menu.js?v=4"></script>
 
 </body>
 </html>

@@ -327,3 +327,123 @@
 @media (prefers-reduced-motion: reduce) {
   .nav-badge { animation: none; }
 }
+
+/* ==========================================================================
+   LIGHTBOX: visor de fotos a pantalla completa (lo crea js/lightbox.js)
+   Se usa en la galería del inicio y en los ambientes de nosotros.
+   ========================================================================== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  grid-template-columns: 64px 1fr 64px;
+  align-items: center;
+  padding: 20px;
+  background: rgba(8, 6, 5, 0.94);
+  backdrop-filter: blur(6px);
+  animation: lightbox-aparecer 0.25s ease;
+}
+.lightbox[hidden] { display: none; }
+.lightbox-figura { grid-column: 2; margin: 0; text-align: center; }
+.lightbox-figura img {
+  max-width: 100%;
+  max-height: 78vh;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  object-fit: contain;
+}
+.lightbox-figura img.entrando { animation: lightbox-zoom 0.35s ease; }
+.lightbox-figura figcaption { margin-top: 14px; color: #fff; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.lightbox-flecha,
+.lightbox-cerrar {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--arg-border);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.lightbox-flecha:hover,
+.lightbox-cerrar:hover { background: var(--arg-celeste); color: #000; transform: scale(1.08); }
+.lightbox-prev { grid-column: 1; }
+.lightbox-next { grid-column: 3; }
+.lightbox-cerrar { position: absolute; top: 18px; right: 18px; font-size: 1.8rem; }
+.lightbox-contador { position: absolute; top: 30px; left: 24px; color: var(--arg-text-muted); font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
+body.sin-scroll { overflow: hidden; }
+@keyframes lightbox-aparecer { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lightbox-zoom { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+@media (max-width: 575.98px) {
+  .lightbox { grid-template-columns: 1fr; padding: 70px 12px 90px; }
+  .lightbox-figura { grid-column: 1; grid-row: 1; }
+  .lightbox-flecha { position: absolute; bottom: 24px; width: 46px; height: 46px; }
+  .lightbox-prev { left: 30%; }
+  .lightbox-next { right: 30%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox, .lightbox-figura img.entrando { animation: none; }
+}
+
+/* ==========================================================================
+   VERSIÓN FINAL: EFECTO 3D CON EL CURSOR (main.js)
+   Las tarjetas de platos (.parrilla-card en la carta, .plato-tarjeta en el
+   inicio) se inclinan hacia el cursor y muestran un brillo donde está el mouse.
+   ========================================================================== */
+.parrilla-card,
+.plato-tarjeta { position: relative; }
+.parrilla-card.inclinando:hover,
+.plato-tarjeta.inclinando:hover {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-8px);
+  transition: transform .08s linear;
+}
+.parrilla-card.inclinando::after,
+.plato-tarjeta.inclinando::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--brillo-x, 50%) var(--brillo-y, 50%), rgba(255, 255, 255, .14), transparent 55%);
+}
+
+/* ==========================================================================
+   VERSIÓN FINAL: BOTÓN FLOTANTE "RESERVAR" (main.js) — solo en celular
+   ========================================================================== */
+.reservar-flotante { display: none; }
+@media (max-width: 767.98px) {
+  .reservar-flotante {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1040;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--arg-dark-carbon);
+    background: var(--arg-celeste);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+    text-decoration: none;
+    transition: transform .3s ease, opacity .3s ease;
+    animation: flotante-latido 2.8s ease-in-out infinite;
+  }
+  .reservar-flotante:hover { color: var(--arg-dark-carbon); }
+  .reservar-flotante.oculto { opacity: 0; transform: translateY(80px); pointer-events: none; }
+}
+@keyframes flotante-latido {
+  0%, 100% { box-shadow: 0 8px 24px rgba(0, 0, 0, .45), 0 0 0 0 rgba(117, 197, 240, .55); }
+  50% { box-shadow: 0 8px 24px rgba(0, 0, 0, .45), 0 0 0 12px rgba(117, 197, 240, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reservar-flotante { animation: none; }
+}

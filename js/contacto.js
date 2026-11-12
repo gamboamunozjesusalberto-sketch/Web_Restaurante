@@ -48,12 +48,77 @@ document.addEventListener('DOMContentLoaded', () => {
   fechaInput.min = hoy.toISOString().split('T')[0];
   fechaInput.max = limite.toISOString().split('T')[0];
 
-  // la hora mínima cambia según el día: lun-vie 18:00, sáb-dom 12:00 //
-  fechaInput.addEventListener('change', () => {
-    if (!fechaInput.value) return;
-    const diaElegido = new Date(fechaInput.value + 'T12:00').getDay();
-    horaInput.min = (diaElegido === 0 || diaElegido === 6) ? '12:00' : '18:00';
-    if (horaInput.value && horaInput.value < horaInput.min) horaInput.value = horaInput.min;
+  // ---------- horarios en botones (en vez del reloj del navegador) ----------
+  // Lunes a viernes de 18:00 a 22:30 · sábado y domingo de 12:00 a 22:30, cada 30 minutos.
+  const contenedorHoras = document.getElementById('horarios');
+
+  function horariosDelDia(fechaISO) {
+    const dia = new Date(fechaISO + 'T12:00').getDay();
+    const desde = (dia === 0 || dia === 6) ? 12 * 60 : 18 * 60;
+    const lista = [];
+    for (let m = desde; m <= 22 * 60 + 30; m += 30) {
+      lista.push(String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'));
+    }
+    return lista;
+  }
+
+  function hora12(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'a. m.' : 'p. m.'}`;
+  }
+
+  function pintarHorarios() {
+    horaInput.value = '';
+    contenedorHoras.innerHTML = '';
+    if (!fechaInput.value) {
+      contenedorHoras.innerHTML = '<p class="horarios-vacio"><i class="bi bi-calendar-event" aria-hidden="true"></i> Primero elige la fecha para ver los horarios.</p>';
+      return;
+    }
+    const esHoy = fechaInput.value === fechaInput.min;
+    const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
+    horariosDelDia(fechaInput.value).forEach((hhmm) => {
+      const [h, m] = hhmm.split(':').map(Number);
+      const boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'horario';
+      boton.textContent = hora12(hhmm);
+      boton.setAttribute('role', 'radio');
+      boton.setAttribute('aria-checked', 'false');
+      boton.dataset.hora = hhmm;
+      // si es hoy, las horas que ya pasaron no se pueden elegir
+      if (esHoy && h * 60 + m <= minutosAhora) boton.disabled = true;
+      contenedorHoras.append(boton);
+    });
+    if (!contenedorHoras.querySelector('.horario:not(:disabled)')) {
+      contenedorHoras.innerHTML = '<p class="horarios-vacio">Ya no quedan horarios para hoy. Elige otra fecha.</p>';
+    }
+  }
+
+  // un solo listener para todos los botones (delegación de eventos)
+  contenedorHoras.addEventListener('click', (e) => {
+    const boton = e.target.closest('.horario');
+    if (!boton || boton.disabled) return;
+    contenedorHoras.querySelectorAll('.horario').forEach((b) => {
+      b.classList.remove('activo');
+      b.setAttribute('aria-checked', 'false');
+    });
+    boton.classList.add('activo');
+    boton.setAttribute('aria-checked', 'true');
+    horaInput.value = boton.dataset.hora;
+    contenedorHoras.classList.remove('campo-error');
+  });
+
+  fechaInput.addEventListener('change', pintarHorarios);
+
+  // contador de personas con botones − y +
+  document.querySelectorAll('[data-contador]').forEach((contador) => {
+    const input = contador.querySelector('input');
+    contador.addEventListener('click', (e) => {
+      const boton = e.target.closest('.contador-btn');
+      if (!boton) return;
+      const valor = Math.min(Number(input.max), Math.max(Number(input.min), Number(input.value || 0) + Number(boton.dataset.paso)));
+      input.value = valor;
+    });
   });
 
   const mostrar = (texto, ok = false) => {
@@ -66,15 +131,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // validación nativa con mensaje propio //
   function formularioValido() {
     form.querySelectorAll('.campo-error').forEach((el) => el.classList.remove('campo-error'));
-    // mensajes propios en español para la hora y la fecha
-    horaInput.setCustomValidity(
-      horaInput.validity.rangeUnderflow ? `Ese día atendemos desde las ${horaInput.min} horas`
-        : horaInput.validity.rangeOverflow ? 'La última reserva es a las 22:30' : ''
-    );
+    // mensajes propios en español para la fecha
     fechaInput.setCustomValidity(
       fechaInput.validity.rangeUnderflow ? 'No se puede reservar en una fecha pasada'
         : fechaInput.validity.rangeOverflow ? 'Solo se puede reservar hasta 60 días antes' : ''
     );
+    // la hora es un campo oculto: se revisa a mano
+    if (fechaInput.validity.valid && !horaInput.value) {
+      contenedorHoras.classList.add('campo-error');
+      contenedorHoras.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      mostrar('Elige una hora para tu reserva.');
+      return false;
+    }
     if (form.checkValidity()) return true;
     const invalido = form.querySelector(':invalid');
     invalido.classList.add('campo-error');
@@ -169,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     form.elements.fecha.value = '';
-    form.elements.hora.value = '';
+    pintarHorarios();
     form.elements.mensaje.value = '';
     feedback.classList.add('ok');
     feedback.innerHTML = '¡Reserva enviada! Está <strong>pendiente</strong> de confirmación. Puedes verla en <a href="cuenta.html#mis-reservas">Mi cuenta</a>.';

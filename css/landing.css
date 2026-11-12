@@ -689,36 +689,158 @@ body.landing-page main {
   line-height: 1.6;
 }
 
+/* Versión final: rejilla "bento" de 4 columnas con áreas fijas,
+   así ninguna foto queda cortada de forma rara */
 .galeria-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 220px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 230px;
+  grid-template-areas:
+    "a a b c"
+    "a a b d"
+    "e e f g";
   gap: 14px;
 }
+.galeria-item.g-a { grid-area: a; }
+.galeria-item.g-b { grid-area: b; }
+.galeria-item.g-c { grid-area: c; }
+.galeria-item.g-d { grid-area: d; }
+.galeria-item.g-e { grid-area: e; }
+.galeria-item.g-f { grid-area: f; }
+.galeria-item.g-g { grid-area: g; }
 
 .galeria-item {
+  position: relative;
   margin: 0;
   overflow: hidden;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.galeria-item.g-wide {
-  grid-column: span 2;
+  cursor: zoom-in;
 }
 
 .galeria-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  object-position: center;
+  transition: transform 0.6s ease, filter 0.6s ease;
+}
+.galeria-item.g-e img { object-position: center 65%; }
+
+.galeria-item figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 28px 16px 14px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
 }
 
-.galeria-item:hover img {
-  transform: scale(1.06);
+.galeria-item:hover img { transform: scale(1.06); filter: brightness(1.08); }
+.galeria-item:hover figcaption,
+.galeria-item:focus-within figcaption { transform: translateY(0); }
+
+@media (max-width: 991.98px) {
+  .galeria-grid { grid-auto-rows: 180px; }
 }
 
 @media (max-width: 767.98px) {
   .section-galeria { padding: 45px 0; }
-  .galeria-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; gap: 10px; }
+  .galeria-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+    grid-template-areas:
+      "a a"
+      "a a"
+      "b c"
+      "b d"
+      "e e"
+      "f g";
+    gap: 10px;
+  }
+  .galeria-item figcaption { transform: none; padding: 20px 10px 8px; font-size: 0.68rem; }
+}
+
+/* ==========================================================================
+   VERSIÓN FINAL: PROMOCIONES (se llenan desde Supabase con landing.js)
+   Franja oscura bajo el hero con hasta 3 tarjetas. Si no hay promociones
+   activas la sección queda oculta (atributo hidden).
+   ========================================================================== */
+.section-promos {
+  padding: 34px 0;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(117, 197, 240, .16), transparent 55%),
+    #0c0908;
+  border-bottom: 1px solid var(--arg-border-subtle);
+}
+.promos-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.promos-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-title);
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--arg-celeste);
+}
+.promos-etiqueta i { animation: promo-megafono 2.4s ease-in-out infinite; }
+@keyframes promo-megafono {
+  0%, 70%, 100% { transform: rotate(0); }
+  80% { transform: rotate(-14deg); }
+  90% { transform: rotate(10deg); }
+}
+.promos-aviso { font-size: .9rem; color: var(--arg-text-muted); }
+.promos-aviso:hover { color: var(--arg-celeste); }
+.promos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.promo-tarjeta {
+  position: relative;
+  padding: 20px 20px 18px 24px;
+  background: var(--arg-dark-card);
+  border: 1px solid var(--arg-border);
+  border-radius: 14px;
+  overflow: hidden;
+  animation: promo-entra .6s ease backwards;
+  animation-delay: var(--delay, 0s);
+}
+.promo-tarjeta::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--arg-celeste);
+}
+.promo-tarjeta h3 { font-size: 1.1rem; font-weight: 800; color: var(--arg-white); margin-bottom: 6px; }
+.promo-tarjeta p { margin: 0; color: var(--arg-text-light); font-size: .95rem; }
+.promo-vence {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 3px 10px;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--arg-dark-carbon);
+  background: var(--arg-celeste-light);
+  border-radius: 999px;
+}
+@keyframes promo-entra {
+  from { opacity: 0; transform: translateY(16px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .promos-etiqueta i, .promo-tarjeta { animation: none; }
 }

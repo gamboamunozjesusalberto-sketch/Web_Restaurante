@@ -252,6 +252,108 @@
 .pagina-nosotros .galeria-historia figure:nth-child(2) { grid-column: 4; grid-row: 1; }
 .pagina-nosotros .galeria-historia figure:nth-child(4) { grid-column: 3 / 5; grid-row: 2; }
 
+/* ==========================================================================
+   VERSIÓN FINAL: SECCIÓN "NUESTROS AMBIENTES"
+   Pestañas (Salón interior / Al aire libre / Parrilla y fachada) y una
+   cuadrícula pareja de fotos. Al hacer clic se abren en el visor
+   (lightbox.js). La primera foto de cada pestaña es la grande.
+   ========================================================================== */
+.pagina-nosotros .ambientes-intro { margin: 12px 0 18px; color: var(--arg-text-muted); }
+
+.pagina-nosotros .ambientes-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.pagina-nosotros .ambiente-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-weight: 700;
+  color: var(--arg-text-light);
+  background: var(--arg-dark-card);
+  border: 1px solid var(--arg-border-subtle);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .25s, color .25s, border-color .25s, transform .25s;
+}
+.pagina-nosotros .ambiente-tab .icono { width: 18px; height: 18px; margin: 0; flex-shrink: 0; }
+.pagina-nosotros .ambiente-tab:hover { border-color: var(--arg-celeste); transform: translateY(-2px); }
+.pagina-nosotros .ambiente-tab.activo {
+  color: var(--arg-dark-carbon);
+  background: var(--arg-celeste);
+  border-color: var(--arg-celeste);
+}
+.pagina-nosotros .ambiente-tab.activo .icono { color: var(--arg-dark-carbon); }
+.pagina-nosotros .ambiente-tab:focus-visible { outline: 3px solid var(--arg-celeste-light); outline-offset: 2px; }
+
+.pagina-nosotros .ambiente-panel { animation: ambiente-entra .45s ease both; }
+@keyframes ambiente-entra {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.pagina-nosotros .ambiente-texto { margin-bottom: 14px; }
+
+/* Cuadrícula: 4 columnas, filas del mismo alto; todas las fotos recortadas iguales */
+.pagina-nosotros .ambiente-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 200px;
+  gap: 12px;
+}
+.pagina-nosotros .ambiente-grid figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--arg-border-subtle);
+  cursor: zoom-in;
+}
+.pagina-nosotros .ambiente-grid picture { display: block; height: 100%; }
+.pagina-nosotros .ambiente-grid img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .6s ease, filter .6s ease;
+  filter: brightness(.88);
+}
+.pagina-nosotros .ambiente-grid figure:hover img,
+.pagina-nosotros .ambiente-grid figure:focus-visible img { transform: scale(1.07); filter: brightness(1); }
+.pagina-nosotros .ambiente-grid figure:focus-visible { outline: 3px solid var(--arg-celeste); outline-offset: 2px; }
+.pagina-nosotros .ambiente-grid figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 26px 12px 10px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--arg-white);
+  background: linear-gradient(transparent, rgba(0, 0, 0, .8));
+}
+
+/* La primera foto ocupa 2x2; las demás se acomodan según cuántas haya */
+.pagina-nosotros .ambiente-grid figure:first-child { grid-column: span 2; grid-row: span 2; }
+/* 2 fotos: las dos grandes */
+.pagina-nosotros .ambiente-grid figure:nth-child(2):last-child { grid-column: span 2; grid-row: span 2; }
+/* 3 fotos: la 2 y la 3 anchas */
+.pagina-nosotros .ambiente-grid figure:nth-child(2):nth-last-child(2),
+.pagina-nosotros .ambiente-grid figure:nth-child(3):last-child { grid-column: span 2; }
+/* 4 fotos: la última ancha */
+.pagina-nosotros .ambiente-grid figure:nth-child(4):last-child { grid-column: span 2; }
+
+@media (max-width: 768px) {
+  .pagina-nosotros .ambiente-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+  .pagina-nosotros .ambiente-grid figure:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+  .pagina-nosotros .ambiente-grid figure:first-child,
+  .pagina-nosotros .ambiente-grid figure:nth-child(2):last-child { grid-column: 1 / -1; grid-row: span 2; }
+  .pagina-nosotros .ambiente-grid figure:nth-child(3):last-child { grid-column: 1 / -1; }
+  /* pestañas en una sola fila que se desliza con el dedo */
+  .pagina-nosotros .ambientes-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .pagina-nosotros .ambiente-tab { flex: 0 0 auto; padding: 9px 14px; font-size: .9rem; }
+}
+
 /* ===== SEMANA 8: Diseño responsivo (reglas @media) ===== */
 
 @media (min-width: 1200px) {

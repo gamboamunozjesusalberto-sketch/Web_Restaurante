@@ -17,10 +17,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css propio de nosotros -->
-  <link rel="stylesheet" href="css/variables.css?v=3" />
-  <link rel="stylesheet" href="css/components.css?v=3" />
-  <link rel="stylesheet" href="css/paginas.css?v=3" />
-  <link rel="stylesheet" href="css/nosotros.css?v=3" />
+  <link rel="stylesheet" href="css/variables.css?v=4" />
+  <link rel="stylesheet" href="css/components.css?v=4" />
+  <link rel="stylesheet" href="css/paginas.css?v=4" />
+  <link rel="stylesheet" href="css/nosotros.css?v=4" />
 </head>
 <body class="inner-page pagina-nosotros">
 
@@ -118,30 +118,84 @@
         <li><svg class="icono" aria-hidden="true"><use href="#i-trofeo"/></svg><strong>1.er puesto</strong><span>Clasificatorio a Texas</span></li>
         <li><svg class="icono" aria-hidden="true"><use href="#i-mesa"/></svg><strong>Ica, Perú</strong><span>Ambiente familiar</span></li>
       </ul>
+    </section>
 
-      <!-- Galería de 4 imágenes (Grid + imágenes responsivas) -->
-      <div class="galeria-historia">
-        <figure>
-          <img src="images/mesas interior 2.png" width="347" height="451" loading="lazy" alt="Mesas interiores de Punto Asado" />
-          <figcaption>Mesas en el interior del Restaurante</figcaption>
-        </figure>
-        <figure>
-          <img src="images/mesas interior.png" width="331" height="448" loading="lazy" alt="Ambiente interior de Punto Asado" />
-          <figcaption>Ambiente acogedor en el interior</figcaption>
-        </figure>
-        <figure>
-          <picture>
-            <source type="image/webp"
-                    srcset="images/nosotros/zona-parrillas-480.webp 480w, images/nosotros/zona-parrillas-960.webp 960w"
-                    sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, 450px" />
-            <img src="images/zona parrilas aire libre.jpg" width="1440" height="1440" loading="lazy" alt="Zona de parrillas al aire libre" />
-          </picture>
-          <figcaption>Zona de parrillas al aire libre</figcaption>
-        </figure>
-        <figure>
-          <img src="images/restaurante exterior.png" width="337" height="401" loading="lazy" alt="Vista exterior del restaurante" />
-          <figcaption>Nuestro local en Ica</figcaption>
-        </figure>
+    <!-- SECCION: NUESTROS AMBIENTES (versión final: pestañas + visor de fotos) -->
+    <section class="ambientes" id="ambientes">
+      <h2>Nuestros ambientes</h2>
+      <p class="ambientes-intro">Elige dónde quieres vivir tu parrillada. Toca una foto para verla en grande.</p>
+
+      <div class="ambientes-tabs" role="tablist" aria-label="Ambientes del restaurante">
+        <button type="button" class="ambiente-tab activo" role="tab" id="tab-salon" aria-controls="panel-salon" aria-selected="true">
+          <svg class="icono" aria-hidden="true"><use href="#i-mesa"/></svg> Salón interior
+        </button>
+        <button type="button" class="ambiente-tab" role="tab" id="tab-aire" aria-controls="panel-aire" aria-selected="false" tabindex="-1">
+          <svg class="icono" aria-hidden="true"><use href="#i-familia"/></svg> Al aire libre
+        </button>
+        <button type="button" class="ambiente-tab" role="tab" id="tab-parrilla" aria-controls="panel-parrilla" aria-selected="false" tabindex="-1">
+          <svg class="icono" aria-hidden="true"><use href="#i-fuego"/></svg> Parrilla y fachada
+        </button>
+      </div>
+
+      <div class="ambientes-paneles" data-lightbox>
+        <div class="ambiente-panel" role="tabpanel" id="panel-salon" aria-labelledby="tab-salon">
+          <p class="ambiente-texto">Mesas cómodas y un ambiente acogedor para cenas en familia, cumpleaños y aniversarios.</p>
+          <div class="ambiente-grid">
+            <figure>
+              <img src="images/mesas interior 2.png" width="347" height="451" loading="lazy" alt="Mesas interiores de Punto Asado" />
+              <figcaption>Mesas en el interior del restaurante</figcaption>
+            </figure>
+            <figure>
+              <img src="images/nosotros/salon-familia.jpg" width="1200" height="835" loading="lazy" alt="Familia compartiendo en el salón" />
+              <figcaption>Reuniones en familia</figcaption>
+            </figure>
+            <figure>
+              <img src="images/mesas interior.png" width="331" height="448" loading="lazy" alt="Ambiente interior de Punto Asado" />
+              <figcaption>Ambiente acogedor en el interior</figcaption>
+            </figure>
+            <figure>
+              <img src="images/nosotros/salon-clienta.jpg" width="801" height="1200" loading="lazy" alt="Clienta disfrutando una parrillada" />
+              <figcaption>La parrilla llega a tu mesa</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="ambiente-panel" role="tabpanel" id="panel-aire" aria-labelledby="tab-aire" hidden>
+          <p class="ambiente-texto">Aprovecha el clima de Ica: mesas al aire libre junto a la zona de parrillas, ideales para las noches.</p>
+          <div class="ambiente-grid">
+            <figure>
+              <picture>
+                <source type="image/webp"
+                        srcset="images/nosotros/zona-parrillas-480.webp 480w, images/nosotros/zona-parrillas-960.webp 960w"
+                        sizes="(max-width: 500px) 100vw, 50vw" />
+                <img src="images/zona parrilas aire libre.jpg" width="1440" height="1440" loading="lazy" alt="Zona de parrillas al aire libre" />
+              </picture>
+              <figcaption>Zona de parrillas al aire libre</figcaption>
+            </figure>
+            <figure>
+              <img src="images/inicio_mesas.jpg" width="1440" height="1440" loading="lazy" alt="Mesas al aire libre de noche" />
+              <figcaption>Noches al aire libre</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="ambiente-panel" role="tabpanel" id="panel-parrilla" aria-labelledby="tab-parrilla" hidden>
+          <p class="ambiente-texto">Nuestra parrilla a la vista: mira cómo se preparan tus cortes al carbón.</p>
+          <div class="ambiente-grid">
+            <figure>
+              <img src="images/inicio_parrilla.jpg" width="1080" height="1350" loading="lazy" alt="Cortes en la parrilla" />
+              <figcaption>Cortes a la parrilla</figcaption>
+            </figure>
+            <figure>
+              <img src="images/parrila interior.png" width="352" height="432" loading="lazy" alt="Parrilla interior del restaurante" />
+              <figcaption>Nuestra parrilla</figcaption>
+            </figure>
+            <figure>
+              <img src="images/restaurante exterior.png" width="337" height="401" loading="lazy" alt="Vista exterior del restaurante" />
+              <figcaption>Nuestro local en Ica</figcaption>
+            </figure>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -313,9 +367,11 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=3"></script>
-  <script src="js/sesion.js?v=3"></script>
-  <script src="js/main.js?v=3"></script>
+  <script src="js/supabase-config.js?v=4"></script>
+  <script src="js/sesion.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
+  <script src="js/lightbox.js?v=4"></script>
+  <script src="js/nosotros.js?v=4"></script>
 
 </body>
 </html>

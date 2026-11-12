@@ -3,6 +3,7 @@
  * PUNTO ASADO - JAVASCRIPT DE LANDING PAGE (LANDING.JS)
  * Funcionalidades exclusivas de index.html:
  * - Control, sincronización de indicadores y eventos del Hero Carousel
+ * - Promociones activas leídas de Supabase (versión final)
  * ==========================================================================
  */
 
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Soporte para flechas del teclado (izquierda / derecha)
     window.addEventListener('keydown', (event) => {
+      if (document.body.classList.contains('sin-scroll')) return; // el visor de fotos está abierto
       if (event.key === 'ArrowLeft') {
         heroCarousel.prev();
       } else if (event.key === 'ArrowRight') {
@@ -79,4 +81,48 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ------------------------------------------------------------------------
+  // 2. Promociones activas (Supabase). Solo lectura: la política RLS deja
+  //    ver al público únicamente las promociones con activa = true.
+  // ------------------------------------------------------------------------
+  cargarPromociones();
 });
+
+async function cargarPromociones() {
+  const seccion = document.getElementById('promociones');
+  const lista = document.getElementById('promos-lista');
+  if (!seccion || !lista || typeof db === 'undefined' || !db) return;
+
+  const hoy = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' }); // AAAA-MM-DD
+  const { data, error } = await db
+    .from('promociones')
+    .select('titulo, descripcion, hasta')
+    .eq('activa', true)
+    .or(`hasta.is.null,hasta.gte.${hoy}`)
+    .order('creado_en', { ascending: false })
+    .limit(3);
+  if (error || !data || !data.length) return;
+
+  lista.replaceChildren(...data.map((promo, i) => {
+    const tarjeta = document.createElement('article');
+    tarjeta.className = 'promo-tarjeta';
+    tarjeta.style.setProperty('--delay', `${i * 0.12}s`);
+
+    const titulo = document.createElement('h3');
+    titulo.textContent = promo.titulo; // textContent: nunca se interpreta como HTML
+    const texto = document.createElement('p');
+    texto.textContent = promo.descripcion;
+    tarjeta.append(titulo, texto);
+
+    if (promo.hasta) {
+      const fecha = new Date(promo.hasta + 'T12:00:00');
+      const vence = document.createElement('span');
+      vence.className = 'promo-vence';
+      vence.textContent = 'Válido hasta el ' + fecha.toLocaleDateString('es-PE', { day: 'numeric', month: 'long' });
+      tarjeta.append(vence);
+    }
+    return tarjeta;
+  }));
+  seccion.hidden = false;
+}

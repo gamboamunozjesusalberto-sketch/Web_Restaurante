@@ -274,7 +274,9 @@ body.inner-page {
 }
 
 .inner-page .reveal {
-  animation: fadeUp 0.6s ease both;
+  /* backwards (no both): al terminar la entrada suelta el transform,
+     así funcionan el hover y el efecto 3D de las tarjetas */
+  animation: fadeUp 0.6s ease backwards;
   animation-delay: var(--delay, 0s);
 }
 

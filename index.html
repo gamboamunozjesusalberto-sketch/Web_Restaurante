@@ -18,9 +18,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Arquitectura modular: variables, componentes compartidos y landing -->
-  <link rel="stylesheet" href="css/variables.css?v=3" />
-  <link rel="stylesheet" href="css/components.css?v=3" />
-  <link rel="stylesheet" href="css/landing.css?v=3" />
+  <link rel="stylesheet" href="css/variables.css?v=4" />
+  <link rel="stylesheet" href="css/components.css?v=4" />
+  <link rel="stylesheet" href="css/landing.css?v=4" />
 </head>
 <body class="landing-page">
 
@@ -134,6 +134,20 @@
             Reservar Mesa
           </a>
         </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         PROMOCIONES (versión final): se llena con las promociones
+         activas de la base de datos (landing.js). Si no hay, queda oculta.
+         ======================================================== -->
+    <section class="section-promos" id="promociones" hidden>
+      <div class="container">
+        <div class="promos-cabecera">
+          <span class="promos-etiqueta"><i class="bi bi-megaphone-fill" aria-hidden="true"></i> Promociones</span>
+          <a class="promos-aviso" href="login.html#registro">Crea tu cuenta y recíbelas primero</a>
+        </div>
+        <div class="promos-lista" id="promos-lista"></div>
       </div>
     </section>
 
@@ -284,13 +298,15 @@
         <h2 class="galeria-titulo">Brasas &amp; Ambiente</h2>
         <p class="galeria-lead">Un vistazo a nuestra parrilla, nuestros cortes y el salón donde compartimos la mesa.</p>
       </div>
-      <div class="container galeria-grid">
-        <figure class="galeria-item g-wide"><img src="images/asador.jpg" alt="Maestro asador junto a las brasas" loading="lazy" /></figure>
-        <figure class="galeria-item "><img src="images/inicio_parrilla.jpg" alt="Cortes y chorizos sobre la parrilla" loading="lazy" /></figure>
-        <figure class="galeria-item "><img src="images/salon.jpg" alt="Salón de Punto Asado con bodega" loading="lazy" /></figure>
-        <figure class="galeria-item g-wide"><img src="images/inicio_mesas.jpg" alt="Mesas al aire libre de noche" loading="lazy" /></figure>
-        <figure class="galeria-item "><img src="images/inicio_empanadas.jpg" alt="Empanadas argentinas con limón" loading="lazy" /></figure>
-        <figure class="galeria-item g-wide"><img src="images/inicio_cortecarne.jpg" alt="Cortes de carne a la parrilla" loading="lazy" /></figure>
+      <!-- Galería tipo "bento" (CSS Grid con áreas) + lightbox al hacer clic (js/lightbox.js) -->
+      <div class="container galeria-grid" data-lightbox>
+        <figure class="galeria-item g-a"><img src="images/asador.jpg" alt="Maestro asador junto a las brasas" loading="lazy" /><figcaption>El fuego de cada día</figcaption></figure>
+        <figure class="galeria-item g-b"><img src="images/inicio_parrilla.jpg" alt="Cortes y chorizos sobre la parrilla" loading="lazy" /><figcaption>A la parrilla</figcaption></figure>
+        <figure class="galeria-item g-c"><img src="images/inicio_cortes.jpg" alt="Costillar asado servido en tabla" loading="lazy" /><figcaption>Costillar</figcaption></figure>
+        <figure class="galeria-item g-d"><img src="images/inicio_empanadas.jpg" alt="Empanadas argentinas con limón" loading="lazy" /><figcaption>Empanadas</figcaption></figure>
+        <figure class="galeria-item g-e"><img src="images/inicio_mesas.jpg" alt="Mesas al aire libre de noche junto al mural" loading="lazy" /><figcaption>Noches al aire libre</figcaption></figure>
+        <figure class="galeria-item g-f"><img src="images/inicio_cortecarne.jpg" alt="Cortes de carne a la parrilla" loading="lazy" /><figcaption>Cortes Angus</figcaption></figure>
+        <figure class="galeria-item g-g"><img src="images/provoleta.jpg" alt="Provoleta a la parrilla" loading="lazy" /><figcaption>Provoleta</figcaption></figure>
       </div>
     </section>
 
@@ -411,10 +427,11 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=3"></script>
-  <script src="js/sesion.js?v=3"></script>
-  <script src="js/main.js?v=3"></script>
-  <script src="js/landing.js?v=3"></script>
+  <script src="js/supabase-config.js?v=4"></script>
+  <script src="js/sesion.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
+  <script src="js/landing.js?v=4"></script>
+  <script src="js/lightbox.js?v=4"></script>
 
 </body>
 </html>
