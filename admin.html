@@ -18,11 +18,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css de la cuenta (tarjetas) + css propio del admin -->
-  <link rel="stylesheet" href="css/variables.css?v=8" />
-  <link rel="stylesheet" href="css/components.css?v=8" />
-  <link rel="stylesheet" href="css/paginas.css?v=8" />
-  <link rel="stylesheet" href="css/cuenta.css?v=8" />
-  <link rel="stylesheet" href="css/admin.css?v=8" />
+  <link rel="stylesheet" href="css/variables.css?v=9" />
+  <link rel="stylesheet" href="css/components.css?v=9" />
+  <link rel="stylesheet" href="css/paginas.css?v=9" />
+  <link rel="stylesheet" href="css/cuenta.css?v=9" />
+  <link rel="stylesheet" href="css/admin.css?v=9" />
 </head>
 <body class="inner-page page-cuenta page-admin">
 
@@ -209,6 +209,11 @@
           <option value="images/zapa.jpeg"></option>
           <option value="images/zona parrilas aire libre.jpg"></option>
                 </datalist>
+                <label class="subir-foto" for="p-archivo">
+                  <i class="bi bi-upload" aria-hidden="true"></i>
+                  <span id="p-archivo-texto">O sube una foto desde tu equipo (JPG, PNG o WEBP, máx. 5 MB)</span>
+                </label>
+                <input type="file" id="p-archivo" name="archivo" accept="image/jpeg,image/png,image/webp" class="visually-hidden">
                 <img class="preview-foto" id="preview-foto" alt="Vista previa" hidden>
                 <button type="submit" class="btn btn-celeste px-4 py-2 mt-3 w-100">Agregar a la carta</button>
                 <p class="form-feedback" role="status" aria-live="polite"></p>
@@ -339,10 +344,10 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=8"></script>
-  <script src="js/sesion.js?v=8"></script>
-  <script src="js/main.js?v=8"></script>
-  <script src="js/admin.js?v=8"></script>
+  <script src="js/supabase-config.js?v=9"></script>
+  <script src="js/sesion.js?v=9"></script>
+  <script src="js/main.js?v=9"></script>
+  <script src="js/admin.js?v=9"></script>
 
 </body>
 </html>

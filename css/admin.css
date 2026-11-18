@@ -185,3 +185,17 @@
   .plato-item { grid-template-columns: 48px 1fr; }
   .plato-controles { grid-column: 1 / -1; justify-content: space-between; }
 }
+
+/* Subir foto desde el equipo (Panel → Carta) */
+.form-cuenta label.subir-foto {
+  display: flex; align-items: center; gap: 10px;
+  margin: 8px 0 0; padding: 12px 14px;
+  border: 2px dashed #d8cbbd; border-radius: 12px; background: var(--pa-cream-soft);
+  color: var(--pa-muted); font-size: 0.8rem; font-weight: 600; letter-spacing: 0; text-transform: none;
+  cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease;
+}
+.form-cuenta label.subir-foto i { font-size: 1.2rem; color: var(--arg-celeste-dark); }
+.form-cuenta label.subir-foto:hover,
+#p-archivo:focus-visible + .preview-foto,
+.form-cuenta label.subir-foto:focus-within { border-color: var(--arg-celeste-dark); color: var(--pa-ink-warm); }
+#p-archivo-texto { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

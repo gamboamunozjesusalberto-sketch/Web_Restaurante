@@ -274,13 +274,51 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   buscarPlato.addEventListener('input', pintarPlatos);
 
-  // vista previa de la foto elegida
+  // vista previa de la foto elegida (ruta escrita o archivo subido)
+  const archivoFoto = document.getElementById('p-archivo');
+  const archivoTexto = document.getElementById('p-archivo-texto');
+  const textoArchivoInicial = archivoTexto.textContent;
+  const TIPOS_FOTO = ['image/jpeg', 'image/png', 'image/webp'];
+  const MAX_FOTO = 5 * 1024 * 1024; // 5 MB
+
+  function limpiarArchivo() {
+    archivoFoto.value = '';
+    archivoTexto.textContent = textoArchivoInicial;
+  }
+
   formPlato.elements.imagen.addEventListener('input', () => {
     const ruta = formPlato.elements.imagen.value.trim();
+    if (ruta) limpiarArchivo(); // se usa la ruta escrita, no el archivo
     preview.hidden = !ruta;
     if (ruta) preview.src = ruta;
   });
+
+  archivoFoto.addEventListener('change', () => {
+    const archivo = archivoFoto.files[0];
+    if (!archivo) return limpiarArchivo();
+    if (!TIPOS_FOTO.includes(archivo.type)) {
+      limpiarArchivo();
+      return avisar(formPlato, 'La foto debe ser JPG, PNG o WEBP.', false);
+    }
+    if (archivo.size > MAX_FOTO) {
+      limpiarArchivo();
+      return avisar(formPlato, 'La foto pesa más de 5 MB. Elige una más liviana.', false);
+    }
+    formPlato.elements.imagen.value = ''; // se usa el archivo, no la ruta
+    archivoTexto.textContent = archivo.name;
+    preview.src = URL.createObjectURL(archivo);
+    preview.hidden = false;
+  });
   preview.addEventListener('error', () => { preview.hidden = true; });
+
+  // Sube la foto a Supabase Storage y devuelve su dirección pública
+  async function subirFoto(archivo) {
+    const extension = archivo.type.split('/')[1].replace('jpeg', 'jpg');
+    const ruta = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
+    const { error } = await db.storage.from('fotos-platos').upload(ruta, archivo, { contentType: archivo.type });
+    if (error) throw error;
+    return db.storage.from('fotos-platos').getPublicUrl(ruta).data.publicUrl;
+  }
 
   formPlato.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -293,9 +331,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       descripcion: d.get('descripcion').trim() || null,
       imagen: d.get('imagen').trim() || null
     };
+    const boton = formPlato.querySelector('[type="submit"]');
+    boton.disabled = true;
+    try {
+      if (archivoFoto.files[0]) nuevo.imagen = await subirFoto(archivoFoto.files[0]);
+    } catch (err) {
+      boton.disabled = false;
+      return avisar(formPlato, 'No se pudo subir la foto: ' + err.message, false);
+    }
     const { error } = await db.from('platos').insert(nuevo);
+    boton.disabled = false;
     if (error) return avisar(formPlato, 'No se pudo agregar: ' + error.message, false);
     formPlato.reset();
+    limpiarArchivo();
     preview.hidden = true;
     avisar(formPlato, `"${nuevo.nombre}" se agregó a la carta.`, true);
     cargarPlatos();
