@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const listaPedido = document.getElementById('pedido-lista');
   const pedido = [];
   const MAX_PEDIDO = 15;
-  const NOMBRES_CATEGORIA = { entradas: 'Para comenzar', parrilla: 'A la parrilla', platos: 'Nuestros platos', postres: 'Postres', vinos: 'Vinos' };
+  const NOMBRES_CATEGORIA = { entradas: 'Para comenzar', parrilla: 'A la parrilla', platos: 'Nuestros platos', postres: 'Postres', vinos: 'Vinos', bebidas: 'Bebidas' };
 
   function llenarPlatos(lista) {
     selectPlato.innerHTML = '<option value="">Elige un plato de la carta…</option>';
@@ -323,11 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // la lista base es la carta; si el admin agregó platos en el Panel, también salen
+  // (sin los platos que el admin quitó de la carta)
   llenarPlatos(CARTA);
   if (db) {
-    db.from('platos').select('nombre, categoria').eq('visible', true).then(({ data }) => {
-      if (!data) return;
-      const extra = data
+    Promise.all([cartaVisible(), db.from('platos').select('nombre, categoria').eq('visible', true)]).then(([, { data }]) => {
+      const extra = (data || [])
         .map((p) => ({ nombre: p.nombre, categoria: String(p.categoria).toLowerCase() }))
         .filter((p) => !CARTA.some((c) => c.nombre.toLowerCase() === p.nombre.toLowerCase()));
       llenarPlatos([...CARTA, ...extra]);

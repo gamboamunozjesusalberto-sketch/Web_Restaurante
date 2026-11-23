@@ -201,6 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Platos que ya están publicados en menu.html (carta-datos.js) pero todavía no
   // tienen fila en la tabla platos. Se muestran para poder cambiarles la foto.
   const normalizar = (t) => String(t).trim().toLowerCase();
+  const esDeLaCarta = (nombre) => typeof CARTA !== 'undefined' && CARTA.some((c) => normalizar(c.nombre) === normalizar(nombre));
   function platosDeLaCarta() {
     if (typeof CARTA === 'undefined') return [];
     const enBase = new Set(platos.map((p) => normalizar(p.nombre)));
@@ -234,12 +235,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const info = crear('div');
-      info.append(crear('h3', '', p.nombre), crear('p', '', p.categoria + (p.visible ? '' : ' · oculto') + (p.deLaCarta ? ' · publicado en la carta' : '')));
+      const enMenu = !p.deLaCarta && esDeLaCarta(p.nombre);
+      const estadoTexto = p.visible ? '' : (enMenu ? ' · eliminado de la carta' : ' · oculto');
+      info.append(crear('h3', '', p.nombre), crear('p', '', p.categoria + estadoTexto + (p.deLaCarta ? ' · publicado en la carta' : '')));
 
       // los platos de la carta solo tienen el botón de foto (sus datos están en menu.html)
       if (p.deLaCarta) {
         const controles = crear('div', 'plato-controles');
-        controles.append(cambiarFoto);
+        const quitar = crear('button', 'btn-accion btn-eliminar');
+        quitar.type = 'button';
+        quitar.innerHTML = '<i class="bi bi-trash3" aria-hidden="true"></i>';
+        quitar.setAttribute('aria-label', 'Eliminar ' + p.nombre + ' de la carta');
+        quitar.title = 'Eliminar de la carta';
+        // el plato está escrito en menu.html: se guarda como oculto para que la carta lo esconda
+        quitar.addEventListener('click', async () => {
+          if (!confirm(`¿Eliminar "${p.nombre}" de la carta?\nDejará de verse en la carta, en la reserva y en el chatbot.`)) return;
+          const { error } = await db.from('platos').insert({ nombre: p.nombre, categoria: p.categoria, precio: p.precio, imagen: p.imagen, visible: false });
+          if (error) return alert('No se pudo eliminar: ' + error.message);
+          cargarPlatos();
+        });
+        controles.append(cambiarFoto, quitar);
         li.append(info, controles);
         listaPlatos.append(li);
         return;
@@ -283,6 +298,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       eliminar.setAttribute('aria-label', 'Eliminar ' + p.nombre);
       eliminar.addEventListener('click', async () => {
         if (!confirm(`¿Eliminar "${p.nombre}" de la carta?`)) return;
+        // si el plato también está escrito en menu.html, borrar la fila lo haría
+        // volver a aparecer: por eso se deja guardado como oculto
+        if (enMenu) {
+          const { error } = await db.from('platos').update({ visible: false }).eq('id', p.id);
+          if (error) return alert('No se pudo eliminar: ' + error.message);
+          p.visible = false;
+          return pintarPlatos();
+        }
         const { error } = await db.from('platos').delete().eq('id', p.id);
         if (error) return alert('No se pudo eliminar: ' + error.message);
         platos = platos.filter((x) => x.id !== p.id);

@@ -17,6 +17,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof CARTA === 'undefined' || typeof PAQUETES === 'undefined') return;
+  cartaVisible(); // saca de CARTA los platos que el admin quitó
 
   const WHATSAPP = '51919293435';
   const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
@@ -284,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function responderPlato(p) {
-    bot([{ negrita: p.nombre }, ` · ${soles(p.precio)}`, { salto: true }, p.coccion]);
+    bot([{ negrita: p.nombre }, p.precio != null ? ` · ${soles(p.precio)}` : ' · precio a consultar', { salto: true }, p.coccion || 'Pregúntanos por WhatsApp cómo lo preparamos.']);
     chips([
       { texto: 'Otro plato', accion: preguntarPlato },
       { texto: 'Platos recomendados', accion: () => responderRecomendados('') },

@@ -88,3 +88,56 @@ const CARTA = [
   { nombre: 'Nostrum Tacama', categoria: 'vinos', precio: 75, coccion: 'Tinto ícono de Tacama, de los valles de Ica.', imagen: 'images/nostrum_tacama.jpeg' },
   { nombre: 'Tonuz Tacama', categoria: 'vinos', precio: 70, coccion: 'Tinto de Tacama para acompañar parrilladas.', imagen: 'images/tonuz_tacama.png' }
 ];
+
+// ---------- Platos quitados desde el Panel ----------
+// El admin puede eliminar un plato de la carta aunque esté escrito en menu.html:
+// queda guardado como oculto en la tabla platos. Estas funciones preguntan a
+// Supabase (función platos_ocultos) cuáles son y los sacan de CARTA, para que
+// no salgan en la carta, en la reserva ni en el chatbot.
+let _platosOcultos = null;
+function nombresOcultos() {
+  if (!_platosOcultos) {
+    _platosOcultos = (async () => {
+      if (typeof db === 'undefined' || !db) return new Set();
+      const { data, error } = await db.rpc('platos_ocultos');
+      if (error || !Array.isArray(data)) return new Set();
+      return new Set(data.map((n) => String(typeof n === 'object' && n ? Object.values(n)[0] : n).trim().toLowerCase()));
+    })();
+  }
+  return _platosOcultos;
+}
+
+// También suma a CARTA los platos nuevos que el admin agregó en el Panel,
+// así el chatbot, la reserva y la ficha de la carta los conocen sin tocar código.
+let _cartaLista = null;
+function cartaVisible() {
+  if (!_cartaLista) {
+    _cartaLista = (async () => {
+      const ocultos = await nombresOcultos();
+      for (let i = CARTA.length - 1; i >= 0; i--) {
+        if (ocultos.has(CARTA[i].nombre.toLowerCase())) CARTA.splice(i, 1);
+      }
+      if (typeof db !== 'undefined' && db) {
+        const { data } = await db.from('platos').select('nombre, descripcion, categoria, precio, imagen').eq('visible', true);
+        (data || []).forEach((p) => {
+          const actual = CARTA.find((c) => c.nombre.toLowerCase() === p.nombre.trim().toLowerCase());
+          if (actual) {
+            if (p.precio != null) actual.precio = Number(p.precio);
+            if (p.imagen) actual.imagen = p.imagen;
+            return;
+          }
+          CARTA.push({
+            nombre: p.nombre.trim(),
+            categoria: String(p.categoria).toLowerCase(),
+            precio: p.precio == null ? null : Number(p.precio),
+            coccion: p.descripcion || '',
+            imagen: p.imagen || null
+          });
+        });
+      }
+      return CARTA;
+    })();
+  }
+  return _cartaLista;
+}
+

@@ -44,12 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const categoria = window.location.hash.replace('#', '');
-  if (['entradas', 'parrilla', 'platos', 'postres', 'vinos'].includes(categoria)) {
+  if (['entradas', 'parrilla', 'platos', 'postres', 'vinos', 'bebidas'].includes(categoria)) {
     mostrar(categoria);
   }
 
-  cargarPlatosDeLaBase();
+  // los platos del Panel entran solos a su sección; al final se quitan las secciones vacías
+  cargarPlatosDeLaBase().finally(quitarSeccionesVacias);
 });
+
+// Una sección sin platos (por ejemplo Bebidas, si el admin aún no agregó ninguna,
+// o una categoría cuyos platos se eliminaron) se quita junto con su botón de filtro.
+function quitarSeccionesVacias() {
+  document.querySelectorAll('.menu-block').forEach((bloque) => {
+    if (!bloque.querySelector('.parrilla-card, .vino-card')) bloque.remove();
+  });
+  document.querySelectorAll('.filter-btn').forEach((btn) => {
+    if (btn.dataset.filter !== 'todo' && !document.getElementById(btn.dataset.filter)) btn.remove();
+  });
+}
 
 // Lee los platos visibles de Supabase y los pone en la carta.
 // Solo lectura: la política RLS deja ver al público únicamente los platos visibles.
@@ -63,6 +75,15 @@ async function cargarPlatosDeLaBase() {
   if (error || !data) return;
 
   const normalizar = (t) => t.trim().toLowerCase();
+
+  // Platos que el admin eliminó desde el Panel: se quita su tarjeta
+  if (typeof nombresOcultos === 'function') {
+    const ocultos = await nombresOcultos();
+    document.querySelectorAll('.parrilla-card, .vino-card').forEach((tarjeta) => {
+      const h3 = tarjeta.querySelector('h3');
+      if (h3 && ocultos.has(normalizar(h3.textContent))) tarjeta.remove();
+    });
+  }
   const precioTexto = (n) => 'S/. ' + Number(n).toFixed(2);
 
   data.forEach((plato) => {
