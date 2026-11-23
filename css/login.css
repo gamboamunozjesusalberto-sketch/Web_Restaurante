@@ -97,3 +97,115 @@
   .showcase-content { animation: none; }
   .login-page *, .login-page *::before, .login-page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+/* ==========================================================================
+   MEJORAS DEL LOGIN (versión final)
+   ========================================================================== */
+
+/* ---------- Panel de fotos: se turnan con zoom lento + chispas ---------- */
+.login-showcase { background: #302016; }
+.showcase-fotos { position: absolute; inset: 0; z-index: -2; }
+.showcase-fotos img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; animation: foto-turno 24s infinite;
+}
+.showcase-fotos img:nth-child(2) { animation-delay: 6s; }
+.showcase-fotos img:nth-child(3) { animation-delay: 12s; }
+.showcase-fotos img:nth-child(4) { animation-delay: 18s; }
+@keyframes foto-turno {
+  0% { opacity: 0; transform: scale(1.12); }
+  5% { opacity: 1; }
+  25% { opacity: 1; }
+  32% { opacity: 0; transform: scale(1); }
+  100% { opacity: 0; }
+}
+.showcase-fotos img:first-child { opacity: 1; } /* se ve algo mientras carga la animación */
+.showcase-chispas { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; }
+.showcase-content.cambio { animation: login-rise .55s ease both; }
+
+.beneficios { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+.beneficios li {
+  display: flex; align-items: center; gap: 12px; color: #f3e6d6; font-size: .85rem;
+  opacity: 0; animation: login-rise .5s ease forwards;
+}
+.beneficios li:nth-child(2) { animation-delay: .08s; }
+.beneficios li:nth-child(3) { animation-delay: .16s; }
+.beneficios li:nth-child(4) { animation-delay: .24s; }
+.beneficios i {
+  display: grid; place-items: center; flex: 0 0 34px; height: 34px; border-radius: 50%;
+  background: rgba(231, 184, 117, .16); color: #e7b875;
+}
+
+/* ---------- Pestañas con indicador que se desliza ---------- */
+.form-tabs { position: relative; }
+.form-tabs::before {
+  position: absolute; z-index: 0; top: 5px; bottom: 5px; left: 5px; width: calc(50% - 7.5px);
+  border-radius: 4px; background: #fffdfa; box-shadow: 0 2px 8px rgba(51, 34, 20, .09);
+  content: ''; transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+}
+.form-tabs.en-registro::before { transform: translateX(calc(100% + 5px)); }
+.form-tab { position: relative; z-index: 1; }
+.form-tab.is-active { background: transparent; box-shadow: none; }
+.client-form.cambio { animation: login-rise .45s ease both; }
+
+/* ---------- Contraseña: ojo, mayúsculas y fuerza ---------- */
+.campo-clave { position: relative; }
+.login-page .campo-clave input { padding-right: 48px; }
+.ver-clave {
+  position: absolute; top: 50%; right: 6px; display: grid; place-items: center; width: 38px; height: 38px;
+  border: 0; border-radius: 50%; background: none; color: #8d7d70; transform: translateY(-50%); cursor: pointer;
+  transition: color .2s ease, background .2s ease;
+}
+.ver-clave:hover { background: #efe6db; color: #2b1d14; }
+.aviso-mayus { margin: 7px 0 0; color: #b36a1d; font-size: .68rem; font-weight: 700; line-height: 1.4; }
+.fuerza { margin-top: 10px; }
+.fuerza-barra { position: relative; height: 6px; border-radius: 999px; background: #e6ddd2; overflow: visible; }
+.fuerza-barra span { display: block; width: 0; height: 100%; border-radius: inherit; transition: width .35s ease, background .35s ease; }
+.fuerza-barra span::after {
+  position: absolute; top: 12px; right: 0; color: #6f6157; font-size: .64rem; font-weight: 800;
+  content: attr(data-texto);
+}
+.fuerza-reglas { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 9px 0 0; padding: 0 74px 0 0; list-style: none; }
+.fuerza-reglas li { color: #9b8d82; font-size: .66rem; line-height: 1.4; transition: color .2s ease; }
+.fuerza-reglas li::before { content: '○ '; }
+.fuerza-reglas li.ok { color: #2f7a3f; font-weight: 700; }
+.fuerza-reglas li.ok::before { content: '✓ '; }
+
+/* ---------- Ayuda en vivo de cada campo ---------- */
+.campo-ayuda { display: block; min-height: 0; margin-top: 6px; font-size: .66rem; font-weight: 600; line-height: 1.4; }
+.campo-ayuda:empty { display: none; }
+.campo-ayuda.ok { color: #2f7a3f; }
+.campo-ayuda.error { color: #b23a32; }
+.login-only { margin-top: -4px; }
+
+/* ---------- Botón: cargando, éxito y error ---------- */
+.submit-button.cargando .submit-flecha {
+  width: 18px; height: 18px; border: 2px solid rgba(232, 188, 128, .35); border-top-color: #e8bc80;
+  border-radius: 50%; font-size: 0; animation: girar .7s linear infinite;
+}
+.submit-button.exito { border-color: #2f7a3f; background: #2f7a3f; }
+.submit-button.exito .submit-flecha { font-size: 0; }
+.submit-button.exito .submit-flecha::before { color: #fff; font-size: 1.1rem; content: '✓'; }
+@keyframes girar { to { transform: rotate(360deg); } }
+.login-panel.sacudir { animation: sacudir .4s ease; }
+@keyframes sacudir {
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* ---------- Recuperar contraseña ---------- */
+.recuperar { text-align: center; }
+.recuperar .field-group { text-align: left; }
+.recuperar-icono {
+  display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 12px;
+  border-radius: 50%; background: #f0e4d4; color: #9a6b39; font-size: 1.7rem;
+}
+.recuperar-texto { margin: 0 0 18px; color: #6f6157; font-size: .8rem; }
+.volver-login { margin-top: 18px; padding: 0; border: 0; background: none; color: #925d2c; font: 700 .72rem 'Montserrat', Arial, sans-serif; cursor: pointer; }
+.volver-login:hover { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-fotos img { animation: none; }
+  .showcase-fotos img:not(:first-child) { display: none; }
+  .login-panel.sacudir, .beneficios li { animation: none; opacity: 1; }
+}
