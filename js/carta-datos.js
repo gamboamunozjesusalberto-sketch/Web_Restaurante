@@ -1,0 +1,84 @@
+/**
+ * ==========================================================================
+ * PUNTO ASADO - DATOS COMPARTIDOS (CARTA-DATOS.JS)
+ * Lista de platos de la carta y paquetes de reserva. La usan:
+ * - contacto.js: elegir paquete y "¿qué piensas pedir?"
+ * - chatbot.js: recomendar platos, explicar la cocción y los paquetes
+ * Si cambian la carta (menu.html), actualicen también esta lista.
+ * ==========================================================================
+ */
+
+'use strict';
+
+const HORARIO = {
+  // 0 = domingo ... 6 = sábado
+  apertura: (dia) => (dia === 0 || dia === 6 ? '12:00' : '18:00'),
+  cierre: '23:00',
+  ultimaReserva: '22:30',
+  texto: 'Lunes a viernes de 6:00 p. m. a 11:00 p. m.; sábados y domingos de 12:00 m. a 11:00 p. m.'
+};
+
+const PAQUETES = [
+  {
+    id: 'Cumpleañero',
+    icono: 'bi-cake2',
+    resumen: 'Mesa decorada, postre con vela y la canción del equipo.',
+    min: 2, max: 10
+  },
+  {
+    id: 'Parrilla en vivo',
+    icono: 'bi-fire',
+    resumen: 'Nuestro asador prepara los cortes frente a tu mesa y te explica cada uno.',
+    min: 4, max: 10
+  },
+  {
+    id: 'Empresarial',
+    icono: 'bi-briefcase',
+    resumen: 'Mesa para reuniones de trabajo con menú para el grupo.',
+    min: 8, max: 30
+  },
+  {
+    id: 'Segundo piso exclusivo',
+    icono: 'bi-building',
+    resumen: 'Todo el segundo piso solo para tu evento (uno por día).',
+    min: 15, max: 40
+  }
+];
+
+// categoria: entradas | parrilla | platos | postres | vinos
+// coccion: cómo se prepara (sale de la descripción de la carta)
+const CARTA = [
+  { nombre: 'Empanadas Argentinas', categoria: 'entradas', precio: 19, coccion: 'Fritas, rellenas de carne molida clásica.' },
+  { nombre: 'Empanadas Angus', categoria: 'entradas', precio: 26, coccion: 'Carne Angus picada a cuchillo con cebolla y especias.' },
+  { nombre: 'Provoleta Perfecta', categoria: 'entradas', precio: 35, coccion: 'Queso provoleta a la parrilla con orégano, servido con pan de la casa.' },
+  { nombre: 'Papas Patagonia', categoria: 'entradas', precio: 32, coccion: 'Papas fritas con queso cheddar, tocino y cebolla china.' },
+  { nombre: 'Mollejas de Res', categoria: 'entradas', precio: 42, coccion: 'Asadas a fuego vivo en la parrilla y terminadas al limón.' },
+  { nombre: 'Trilogía de Chorizos', categoria: 'entradas', precio: 39, coccion: 'Chorizo clásico, de ají limo y de ají charapita, a la parrilla.' },
+  { nombre: 'Bife de Chorizo', categoria: 'parrilla', precio: 68, coccion: 'Madurado 21 días y asado a la parrilla con sal marina. Recomendado a punto.' },
+  { nombre: 'Entraña Fina', categoria: 'parrilla', precio: 75, coccion: 'Asada con leña de quebracho blanco; queda muy jugosa. Recomendada a punto.' },
+  { nombre: 'Tomahawk Angus', categoria: 'parrilla', precio: 115, coccion: 'Corte con hueso largo, asado a fuego vivo. Ideal para compartir.' },
+  { nombre: 'Gran Parrillada', categoria: 'parrilla', precio: 125, coccion: 'Bife Angus, entraña, chorizos y morcilla a la parrilla, con papas rústicas y chimichurri.' },
+  { nombre: 'Picaña Angus', categoria: 'parrilla', precio: 72, coccion: 'Asado lento sobre las brasas para que la capa de grasa le dé sabor.' },
+  { nombre: 'Colita de Cuadril', categoria: 'parrilla', precio: 69, coccion: 'Cortada en lonjas y asada al punto con sal marina.' },
+  { nombre: 'Bife Ancho', categoria: 'parrilla', precio: 78, coccion: 'Corte con hueso y marmoleado intenso a la parrilla, con papas rústicas.' },
+  { nombre: 'Matambrito a la Parrilla', categoria: 'parrilla', precio: 48, coccion: 'Glaseado a fuego lento, con limón y chimichurri de la casa.' },
+  { nombre: 'Costillar a la Leña', categoria: 'parrilla', precio: 65, coccion: 'Cocido lentamente a la leña con hierbas aromáticas hasta quedar tierno.' },
+  { nombre: 'Cordero a las Brasas', categoria: 'parrilla', precio: 72, coccion: 'Dorado a las brasas con romero y servido con limón.' },
+  { nombre: 'Parrilla para Dos', categoria: 'parrilla', precio: 110, coccion: 'Selección de carnes, chorizo y morcilla a la parrilla para dos personas.' },
+  { nombre: 'Parrilla para Cuatro', categoria: 'parrilla', precio: 189, coccion: 'Bifes, achuras y embutidos a la parrilla en bandeja para cuatro.' },
+  { nombre: 'Milanesa Argentina', categoria: 'platos', precio: 52, coccion: 'Carne de res empanizada y frita, crocante al estilo argentino.' },
+  { nombre: 'Milanesa Napolitana', categoria: 'platos', precio: 62, coccion: 'Milanesa con salsa de tomate casera y queso fundido al horno.' },
+  { nombre: 'Suprema de Pollo Napolitana', categoria: 'platos', precio: 58, coccion: 'Pechuga empanizada con salsa de tomate y queso gratinado.' },
+  { nombre: 'Pastel de Papa', categoria: 'platos', precio: 45, coccion: 'Al horno, relleno de carne Angus y queso.' },
+  { nombre: 'Pollo Punto Asado', categoria: 'platos', precio: 42, coccion: 'Pechuga a la parrilla con chimichurri, ensalada y papas doradas.' },
+  { nombre: 'Pollo al Limón', categoria: 'platos', precio: 40, coccion: 'Pechuga jugosa en salsa cítrica de limón.' },
+  { nombre: 'Panceta Braseada', categoria: 'platos', precio: 38, coccion: 'Braseada: cocida lentamente y servida en su jugo.' },
+  { nombre: 'Panqueque de Dulce de Leche', categoria: 'postres', precio: 22, coccion: 'Panqueque casero relleno de dulce de leche, con una bola de helado.' },
+  { nombre: 'Vaca Sagrada', categoria: 'vinos', precio: 95, coccion: 'Tinto argentino de cuerpo medio, ideal con cortes a la parrilla.' },
+  { nombre: 'Zapa', categoria: 'vinos', precio: 85, coccion: 'Tinto con taninos suaves, para carnes rojas.' },
+  { nombre: 'Minimalista Malbec', categoria: 'vinos', precio: 120, coccion: 'Malbec fresco y frutado, fácil de maridar.' },
+  { nombre: 'Durigutti', categoria: 'vinos', precio: 110, coccion: 'Malbec argentino intenso y de final largo.' },
+  { nombre: 'Malbec Pampas', categoria: 'vinos', precio: 65, coccion: 'Malbec sabroso y redondo de Bodega Pampas.' },
+  { nombre: 'Nostrum Tacama', categoria: 'vinos', precio: 75, coccion: 'Tinto ícono de Tacama, de los valles de Ica.' },
+  { nombre: 'Tonuz Tacama', categoria: 'vinos', precio: 70, coccion: 'Tinto de Tacama para acompañar parrilladas.' }
+];

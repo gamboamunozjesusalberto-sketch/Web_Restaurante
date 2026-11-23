@@ -844,3 +844,50 @@ body.landing-page main {
 @media (prefers-reduced-motion: reduce) {
   .promos-etiqueta i, .promo-tarjeta { animation: none; }
 }
+
+/* =========================================================
+   PAQUETES (Inicio)
+   ========================================================= */
+.section-paquetes { background: var(--pa-cream); padding: 70px 0; }
+.paquetes-kicker { display: inline-block; margin-bottom: 8px; color: var(--pa-blue-ink); font-size: 0.78rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+.paquetes-titulo { margin-bottom: 10px; color: var(--pa-ink-warm); font-family: var(--font-title); font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+.paquetes-lead { max-width: 560px; margin: 0 auto 34px; color: var(--pa-muted); }
+.paquetes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; text-align: left; }
+.paquete-tarjeta {
+  display: flex; flex-direction: column; gap: 8px; padding: 24px 22px;
+  border: 1px solid var(--pa-cream-line); border-radius: 18px; background: var(--pa-paper);
+  color: var(--pa-ink-soft); text-decoration: none;
+  box-shadow: 0 10px 26px rgba(60, 40, 20, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: paquete-entra 0.6s var(--delay, 0s) ease both;
+}
+.paquete-tarjeta i { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: #14110e; color: var(--arg-celeste); font-size: 1.4rem; }
+.paquete-tarjeta h3 { margin: 6px 0 0; color: var(--pa-ink-warm); font-size: 1.1rem; font-weight: 800; }
+.paquete-tarjeta p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
+.paquete-rango { margin-top: auto; padding-top: 6px; color: var(--pa-blue-ink); font-size: 0.8rem; font-weight: 800; }
+.paquete-tarjeta:hover { transform: translateY(-5px); border-color: var(--arg-celeste-dark); box-shadow: 0 16px 34px rgba(60, 40, 20, 0.18); color: var(--pa-ink-soft); }
+@keyframes paquete-entra { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (max-width: 991.98px) { .paquetes-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 575.98px) { .paquetes-grid { grid-template-columns: 1fr; } .section-paquetes { padding: 48px 0; } }
+
+/* =========================================================
+   OPINIONES DE CLIENTES (Inicio)
+   ========================================================= */
+.section-opiniones { background: #0c0908; padding: 70px 0; border-top: 1px solid var(--arg-border-subtle); }
+.opiniones-cabecera { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+.opiniones-titulo { margin: 0 0 6px; color: #fff; font-family: var(--font-title); font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+.opiniones-lead { margin: 0; color: var(--pa-gold); font-weight: 700; }
+.opiniones-grid { columns: 3 280px; column-gap: 18px; }
+.opinion-tarjeta {
+  display: inline-block; width: 100%; margin: 0 0 18px; padding: 18px;
+  border: 1px solid var(--arg-border-subtle); border-radius: 16px; background: var(--arg-dark-card);
+  break-inside: avoid;
+}
+.opinion-tarjeta figure { margin: -18px -18px 14px; overflow: hidden; border-radius: 16px 16px 0 0; cursor: zoom-in; }
+.opinion-tarjeta figure img { display: block; width: 100%; max-height: 280px; object-fit: cover; transition: transform 0.4s ease; }
+.opinion-tarjeta figure:hover img { transform: scale(1.04); }
+.opinion-tarjeta figcaption { display: none; }
+.opinion-estrellas { color: var(--pa-gold); font-size: 1.05rem; letter-spacing: 2px; }
+.opinion-tarjeta p { margin: 8px 0 10px; color: var(--arg-text-light); line-height: 1.55; }
+.opinion-autor { color: var(--arg-text-muted); font-size: 0.82rem; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .paquete-tarjeta { animation: none; } }

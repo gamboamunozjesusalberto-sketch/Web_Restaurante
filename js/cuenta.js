@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const info = crear('div', 'reserva-info');
       info.append(
-        crear('h3', '', `${r.tipo} · ${r.personas} ${r.personas === 1 ? 'persona' : 'personas'}`),
+        crear('h3', '', `${r.paquete ? 'Paquete ' + r.paquete : r.tipo} · ${r.personas} ${r.personas === 1 ? 'persona' : 'personas'}`),
         crear('p', '', `${hora12(r.hora)} · ${r.ubicacion}${r.preferencias ? ' · ' + r.preferencias : ''}`)
       );
 

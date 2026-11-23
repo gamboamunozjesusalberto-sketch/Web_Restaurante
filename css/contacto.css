@@ -495,3 +495,35 @@
   .page-contacto .btn-reservar { width: 100%; }
   .page-contacto .aviso-cuenta { flex-direction: column; padding: 22px 18px; }
 }
+
+/* ---------- Paquetes y pedido anticipado ---------- */
+.page-contacto .formulario-reserva legend .opcional { color: var(--pa-muted); font-weight: 600; letter-spacing: 0; text-transform: none; }
+.page-contacto .ayuda-campo { margin: 6px 0 0; color: var(--pa-muted); font-size: 0.8rem; }
+.page-contacto .paquetes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.page-contacto .paquete {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  padding: 14px; text-align: left;
+  border: 1px solid #ddd2c5; border-radius: 14px; background: #fff; color: var(--pa-ink-soft);
+  cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.page-contacto .paquete i { font-size: 1.4rem; color: var(--arg-celeste-dark); }
+.page-contacto .paquete strong { color: var(--pa-ink-warm); font-size: 0.92rem; }
+.page-contacto .paquete span { font-size: 0.78rem; line-height: 1.35; }
+.page-contacto .paquete small { margin-top: auto; padding-top: 4px; font-size: 0.72rem; font-weight: 700; color: var(--pa-muted); }
+.page-contacto .paquete:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--arg-celeste-dark); }
+.page-contacto .paquete.activo { background: #14110e; border-color: #14110e; color: #d9d2c8; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18); }
+.page-contacto .paquete.activo strong { color: #fff; }
+.page-contacto .paquete.activo i, .page-contacto .paquete.activo small { color: var(--arg-celeste); }
+.page-contacto .pedido-agregar { display: flex; gap: 10px; }
+.page-contacto .pedido-agregar select { flex: 1; }
+.page-contacto .pedido-agregar .btn { flex: 0 0 auto; border-radius: 10px; }
+.page-contacto .pedido-lista { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+.page-contacto .pedido-lista li {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 8px 6px 12px; border-radius: 999px;
+  background: #14110e; color: #fff; font-size: 0.82rem; font-weight: 600;
+}
+.page-contacto .pedido-lista button { border: 0; background: none; color: var(--arg-celeste); line-height: 1; padding: 2px; cursor: pointer; }
+@media (max-width: 575.98px) {
+  .page-contacto .pedido-agregar { flex-direction: column; }
+}

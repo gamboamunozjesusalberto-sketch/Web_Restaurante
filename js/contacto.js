@@ -4,6 +4,7 @@
  * Funcionalidades exclusivas de contacto.html:
  * - Resalta el día actual y muestra si estamos abiertos
  * - Formulario de reserva: se guarda en Supabase con la cuenta del cliente
+ * - Paquetes (cumpleañero, parrilla en vivo, empresarial, segundo piso) y pedido anticipado
  *   (si Supabase no está configurado, se envía por WhatsApp)
  * ==========================================================================
  */
@@ -193,6 +194,126 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ---------- paquetes (datos en js/carta-datos.js) ----------
+  const personasInput = form.elements.personas;
+  const personasAyuda = document.getElementById('r-personas-ayuda');
+  const contenedorPaquetes = document.getElementById('paquetes-reserva');
+  let paqueteElegido = null;
+
+  function pintarPaquetes() {
+    const opciones = [{ id: '', icono: 'bi-dash-circle', resumen: 'Reserva normal, de 1 a 10 personas.', min: 1, max: 10 }, ...PAQUETES];
+    opciones.forEach((paq) => {
+      const boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'paquete' + (paq.id === '' ? ' activo' : '');
+      boton.dataset.paquete = paq.id;
+      boton.setAttribute('role', 'radio');
+      boton.setAttribute('aria-checked', String(paq.id === ''));
+      const icono = document.createElement('i');
+      icono.className = 'bi ' + paq.icono;
+      icono.setAttribute('aria-hidden', 'true');
+      const titulo = document.createElement('strong');
+      titulo.textContent = paq.id || 'Sin paquete';
+      const texto = document.createElement('span');
+      texto.textContent = paq.resumen;
+      const rango = document.createElement('small');
+      rango.textContent = `${paq.min} a ${paq.max} personas`;
+      boton.append(icono, titulo, texto, rango);
+      contenedorPaquetes.append(boton);
+    });
+  }
+
+  function elegirPaquete(id) {
+    paqueteElegido = PAQUETES.find((p) => p.id === id) || null;
+    contenedorPaquetes.querySelectorAll('.paquete').forEach((b) => {
+      const activo = b.dataset.paquete === (id || '');
+      b.classList.toggle('activo', activo);
+      b.setAttribute('aria-checked', String(activo));
+    });
+    const min = paqueteElegido ? paqueteElegido.min : 1;
+    const max = paqueteElegido ? paqueteElegido.max : 10;
+    personasInput.min = min;
+    personasInput.max = max;
+    personasInput.value = Math.min(max, Math.max(min, Number(personasInput.value) || min));
+    personasAyuda.textContent = paqueteElegido
+      ? `Con el paquete ${paqueteElegido.id}: de ${min} a ${max} personas.`
+      : 'De 1 a 10 personas. Para grupos más grandes, elige un paquete.';
+    // el paquete decide algunos campos
+    const ubicacion = form.elements.ubicacion;
+    const exclusivo = id === 'Segundo piso exclusivo';
+    if (exclusivo) ubicacion.value = 'Segundo piso';
+    ubicacion.disabled = exclusivo;
+    if (id === 'Cumpleañero') form.querySelector('[name="tipo"][value="Cumpleaños"]').checked = true;
+  }
+
+  contenedorPaquetes.addEventListener('click', (e) => {
+    const boton = e.target.closest('.paquete');
+    if (boton) elegirPaquete(boton.dataset.paquete);
+  });
+  pintarPaquetes();
+
+  // permite llegar con un paquete ya elegido: contacto.html?paquete=Cumpleañero#reserva
+  const paqueteUrl = new URLSearchParams(location.search).get('paquete');
+  if (paqueteUrl && PAQUETES.some((p) => p.id === paqueteUrl)) elegirPaquete(paqueteUrl);
+
+  // ---------- "¿qué piensas pedir?" ----------
+  const selectPlato = document.getElementById('r-plato');
+  const listaPedido = document.getElementById('pedido-lista');
+  const pedido = [];
+  const MAX_PEDIDO = 15;
+  const NOMBRES_CATEGORIA = { entradas: 'Para comenzar', parrilla: 'A la parrilla', platos: 'Nuestros platos', postres: 'Postres', vinos: 'Vinos' };
+
+  function llenarPlatos(lista) {
+    selectPlato.innerHTML = '<option value="">Elige un plato de la carta…</option>';
+    Object.entries(NOMBRES_CATEGORIA).forEach(([cat, nombre]) => {
+      const grupo = document.createElement('optgroup');
+      grupo.label = nombre;
+      lista.filter((p) => p.categoria === cat).forEach((p) => {
+        const op = document.createElement('option');
+        op.value = op.textContent = p.nombre;
+        grupo.append(op);
+      });
+      if (grupo.children.length) selectPlato.append(grupo);
+    });
+  }
+
+  function pintarPedido() {
+    listaPedido.innerHTML = '';
+    pedido.forEach((nombre, i) => {
+      const li = document.createElement('li');
+      li.textContent = nombre;
+      const quitar = document.createElement('button');
+      quitar.type = 'button';
+      quitar.setAttribute('aria-label', 'Quitar ' + nombre);
+      quitar.innerHTML = '<i class="bi bi-x-lg" aria-hidden="true"></i>';
+      quitar.addEventListener('click', () => { pedido.splice(i, 1); pintarPedido(); });
+      li.append(quitar);
+      listaPedido.append(li);
+    });
+  }
+
+  document.getElementById('r-plato-agregar').addEventListener('click', () => {
+    const nombre = selectPlato.value;
+    if (!nombre) return selectPlato.focus();
+    if (pedido.includes(nombre)) return;
+    if (pedido.length >= MAX_PEDIDO) return mostrar(`Puedes anotar hasta ${MAX_PEDIDO} platos.`);
+    pedido.push(nombre);
+    selectPlato.value = '';
+    pintarPedido();
+  });
+
+  // la lista base es la carta; si el admin agregó platos en el Panel, también salen
+  llenarPlatos(CARTA);
+  if (db) {
+    db.from('platos').select('nombre, categoria').eq('visible', true).then(({ data }) => {
+      if (!data) return;
+      const extra = data
+        .map((p) => ({ nombre: p.nombre, categoria: String(p.categoria).toLowerCase() }))
+        .filter((p) => !CARTA.some((c) => c.nombre.toLowerCase() === p.nombre.toLowerCase()));
+      llenarPlatos([...CARTA, ...extra]);
+    });
+  }
+
   const mostrar = (texto, ok = false) => {
     feedback.textContent = texto;
     feedback.classList.toggle('ok', ok);
@@ -239,8 +360,10 @@ document.addEventListener('DOMContentLoaded', () => {
       `• Hora: ${d.get('hora')}`,
       `• Personas: ${d.get('personas')}`,
       `• Tipo: ${d.get('tipo')}`,
-      `• Ubicación: ${d.get('ubicacion')}`
+      `• Ubicación: ${form.elements.ubicacion.value}`
     ];
+    if (paqueteElegido) lineas.push(`• Paquete: ${paqueteElegido.id}`);
+    if (pedido.length) lineas.push(`• Pienso pedir: ${pedido.join(', ')}`);
     if (preferencias.length) lineas.push(`• Preferencias: ${preferencias.join(', ')}`);
     if (mensaje) lineas.push(`• Mensaje: ${mensaje}`);
     const url = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(lineas.join('\n'))}`;
@@ -298,7 +421,9 @@ document.addEventListener('DOMContentLoaded', () => {
       hora: d.get('hora'),
       personas: Number(d.get('personas')),
       tipo: d.get('tipo'),
-      ubicacion: d.get('ubicacion'),
+      ubicacion: form.elements.ubicacion.value, // FormData omite el campo si está deshabilitado
+      paquete: paqueteElegido ? paqueteElegido.id : null,
+      pedido,
       preferencias: d.getAll('preferencia').join(', ') || null,
       mensaje: (d.get('mensaje') || '').trim() || null
     });
@@ -314,6 +439,9 @@ document.addEventListener('DOMContentLoaded', () => {
     pintarDias();
     pintarHorarios();
     form.elements.mensaje.value = '';
+    pedido.length = 0;
+    pintarPedido();
+    elegirPaquete('');
     feedback.classList.add('ok');
     feedback.innerHTML = '¡Reserva enviada! Está <strong>pendiente</strong> de confirmación. Puedes verla en <a href="cuenta.html#mis-reservas">Mi cuenta</a>.';
   });

@@ -18,9 +18,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Arquitectura modular: variables, componentes compartidos y landing -->
-  <link rel="stylesheet" href="css/variables.css?v=9" />
-  <link rel="stylesheet" href="css/components.css?v=9" />
-  <link rel="stylesheet" href="css/landing.css?v=9" />
+  <link rel="stylesheet" href="css/variables.css?v=10" />
+  <link rel="stylesheet" href="css/components.css?v=10" />
+  <link rel="stylesheet" href="css/chatbot.css?v=10" />
+  <link rel="stylesheet" href="css/landing.css?v=10" />
 </head>
 <body class="landing-page">
 
@@ -311,6 +312,34 @@
     </section>
 
     <!-- ========================================================
+         PAQUETES (las tarjetas las crea landing.js con js/carta-datos.js)
+         ======================================================== -->
+    <section class="section-paquetes" id="paquetes" aria-labelledby="titulo-paquetes">
+      <div class="container text-center">
+        <span class="paquetes-kicker">Celebra con nosotros</span>
+        <h2 class="paquetes-titulo" id="titulo-paquetes">Paquetes para cada ocasión</h2>
+        <p class="paquetes-lead">Elige uno al reservar y lo coordinamos contigo por WhatsApp.</p>
+        <div class="paquetes-grid" id="paquetes-inicio"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         OPINIONES DE CLIENTES (las carga landing.js desde Supabase)
+         ======================================================== -->
+    <section class="section-opiniones" id="opiniones" aria-labelledby="titulo-opiniones" hidden>
+      <div class="container">
+        <div class="opiniones-cabecera">
+          <div>
+            <h2 class="opiniones-titulo" id="titulo-opiniones">Lo que dicen nuestros clientes</h2>
+            <p class="opiniones-lead" id="opiniones-promedio"></p>
+          </div>
+          <a href="cuenta.html#opinar" class="btn btn-outline-pill-celeste px-4 py-2"><i class="bi bi-camera me-2" aria-hidden="true"></i>Comparte tu experiencia</a>
+        </div>
+        <div class="opiniones-grid" id="opiniones-lista" data-lightbox></div>
+      </div>
+    </section>
+
+    <!-- ========================================================
          SECCIÓN RESERVA: FONDO CREMA CON FOTOGRAFÍA LATERAL
          ======================================================== -->
     <section class="section-reserva" id="reserva">
@@ -427,11 +456,13 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=9"></script>
-  <script src="js/sesion.js?v=9"></script>
-  <script src="js/main.js?v=9"></script>
-  <script src="js/landing.js?v=9"></script>
-  <script src="js/lightbox.js?v=9"></script>
+  <script src="js/carta-datos.js?v=10"></script>
+  <script src="js/supabase-config.js?v=10"></script>
+  <script src="js/sesion.js?v=10"></script>
+  <script src="js/main.js?v=10"></script>
+  <script src="js/chatbot.js?v=10"></script>
+  <script src="js/landing.js?v=10"></script>
+  <script src="js/lightbox.js?v=10"></script>
 
 </body>
 </html>

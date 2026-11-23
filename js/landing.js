@@ -4,6 +4,7 @@
  * Funcionalidades exclusivas de index.html:
  * - Control, sincronización de indicadores y eventos del Hero Carousel
  * - Promociones activas leídas de Supabase (versión final)
+ * - Paquetes (datos de js/carta-datos.js) y opiniones de clientes con foto
  * ==========================================================================
  */
 
@@ -87,6 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
   //    ver al público únicamente las promociones con activa = true.
   // ------------------------------------------------------------------------
   cargarPromociones();
+  pintarPaquetesInicio();
+  cargarOpiniones();
 });
 
 async function cargarPromociones() {
@@ -125,4 +128,76 @@ async function cargarPromociones() {
     return tarjeta;
   }));
   seccion.hidden = false;
+}
+
+// Tarjetas de paquetes: cada una lleva a la reserva con el paquete ya elegido
+function pintarPaquetesInicio() {
+  const grilla = document.getElementById('paquetes-inicio');
+  if (!grilla || typeof PAQUETES === 'undefined') return;
+  PAQUETES.forEach((paq, i) => {
+    const tarjeta = document.createElement('a');
+    tarjeta.className = 'paquete-tarjeta';
+    tarjeta.href = `contacto.html?paquete=${encodeURIComponent(paq.id)}#reserva`;
+    tarjeta.style.setProperty('--delay', `${i * 0.1}s`);
+    const icono = document.createElement('i');
+    icono.className = 'bi ' + paq.icono;
+    icono.setAttribute('aria-hidden', 'true');
+    const titulo = document.createElement('h3');
+    titulo.textContent = paq.id;
+    const texto = document.createElement('p');
+    texto.textContent = paq.resumen;
+    const rango = document.createElement('span');
+    rango.className = 'paquete-rango';
+    rango.textContent = `${paq.min} a ${paq.max} personas · Reservar →`;
+    tarjeta.append(icono, titulo, texto, rango);
+    grilla.append(tarjeta);
+  });
+}
+
+// Opiniones de clientes (solo las visibles, por RLS). Muestra las 6 más recientes.
+async function cargarOpiniones() {
+  const seccion = document.getElementById('opiniones');
+  const lista = document.getElementById('opiniones-lista');
+  if (!seccion || !lista || typeof db === 'undefined' || !db) return;
+
+  const { data, error } = await db
+    .from('opiniones')
+    .select('autor, plato, calificacion, comentario, foto, creado_en')
+    .eq('visible', true)
+    .order('creado_en', { ascending: false })
+    .limit(6);
+  if (error || !data || !data.length) return;
+
+  const promedio = data.reduce((t, o) => t + o.calificacion, 0) / data.length;
+  document.getElementById('opiniones-promedio').textContent =
+    `${'★'.repeat(Math.round(promedio))} ${promedio.toFixed(1)} de 5 en las últimas ${data.length} opiniones`;
+
+  lista.replaceChildren(...data.map((o) => {
+    const tarjeta = document.createElement('article');
+    tarjeta.className = 'opinion-tarjeta';
+    if (o.foto) {
+      const figura = document.createElement('figure');
+      const img = document.createElement('img');
+      img.src = o.foto;
+      img.alt = o.plato ? `${o.plato}, foto de ${o.autor}` : `Foto de ${o.autor}`;
+      img.loading = 'lazy';
+      const pie = document.createElement('figcaption');
+      pie.textContent = `${o.autor}${o.plato ? ' · ' + o.plato : ''}`;
+      figura.append(img, pie);
+      tarjeta.append(figura);
+    }
+    const estrellas = document.createElement('div');
+    estrellas.className = 'opinion-estrellas';
+    estrellas.textContent = '★'.repeat(o.calificacion) + '☆'.repeat(5 - o.calificacion);
+    estrellas.setAttribute('aria-label', `${o.calificacion} de 5 estrellas`);
+    const texto = document.createElement('p');
+    texto.textContent = '“' + o.comentario + '”'; // textContent: nunca HTML
+    const autor = document.createElement('span');
+    autor.className = 'opinion-autor';
+    autor.textContent = `${o.autor}${o.plato ? ' · ' + o.plato : ''}`;
+    tarjeta.append(estrellas, texto, autor);
+    return tarjeta;
+  }));
+  seccion.hidden = false;
+  document.dispatchEvent(new Event('fotos-agregadas')); // el visor de fotos las toma
 }

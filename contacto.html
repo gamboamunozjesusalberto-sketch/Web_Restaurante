@@ -17,10 +17,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css propio de contacto -->
-  <link rel="stylesheet" href="css/variables.css?v=9" />
-  <link rel="stylesheet" href="css/components.css?v=9" />
-  <link rel="stylesheet" href="css/paginas.css?v=9" />
-  <link rel="stylesheet" href="css/contacto.css?v=9" />
+  <link rel="stylesheet" href="css/variables.css?v=10" />
+  <link rel="stylesheet" href="css/components.css?v=10" />
+  <link rel="stylesheet" href="css/chatbot.css?v=10" />
+  <link rel="stylesheet" href="css/paginas.css?v=10" />
+  <link rel="stylesheet" href="css/contacto.css?v=10" />
 </head>
 <body class="inner-page page-contacto">
 
@@ -188,7 +189,7 @@
             </div>
             <ul class="reserva-notas reveal">
               <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Te confirmamos desde tu cuenta</li>
-              <li><i class="bi bi-people-fill" aria-hidden="true"></i> Hasta 10 personas por reserva; para grupos mayores, llámanos</li>
+              <li><i class="bi bi-people-fill" aria-hidden="true"></i> Hasta 10 personas; grupos más grandes con nuestros paquetes</li>
               <li><i class="bi bi-cake2-fill" aria-hidden="true"></i> Cuéntanos si celebras algo especial</li>
             </ul>
           </div>
@@ -254,8 +255,18 @@
                     <input type="number" id="r-personas" name="personas" min="1" max="10" value="2" required>
                     <button type="button" class="contador-btn" data-paso="1" aria-label="Una persona más">+</button>
                   </div>
+                  <p class="ayuda-campo" id="r-personas-ayuda">De 1 a 10 personas. Para grupos más grandes, elige un paquete.</p>
                 </div>
                 <div class="col-md-6"></div>
+
+                <!-- Paquetes: las tarjetas las crea js/contacto.js con los datos de js/carta-datos.js -->
+                <div class="col-12">
+                  <fieldset>
+                    <legend>Paquete <span class="opcional">(opcional)</span></legend>
+                    <div class="paquetes" id="paquetes-reserva" role="radiogroup" aria-label="Paquetes"></div>
+                    <p class="ayuda-campo">El precio del paquete se coordina contigo por WhatsApp al confirmar la reserva.</p>
+                  </fieldset>
+                </div>
 
                 <div class="col-md-6">
                   <fieldset>
@@ -280,6 +291,18 @@
                       <label class="opcion"><input type="checkbox" name="preferencia" value="Cerca de una ventana"> <span>Cerca de una ventana</span></label>
                       <label class="opcion"><input type="checkbox" name="preferencia" value="Cerca de la puerta"> <span>Cerca de la puerta</span></label>
                     </div>
+                  </fieldset>
+                </div>
+
+                <!-- Pedido anticipado: ayuda a la cocina y alimenta "los más pedidos" -->
+                <div class="col-12">
+                  <fieldset>
+                    <legend>¿Qué piensas pedir? <span class="opcional">(opcional)</span></legend>
+                    <div class="pedido-agregar">
+                      <select id="r-plato" aria-label="Plato de la carta"></select>
+                      <button type="button" class="btn btn-outline-pill-celeste" id="r-plato-agregar"><i class="bi bi-plus-lg" aria-hidden="true"></i> Agregar</button>
+                    </div>
+                    <ul class="pedido-lista" id="pedido-lista" aria-live="polite"></ul>
                   </fieldset>
                 </div>
 
@@ -390,10 +413,12 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=9"></script>
-  <script src="js/sesion.js?v=9"></script>
-  <script src="js/main.js?v=9"></script>
-  <script src="js/contacto.js?v=9"></script>
+  <script src="js/carta-datos.js?v=10"></script>
+  <script src="js/supabase-config.js?v=10"></script>
+  <script src="js/sesion.js?v=10"></script>
+  <script src="js/main.js?v=10"></script>
+  <script src="js/chatbot.js?v=10"></script>
+  <script src="js/contacto.js?v=10"></script>
 
 </body>
 </html>

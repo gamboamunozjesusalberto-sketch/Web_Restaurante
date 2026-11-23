@@ -1,0 +1,74 @@
+/* ==========================================================================
+   PUNTO ASADO - CHATBOT "ASADITO" (js/chatbot.js)
+   Botón flotante abajo a la derecha (en celular, a la izquierda para no
+   tapar el botón "Reservar") y ventana de conversación.
+   ========================================================================== */
+
+.chat-lanzador {
+  position: fixed; right: 22px; bottom: 22px; z-index: 1045;
+  display: grid; place-items: center; width: 60px; height: 60px;
+  border: 0; border-radius: 50%;
+  background: var(--arg-celeste); color: var(--arg-dark-carbon);
+  font-size: 1.6rem; cursor: pointer;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.chat-lanzador:hover { transform: scale(1.07); background: var(--arg-celeste-hover); }
+.chat-lanzador:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.chat-burbuja {
+  position: absolute; right: 70px; bottom: 12px;
+  padding: 8px 14px; border-radius: 14px 14px 4px 14px;
+  background: #fff; color: var(--pa-ink-warm); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  font-size: 0.82rem; font-weight: 700; white-space: nowrap;
+  animation: chat-aparece 0.5s 2s ease both;
+}
+.chat-lanzador.abierto .chat-burbuja { display: none; }
+
+.chat-ventana {
+  position: fixed; right: 22px; bottom: 94px; z-index: 1046;
+  display: flex; flex-direction: column;
+  width: min(380px, calc(100vw - 32px)); height: min(560px, calc(100vh - 130px));
+  overflow: hidden; border-radius: 20px;
+  background: var(--pa-paper); color: var(--pa-ink-soft);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  font-family: var(--font-text);
+  animation: chat-aparece 0.25s ease both;
+}
+.chat-ventana[hidden] { display: none; }
+.chat-cabecera { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #14110e; color: #fff; }
+.chat-cabecera strong { display: block; font-size: 1rem; }
+.chat-cabecera small { color: var(--arg-text-muted); font-size: 0.75rem; }
+.chat-avatar { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--arg-celeste); color: var(--arg-dark-carbon); font-size: 1.2rem; }
+.chat-cerrar { margin-left: auto; border: 0; background: none; color: #fff; font-size: 1.1rem; cursor: pointer; padding: 6px; }
+
+.chat-mensajes { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 16px; background: var(--pa-cream); }
+.chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; overflow-wrap: anywhere; animation: chat-aparece 0.2s ease both; }
+.chat-msg.bot { align-self: flex-start; border-bottom-left-radius: 4px; background: #fff; box-shadow: 0 2px 6px rgba(60, 40, 20, 0.08); }
+.chat-msg.yo { align-self: flex-end; border-bottom-right-radius: 4px; background: #14110e; color: #fff; }
+.chat-msg a { color: var(--pa-blue-ink); font-weight: 700; }
+.chat-msg strong { color: var(--pa-ink-warm); }
+.chat-msg.yo strong { color: #fff; }
+
+.chat-opciones { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px 0; background: var(--pa-paper); max-height: 130px; overflow-y: auto; }
+.chat-opciones:empty { display: none; }
+.chat-chip {
+  padding: 6px 12px; border: 1px solid var(--arg-celeste-dark); border-radius: 999px;
+  background: #fff; color: var(--pa-blue-ink); font-size: 0.8rem; font-weight: 700; cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.chat-chip:hover, .chat-chip:focus-visible { background: var(--arg-celeste-dark); color: #fff; outline: none; }
+
+.chat-form { display: flex; gap: 8px; padding: 12px; background: var(--pa-paper); border-top: 1px solid var(--pa-cream-line); }
+.chat-form input { flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid #ddd2c5; border-radius: 999px; font: 500 0.9rem var(--font-text); }
+.chat-form input:focus { outline: none; border-color: var(--arg-celeste-dark); box-shadow: 0 0 0 3px rgba(58, 151, 207, 0.2); }
+.chat-form button { width: 42px; height: 42px; border: 0; border-radius: 50%; background: #14110e; color: var(--arg-celeste); cursor: pointer; }
+
+@keyframes chat-aparece { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .chat-burbuja, .chat-ventana, .chat-msg { animation: none; } }
+
+/* celular: el lanzador va a la izquierda (a la derecha está "Reservar") */
+@media (max-width: 767.98px) {
+  .chat-lanzador { left: 16px; right: auto; bottom: 16px; width: 54px; height: 54px; font-size: 1.4rem; }
+  .chat-burbuja { display: none; }
+  .chat-ventana { top: 100px; left: 8px; right: 8px; bottom: 80px; width: auto; height: auto; }
+}

@@ -18,11 +18,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css de la cuenta (tarjetas) + css propio del admin -->
-  <link rel="stylesheet" href="css/variables.css?v=9" />
-  <link rel="stylesheet" href="css/components.css?v=9" />
-  <link rel="stylesheet" href="css/paginas.css?v=9" />
-  <link rel="stylesheet" href="css/cuenta.css?v=9" />
-  <link rel="stylesheet" href="css/admin.css?v=9" />
+  <link rel="stylesheet" href="css/variables.css?v=10" />
+  <link rel="stylesheet" href="css/components.css?v=10" />
+  <link rel="stylesheet" href="css/paginas.css?v=10" />
+  <link rel="stylesheet" href="css/cuenta.css?v=10" />
+  <link rel="stylesheet" href="css/admin.css?v=10" />
 </head>
 <body class="inner-page page-cuenta page-admin">
 
@@ -96,6 +96,8 @@
           <button class="admin-tab active" role="tab" aria-selected="true" aria-controls="panel-reservas" id="tab-reservas" type="button"><i class="bi bi-calendar-check"></i> Reservas <span class="tab-badge" id="tab-badge-reservas" hidden></span></button>
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-carta" id="tab-carta" type="button"><i class="bi bi-journal-text"></i> Carta</button>
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-promos" id="tab-promos" type="button"><i class="bi bi-megaphone"></i> Promociones</button>
+          <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-dashboard" id="tab-dashboard" type="button"><i class="bi bi-bar-chart-line"></i> Dashboard</button>
+          <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-opiniones" id="tab-opiniones" type="button"><i class="bi bi-chat-heart"></i> Opiniones</button>
         </div>
 
         <!-- ========== RESERVAS ========== -->
@@ -257,6 +259,60 @@
           </div>
         </div>
 
+        <!-- ========== DASHBOARD (js/admin-dashboard.js) ========== -->
+        <div class="admin-panel" id="panel-dashboard" role="tabpanel" aria-labelledby="tab-dashboard" hidden>
+          <div class="tarjeta-cuenta">
+            <div class="tarjeta-cabecera">
+              <h2 class="tarjeta-titulo"><i class="bi bi-bar-chart-line" aria-hidden="true"></i> ¿Cómo nos va?</h2>
+              <div class="filtro-reservas" role="group" aria-label="Periodo">
+                <button type="button" class="filtro-btn" data-periodo="30">Últimos 30 días</button>
+                <button type="button" class="filtro-btn active" data-periodo="90">Últimos 90 días</button>
+                <button type="button" class="filtro-btn" data-periodo="todo">Todo</button>
+              </div>
+            </div>
+            <p class="dash-nota">Cuenta las reservas pendientes y confirmadas (no las canceladas ni rechazadas), incluidas las que vienen.</p>
+            <ul class="dash-kpis" id="dash-kpis"></ul>
+          </div>
+          <div class="row g-4 mt-1">
+            <div class="col-lg-6">
+              <div class="tarjeta-cuenta h-100">
+                <h3 class="dash-titulo"><i class="bi bi-calendar-week" aria-hidden="true"></i> Días pico</h3>
+                <div class="dash-barras" id="dash-dias"></div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="tarjeta-cuenta h-100">
+                <h3 class="dash-titulo"><i class="bi bi-clock" aria-hidden="true"></i> Horas pico</h3>
+                <div class="dash-barras" id="dash-horas"></div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="tarjeta-cuenta h-100">
+                <h3 class="dash-titulo"><i class="bi bi-fire" aria-hidden="true"></i> Platos más pedidos</h3>
+                <p class="dash-nota">Según lo que los clientes anotan en "¿Qué piensas pedir?" al reservar.</p>
+                <div class="dash-barras" id="dash-platos"></div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="tarjeta-cuenta h-100">
+                <h3 class="dash-titulo"><i class="bi bi-gift" aria-hidden="true"></i> Paquetes más elegidos</h3>
+                <div class="dash-barras" id="dash-paquetes"></div>
+                <h3 class="dash-titulo mt-4"><i class="bi bi-calendar-heart" aria-hidden="true"></i> Fechas con más reservas</h3>
+                <ol class="dash-fechas" id="dash-fechas"></ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== OPINIONES (js/admin-dashboard.js) ========== -->
+        <div class="admin-panel" id="panel-opiniones" role="tabpanel" aria-labelledby="tab-opiniones" hidden>
+          <div class="tarjeta-cuenta">
+            <h2 class="tarjeta-titulo"><i class="bi bi-chat-heart" aria-hidden="true"></i> Opiniones de los clientes</h2>
+            <p class="dash-nota">Se publican solas en el Inicio. Si alguna no corresponde, ocúltala o elimínala.</p>
+            <ul class="lista-opiniones-admin" id="lista-opiniones-admin"><li class="cargando">Cargando…</li></ul>
+          </div>
+        </div>
+
       </div>
     </section>
   </main>
@@ -344,10 +400,11 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=9"></script>
-  <script src="js/sesion.js?v=9"></script>
-  <script src="js/main.js?v=9"></script>
-  <script src="js/admin.js?v=9"></script>
+  <script src="js/supabase-config.js?v=10"></script>
+  <script src="js/sesion.js?v=10"></script>
+  <script src="js/main.js?v=10"></script>
+  <script src="js/admin.js?v=10"></script>
+  <script src="js/admin-dashboard.js?v=10"></script>
 
 </body>
 </html>

@@ -4,7 +4,8 @@
  * Cualquier contenedor con el atributo [data-lightbox] se vuelve galería:
  * al hacer clic en una foto se abre en grande, con flechas, teclado
  * (← → Esc) y deslizando el dedo en el celular.
- * Lo usan: index.html (galería) y nosotros.html (ambientes).
+ * Lo usan: index.html (galería y opiniones) y nosotros.html (ambientes).
+ * Si se agregan fotos después, avisar con: document.dispatchEvent(new Event('fotos-agregadas'))
  * ==========================================================================
  */
 
@@ -69,16 +70,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ---------- Eventos ----------
-  galerias.forEach((galeria) => {
-    galeria.querySelectorAll('img').forEach((foto) => {
-      const figura = foto.closest('figure') || foto;
-      figura.tabIndex = 0; // se puede abrir también con el teclado
-      figura.setAttribute('role', 'button');
-      figura.setAttribute('aria-label', 'Ver foto: ' + foto.alt);
-      figura.addEventListener('click', () => abrir(galeria, foto));
-      figura.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(galeria, foto); }
+  // Delegación: también funciona con fotos que se agregan después
+  // (por ejemplo, las opiniones de clientes que carga landing.js).
+  function prepararFotos() {
+    galerias.forEach((galeria) => {
+      galeria.querySelectorAll('img').forEach((foto) => {
+        const figura = foto.closest('figure') || foto;
+        if (figura.dataset.visor) return; // ya preparada
+        figura.dataset.visor = '1';
+        figura.tabIndex = 0; // se puede abrir también con el teclado
+        figura.setAttribute('role', 'button');
+        figura.setAttribute('aria-label', 'Ver foto: ' + foto.alt);
       });
+    });
+  }
+  prepararFotos();
+  document.addEventListener('fotos-agregadas', prepararFotos);
+
+  galerias.forEach((galeria) => {
+    const fotoDe = (e) => {
+      const figura = e.target.closest('[data-visor]');
+      return figura && galeria.contains(figura) ? (figura.matches('img') ? figura : figura.querySelector('img')) : null;
+    };
+    galeria.addEventListener('click', (e) => {
+      const foto = fotoDe(e);
+      if (foto) abrir(galeria, foto);
+    });
+    galeria.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const foto = fotoDe(e);
+      if (foto) { e.preventDefault(); abrir(galeria, foto); }
     });
   });
 

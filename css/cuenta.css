@@ -186,3 +186,40 @@
   .reserva-item { grid-template-columns: 62px 1fr; }
   .reserva-acciones { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
 }
+
+/* ---------- Comparte tu experiencia (opiniones.js) ---------- */
+.form-cuenta select,
+.form-cuenta textarea {
+  box-sizing: border-box; width: 100%; padding: 11px 13px;
+  border: 1px solid #ddd2c5; border-radius: 10px; background: #fff;
+  color: var(--pa-ink-warm); font: 500 0.9rem var(--font-text);
+}
+.form-cuenta textarea { resize: vertical; }
+.form-cuenta select:focus, .form-cuenta textarea:focus { outline: none; border-color: var(--arg-celeste-dark); box-shadow: 0 0 0 3px rgba(58, 151, 207, 0.2); }
+.estrellas-campo { margin: 0; padding: 0; border: 0; }
+.estrellas-campo legend { float: none; margin: 4px 0 6px; padding: 0; color: var(--pa-ink-warm); font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+/* orden invertido: así ":checked ~ label" pinta la elegida y las de su izquierda */
+.estrellas { display: inline-flex; flex-direction: row-reverse; gap: 4px; }
+.estrellas input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.form-cuenta .estrellas label { margin: 0; color: #d8cbbd; font-size: 2rem; line-height: 1; letter-spacing: 0; text-transform: none; cursor: pointer; transition: color 0.15s ease, transform 0.15s ease; }
+.estrellas input:checked ~ label,
+.estrellas label:hover, .estrellas label:hover ~ label { color: var(--pa-gold); }
+.estrellas label:hover { transform: scale(1.15); }
+.estrellas input:focus-visible + label { outline: 2px solid var(--arg-celeste-dark); outline-offset: 2px; border-radius: 4px; }
+.form-cuenta label.subir-foto {
+  display: flex; align-items: center; gap: 10px; margin: 12px 0 0; padding: 12px 14px;
+  border: 2px dashed #d8cbbd; border-radius: 12px; background: var(--pa-cream-soft);
+  color: var(--pa-muted); font-size: 0.8rem; font-weight: 600; letter-spacing: 0; text-transform: none; cursor: pointer;
+}
+.form-cuenta label.subir-foto i { font-size: 1.2rem; color: var(--arg-celeste-dark); }
+.form-cuenta label.subir-foto:hover { border-color: var(--arg-celeste-dark); color: var(--pa-ink-warm); }
+#op-foto-texto { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preview-foto { width: 100%; max-height: 180px; margin-top: 10px; border-radius: 10px; object-fit: cover; }
+.lista-opiniones-admin { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.opinion-admin { display: flex; align-items: flex-start; gap: 14px; padding: 14px; border: 1px solid var(--pa-cream-line); border-radius: 14px; background: #fff; }
+.opinion-admin.oculta { opacity: 0.55; }
+.opinion-admin img { flex: 0 0 72px; width: 72px; height: 72px; border-radius: 10px; object-fit: cover; }
+.opinion-admin-info { flex: 1; min-width: 0; }
+.opinion-admin-info strong { color: var(--pa-gold); font-size: 0.95rem; }
+.opinion-admin-info p { margin: 4px 0; color: var(--pa-ink-soft); font-size: 0.88rem; }
+.opinion-admin-info small { color: var(--pa-muted); font-size: 0.75rem; }
