@@ -1,0 +1,165 @@
+/* ==========================================================================
+   PUNTO ASADO - INTERACCIÓN EN TODO EL SITIO (INTERACCION.CSS)
+   Acompaña a js/interaccion.js
+   ========================================================================== */
+
+/* ---------- Cortina: pantalla de carga y transición entre páginas ---------- */
+.pa-cortina {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 60%, #2a1709 0%, #0d0907 70%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+}
+.pa-cortina.activa { opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
+.pa-cortina-centro { display: grid; justify-items: center; gap: 14px; transform: translateY(8px); transition: transform 0.5s ease; }
+.pa-cortina.activa .pa-cortina-centro { transform: none; }
+.pa-cortina-logo { width: 110px; opacity: 0.95; }
+.pa-cortina-texto { margin: 0; color: #e7b875; font: 600 0.72rem 'Montserrat', Arial, sans-serif; letter-spacing: 0.22em; text-transform: uppercase; }
+.pa-cortina:not(.carga) .pa-cortina-texto { visibility: hidden; }
+
+/* llama hecha con 3 gotas que bailan */
+.pa-llama { position: relative; width: 46px; height: 60px; }
+.pa-llama span {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 0 50% 50%;
+  background: linear-gradient(45deg, #ff5a1f, #ffb347);
+  transform: translateX(-50%) rotate(-45deg);
+  transform-origin: center;
+  filter: blur(0.5px);
+  animation: pa-llama 0.9s ease-in-out infinite alternate;
+}
+.pa-llama span:nth-child(2) { width: 24px; height: 24px; background: linear-gradient(45deg, #ff8a2b, #ffe08a); animation-delay: 0.2s; bottom: 4px; }
+.pa-llama span:nth-child(3) { width: 12px; height: 12px; background: #fff3c4; animation-delay: 0.35s; bottom: 6px; }
+@keyframes pa-llama {
+  from { transform: translateX(-50%) rotate(-45deg) scale(1); }
+  to { transform: translateX(-46%) rotate(-40deg) scale(1.12) translateY(-3px); }
+}
+
+/* ---------- Chispas al hacer clic ---------- */
+.pa-chispa {
+  position: fixed;
+  z-index: 9998;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff3c4 0%, #ffb347 45%, #ff5a1f 100%);
+  box-shadow: 0 0 8px 2px rgba(255, 140, 50, 0.7);
+  pointer-events: none;
+  animation: pa-chispa 0.6s ease-out forwards;
+}
+@keyframes pa-chispa {
+  to { transform: translate(var(--x), var(--y)) scale(0.2); opacity: 0; }
+}
+
+/* ---------- Cursor propio ---------- */
+html.con-cursor,
+html.con-cursor body,
+html.con-cursor a,
+html.con-cursor button,
+html.con-cursor label,
+html.con-cursor [role="button"],
+html.con-cursor .parrilla-card,
+html.con-cursor .vino-card { cursor: none; }
+.pa-cursor-punto,
+.pa-cursor-aro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9997;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.pa-cursor-punto { width: 8px; height: 8px; margin: -4px 0 0 -4px; background: #ff8a2b; box-shadow: 0 0 10px rgba(255, 138, 43, 0.9); }
+.pa-cursor-aro {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border: 1.5px solid rgba(116, 172, 223, 0.85);
+  transition: width 0.25s ease, height 0.25s ease, margin 0.25s ease, background 0.25s ease, border-color 0.25s ease, opacity 0.2s ease;
+}
+.pa-cursor-aro.grande { width: 58px; height: 58px; margin: -29px 0 0 -29px; border-color: #ff8a2b; background: rgba(255, 138, 43, 0.12); }
+.pa-cursor-aro.presionado { width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+.pa-cursor-aro.texto { opacity: 0; }
+/* dentro del chatbot y en campos de texto se usa el cursor normal */
+html.con-cursor input,
+html.con-cursor textarea,
+html.con-cursor select { cursor: auto; }
+
+/* ---------- Botones magnéticos ---------- */
+.pa-magnetico { transition: translate 0.2s ease-out; }
+
+/* ---------- Carta: ruleta del antojo ---------- */
+.pa-ruleta-btn {
+  padding: 9px 20px;
+  border: 1px dashed #ff8a2b;
+  border-radius: 30px;
+  background: rgba(255, 138, 43, 0.12);
+  color: #ffc58a;
+  font: 800 0.82rem var(--font-title);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.pa-ruleta-btn:hover { background: rgba(255, 138, 43, 0.25); transform: translateY(-2px); }
+.pa-ruleta-btn i { display: inline-block; transition: transform 0.5s ease; }
+.pa-ruleta-btn:hover i { transform: rotate(180deg); }
+
+.pa-ruleta { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; }
+.pa-ruleta-fondo { position: absolute; inset: 0; background: rgba(5, 4, 3, 0.8); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.22s ease; }
+.pa-ruleta-caja {
+  position: relative;
+  width: min(440px, 100%);
+  padding: 30px 26px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background: #171310;
+  color: #e9e1d6;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: scale(0.9) rotate(-2deg);
+  transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+.pa-ruleta.abierta .pa-ruleta-fondo,
+.pa-ruleta.abierta .pa-ruleta-caja { opacity: 1; }
+.pa-ruleta.abierta .pa-ruleta-caja { transform: none; }
+.pa-ruleta-cerrar { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: #fff; }
+.pa-ruleta-kicker { margin: 0 0 6px; color: #ff8a2b; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.2em; }
+.pa-ruleta-caja h2 { margin: 0 0 16px; color: #fff; font-family: var(--font-title); font-size: 1.4rem; font-weight: 900; text-transform: uppercase; }
+.pa-ruleta-tipos { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 16px; }
+.pa-ruleta-tipos button { padding: 6px 12px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 999px; background: none; color: #cfc6ba; font: 600 0.75rem var(--font-text); }
+.pa-ruleta-tipos button.activo { border-color: var(--arg-celeste); background: var(--arg-celeste); color: #111; }
+.pa-ruleta-ventana {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 18px;
+  border: 2px solid rgba(255, 138, 43, 0.35);
+  border-radius: 16px;
+  background: #0e0b09;
+}
+.pa-ruleta-foto { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.pa-ruleta-foto:not([src]) { display: none; }
+.pa-ruleta-nombre { padding: 14px 12px 2px; color: #fff; font-family: var(--font-title); font-size: 1.15rem; font-weight: 900; text-transform: uppercase; }
+.pa-ruleta-precio { padding: 0 12px 14px; color: var(--arg-celeste); font-weight: 800; }
+.pa-ruleta-ventana.girando .pa-ruleta-foto,
+.pa-ruleta-ventana.girando .pa-ruleta-nombre { animation: pa-girar 0.12s linear infinite; }
+@keyframes pa-girar { 0% { transform: translateY(-6px); filter: blur(2px); } 100% { transform: translateY(6px); filter: blur(2px); } }
+.pa-ruleta-ventana.ganador { animation: pa-ganador 0.9s ease; }
+@keyframes pa-ganador {
+  0% { box-shadow: 0 0 0 0 rgba(255, 138, 43, 0.8); }
+  100% { box-shadow: 0 0 0 22px rgba(255, 138, 43, 0); }
+}
+.pa-ruleta-botones { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; }
+.pa-ruleta-ver { padding: 0; border: 0; background: none; color: #ffc58a; font: 800 0.85rem var(--font-text); }
+.pa-ruleta-ver:hover { text-decoration: underline; }
