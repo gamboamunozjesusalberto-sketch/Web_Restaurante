@@ -22,16 +22,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (fila) fila.classList.add('hoy');
 
-  if (estado) {
-    const minutos = ahora.getHours() * 60 + ahora.getMinutes();
-    const finDeSemana = dia === 0 || dia === 6;
-    const apertura = (finDeSemana ? 12 : 18) * 60;
+  // Estado en vivo: "Abierto · cerramos en 1 h 20 min" (se actualiza cada 30 segundos)
+  const duracion = (min) => (min >= 60 ? `${Math.floor(min / 60)} h ${min % 60} min` : `${min} min`);
+  const aperturaDe = (d) => ((d === 0 || d === 6) ? 12 : 18) * 60;
+  const horaTexto = (min) => (min === 12 * 60 ? '12:00 m.' : `${((Math.floor(min / 60) + 11) % 12) + 1}:00 p. m.`);
+  function actualizarEstado() {
+    const t = new Date();
+    const d = t.getDay();
+    const minutos = t.getHours() * 60 + t.getMinutes();
+    const apertura = aperturaDe(d);
     const cierre = 23 * 60;
     const abierto = minutos >= apertura && minutos < cierre;
-
-    estado.textContent = abierto ? 'Abierto ahora · cerramos a las 11:00 p. m.' : 'Cerrado ahora';
-    estado.classList.add(abierto ? 'abierto' : 'cerrado');
+    let texto;
+    if (abierto) texto = `Abierto ahora · cerramos en ${duracion(cierre - minutos)}`;
+    else if (minutos < apertura) texto = `Cerrado · abrimos hoy a las ${horaTexto(apertura)} (en ${duracion(apertura - minutos)})`;
+    else texto = `Cerrado · abrimos mañana a las ${horaTexto(aperturaDe((d + 1) % 7))}`;
+    estado.textContent = texto;
+    estado.classList.toggle('abierto', abierto);
+    estado.classList.toggle('cerrado', !abierto);
+  }
+  if (estado) {
+    actualizarEstado();
     estado.hidden = false;
+    setInterval(actualizarEstado, 30000);
   }
 
   // ---------- formulario de reserva ----------
@@ -301,6 +314,13 @@ document.addEventListener('DOMContentLoaded', () => {
     selectPlato.value = '';
     pintarPedido();
   });
+
+  // viene de la ficha de un plato en la Carta: contacto.html?plato=Bife%20Ancho#reserva
+  const platoUrl = new URLSearchParams(location.search).get('plato');
+  if (platoUrl && typeof CARTA !== 'undefined' && CARTA.some((p) => p.nombre === platoUrl)) {
+    pedido.push(platoUrl);
+    pintarPedido();
+  }
 
   // la lista base es la carta; si el admin agregó platos en el Panel, también salen
   llenarPlatos(CARTA);

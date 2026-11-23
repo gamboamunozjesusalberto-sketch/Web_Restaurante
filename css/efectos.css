@@ -1,0 +1,189 @@
+/* ==========================================================================
+   PUNTO ASADO - EFECTOS DE LAS PÁGINAS INTERNAS (EFECTOS.CSS)
+   Acompaña a js/efectos.js en Carta, Nosotros y Contacto.
+   ========================================================================== */
+
+/* ---------- Barra de progreso de lectura ---------- */
+.progreso-lectura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--arg-celeste), #ff9a3c, #e2551d);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* ---------- Portada: chispas y parallax ---------- */
+.con-efectos .page-hero-bg { will-change: transform; transform: scale(1.08); }
+.chispas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.con-efectos .page-hero-inner { position: relative; z-index: 1; }
+.con-efectos .page-title span {
+  background: linear-gradient(90deg, var(--arg-celeste), #ffd08a, var(--arg-celeste));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brillo-titulo 5s linear infinite;
+}
+@keyframes brillo-titulo { to { background-position: 200% center; } }
+
+/* ---------- Aparecer al bajar ---------- */
+/* El HTML ya anima los .reveal al cargar; con efectos.js esperan a verse */
+.inner-page.con-efectos .reveal.revelar {
+  opacity: 0;
+  transform: translateY(36px) scale(0.98);
+  animation: none;
+}
+.inner-page.con-efectos .reveal.revelado {
+  animation: none;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.inner-page.con-efectos .reveal.revelar,
+.inner-page.con-efectos .reveal.revelado { will-change: opacity, transform; }
+
+/* ---------- Volver arriba ---------- */
+.volver-arriba {
+  position: fixed;
+  right: 22px;
+  bottom: 96px;
+  z-index: 1040;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(20, 17, 14, 0.85);
+  color: #fff;
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+}
+.volver-arriba.visible { opacity: 1; transform: none; pointer-events: auto; }
+.volver-arriba:hover { background: var(--arg-celeste-dark); }
+@media (max-width: 767.98px) { .volver-arriba { right: 14px; bottom: 150px; } }
+
+/* ---------- Carta: buscador ---------- */
+.buscador-carta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 360px;
+  margin: 12px auto 0;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cfc6ba;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.buscador-carta:focus-within { border-color: var(--arg-celeste); box-shadow: 0 0 0 3px rgba(116, 172, 223, 0.25); }
+.buscador-carta input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: 500 0.9rem var(--font-text);
+  outline: none;
+}
+.buscador-carta input::placeholder { color: #9a9085; }
+.buscador-vacio { margin: 10px 0 0; color: #f3d9b1; font-size: 0.88rem; text-align: center; }
+.parrilla-card.no-coincide,
+.vino-card.no-coincide { display: none; }
+.menu-block.sin-resultados { display: none; }
+
+/* ---------- Carta: tarjetas clicables ---------- */
+.page-menu .parrilla-card,
+.page-menu .vino-card { cursor: pointer; }
+.page-menu .parrilla-card:focus-visible,
+.page-menu .vino-card:focus-visible { outline: 3px solid var(--arg-celeste); outline-offset: 4px; }
+.page-menu .parrilla-media::before,
+.page-menu .vino-media::before {
+  content: "Ver detalle +";
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 2;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(10, 8, 7, 0.78);
+  color: #fff;
+  font: 600 0.75rem var(--font-text);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.page-menu .parrilla-card:hover .parrilla-media::before,
+.page-menu .vino-card:hover .vino-media::before { opacity: 1; transform: translate(-50%, 0); }
+.page-menu .vino-media { position: relative; }
+
+/* ---------- Carta: ficha del plato ---------- */
+.ficha-plato { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; }
+.ficha-fondo { position: absolute; inset: 0; background: rgba(5, 4, 3, 0.78); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.25s ease; }
+.ficha-caja {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  width: min(920px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: #171310;
+  color: #e9e1d6;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.ficha-plato.abierta .ficha-fondo { opacity: 1; }
+.ficha-plato.abierta .ficha-caja { opacity: 1; transform: none; }
+.ficha-foto { min-height: 320px; overflow: hidden; background: #0e0b09; }
+.ficha-foto img { width: 100%; height: 100%; object-fit: cover; animation: ficha-zoom 8s ease-out both; }
+@keyframes ficha-zoom { from { transform: scale(1.12); } }
+.ficha-info { display: flex; flex-direction: column; gap: 12px; padding: 34px 30px 28px; }
+.ficha-categoria { color: var(--arg-celeste); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+.ficha-info h2 { margin: 0; color: #fff; font-family: var(--font-title); font-size: 1.7rem; font-weight: 900; text-transform: uppercase; }
+.ficha-desc { margin: 0; color: #cfc6ba; line-height: 1.6; }
+.ficha-coccion, .ficha-vino {
+  display: flex; gap: 10px; margin: 0; padding: 10px 12px;
+  border-radius: 12px; background: rgba(255, 255, 255, 0.05); font-size: 0.88rem; line-height: 1.5;
+}
+.ficha-coccion i { color: #ff9a3c; }
+.ficha-vino i { color: #c45c7a; }
+.ficha-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 8px; }
+.ficha-precio { color: var(--arg-celeste); font-family: var(--font-title); font-size: 1.6rem; font-weight: 900; }
+.ficha-cerrar {
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  display: grid; place-items: center; width: 38px; height: 38px;
+  border: 0; border-radius: 50%; background: rgba(10, 8, 7, 0.75); color: #fff;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.ficha-cerrar:hover { background: #b23a1e; transform: rotate(90deg); }
+@media (max-width: 767.98px) {
+  .ficha-caja { grid-template-columns: 1fr; }
+  .ficha-foto { min-height: 0; aspect-ratio: 4 / 3; }
+  .ficha-info { padding: 22px 20px; }
+  .ficha-info h2 { font-size: 1.35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .con-efectos .page-title span { animation: none; }
+  .ficha-foto img { animation: none; }
+}
