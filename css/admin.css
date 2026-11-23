@@ -256,3 +256,10 @@
 .tabla-clientes .si { color: #15803d; }
 .tabla-clientes .no { color: var(--pa-muted); }
 .tabla-clientes td.vacio { white-space: normal; text-align: center; }
+
+/* Botón para cambiar la foto de un plato ya publicado */
+.btn-foto { font-size: 1.15rem; display: inline-grid; place-items: center; margin: 0; padding: 6px 9px; background: none; color: var(--arg-celeste-dark); cursor: pointer; }
+.btn-foto:focus-within { outline: 3px solid var(--arg-celeste-dark); outline-offset: 2px; }
+.btn-foto.subiendo { pointer-events: none; opacity: 0.6; }
+.btn-foto.subiendo i { animation: foto-girar 0.9s linear infinite; }
+@keyframes foto-girar { to { transform: rotate(360deg); } }

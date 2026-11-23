@@ -198,16 +198,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     pintarPlatos();
   }
 
+  // Platos que ya están publicados en menu.html (carta-datos.js) pero todavía no
+  // tienen fila en la tabla platos. Se muestran para poder cambiarles la foto.
+  const normalizar = (t) => String(t).trim().toLowerCase();
+  function platosDeLaCarta() {
+    if (typeof CARTA === 'undefined') return [];
+    const enBase = new Set(platos.map((p) => normalizar(p.nombre)));
+    return CARTA.filter((c) => !enBase.has(normalizar(c.nombre)))
+      .map((c) => ({ id: null, nombre: c.nombre, categoria: c.categoria, precio: c.precio, imagen: c.imagen, visible: true, deLaCarta: true }));
+  }
+
   function pintarPlatos() {
     const texto = buscarPlato.value.trim().toLowerCase();
-    const lista = platos.filter((p) => p.nombre.toLowerCase().includes(texto) || p.categoria.includes(texto));
+    const todos = [...platos, ...platosDeLaCarta()];
+    const lista = todos.filter((p) => p.nombre.toLowerCase().includes(texto) || p.categoria.toLowerCase().includes(texto));
     listaPlatos.innerHTML = '';
     if (!lista.length) {
-      listaPlatos.append(crear('li', 'vacio', platos.length ? 'Ningún plato coincide.' : 'Aún no hay platos. Agrega el primero con el formulario.'));
+      listaPlatos.append(crear('li', 'vacio', todos.length ? 'Ningún plato coincide.' : 'Aún no hay platos. Agrega el primero con el formulario.'));
       return;
     }
     lista.forEach((p) => {
       const li = crear('li', 'plato-item' + (p.visible ? '' : ' oculto'));
+      const cambiarFoto = botonCambiarFoto(p);
 
       if (p.imagen) {
         const img = crear('img');
@@ -222,7 +234,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const info = crear('div');
-      info.append(crear('h3', '', p.nombre), crear('p', '', p.categoria + (p.visible ? '' : ' · oculto')));
+      info.append(crear('h3', '', p.nombre), crear('p', '', p.categoria + (p.visible ? '' : ' · oculto') + (p.deLaCarta ? ' · publicado en la carta' : '')));
+
+      // los platos de la carta solo tienen el botón de foto (sus datos están en menu.html)
+      if (p.deLaCarta) {
+        const controles = crear('div', 'plato-controles');
+        controles.append(cambiarFoto);
+        li.append(info, controles);
+        listaPlatos.append(li);
+        return;
+      }
 
       const controles = crear('div', 'plato-controles');
       const precio = crear('input');
@@ -268,13 +289,50 @@ document.addEventListener('DOMContentLoaded', async () => {
         pintarPlatos();
       });
 
-      controles.append(precio, interruptor, eliminar);
+      controles.append(cambiarFoto, precio, interruptor, eliminar);
       li.append(info, controles);
       listaPlatos.append(li);
     });
   }
 
   buscarPlato.addEventListener('input', pintarPlatos);
+
+  // ---------- Cambiar la foto de un plato ya publicado ----------
+  // Sube la foto nueva a Storage. Si el plato ya está en la tabla, se actualiza
+  // su imagen; si solo estaba en menu.html, se crea su fila con la foto y
+  // menu.js la pone en la tarjeta de la carta (reemplaza la anterior).
+  function botonCambiarFoto(p) {
+    const etiqueta = crear('label', 'btn-accion btn-foto');
+    etiqueta.title = p.imagen ? 'Cambiar foto' : 'Subir foto';
+    etiqueta.innerHTML = '<i class="bi bi-camera" aria-hidden="true"></i>';
+    const entrada = crear('input');
+    entrada.type = 'file';
+    entrada.accept = TIPOS_FOTO.join(',');
+    entrada.className = 'visually-hidden';
+    entrada.setAttribute('aria-label', (p.imagen ? 'Cambiar foto de ' : 'Subir foto de ') + p.nombre);
+    etiqueta.append(entrada);
+
+    entrada.addEventListener('change', async () => {
+      const archivo = entrada.files[0];
+      if (!archivo) return;
+      if (!TIPOS_FOTO.includes(archivo.type)) return alert('La foto debe ser JPG, PNG o WEBP.');
+      if (archivo.size > MAX_FOTO) return alert('La foto pesa más de 5 MB. Elige una más liviana.');
+      etiqueta.classList.add('subiendo');
+      try {
+        const imagen = await subirFoto(archivo);
+        const { error } = p.deLaCarta
+          ? await db.from('platos').insert({ nombre: p.nombre, categoria: p.categoria, precio: p.precio, imagen, visible: true })
+          : await db.from('platos').update({ imagen }).eq('id', p.id);
+        if (error) throw error;
+        await cargarPlatos();
+      } catch (err) {
+        alert('No se pudo cambiar la foto: ' + err.message);
+      } finally {
+        etiqueta.classList.remove('subiendo');
+      }
+    });
+    return etiqueta;
+  }
 
   // vista previa de la foto elegida (ruta escrita o archivo subido)
   const archivoFoto = document.getElementById('p-archivo');
