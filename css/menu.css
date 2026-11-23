@@ -492,3 +492,32 @@
   }
 }
 
+
+/* Postres sin foto todavía: ilustración con ícono (el admin puede subir la foto
+   desde el Panel con el mismo nombre del plato y la reemplaza) */
+.parrilla-media.sin-foto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(232, 160, 69, 0.35), transparent 55%),
+    radial-gradient(circle at 75% 80%, rgba(178, 58, 30, 0.35), transparent 60%),
+    #1d1410;
+  color: #f3d9b1;
+  text-align: center;
+  padding: 1rem;
+}
+.parrilla-media.sin-foto i {
+  font-size: 3.2rem;
+  color: #e8a045;
+  transition: transform 0.6s ease;
+}
+.parrilla-card:hover .parrilla-media.sin-foto i { transform: scale(1.12) rotate(-6deg); }
+.parrilla-media.sin-foto span:not(.parrilla-badge) {
+  font-family: inherit;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}

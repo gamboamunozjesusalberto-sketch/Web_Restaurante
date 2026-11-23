@@ -82,6 +82,7 @@ begin
   if new.ubicacion = 'Segundo piso' and exists (
        select 1 from public.reservas r
        where r.fecha = new.fecha and r.estado in ('pendiente', 'confirmada')
+         and r.id is distinct from new.id  -- al cambiar la fecha, no contarse a sí misma
          and (r.paquete = 'Segundo piso exclusivo' or new.paquete = 'Segundo piso exclusivo')) then
     raise exception 'El segundo piso ya está reservado ese día. Elige el primer piso u otra fecha.';
   end if;

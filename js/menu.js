@@ -79,6 +79,21 @@ async function cargarPlatosDeLaBase() {
       if (precio && plato.precio != null) precio.textContent = precioTexto(plato.precio);
       const texto = info.querySelector('p');
       if (texto && plato.descripcion) texto.textContent = plato.descripcion;
+      // si el admin subió una foto, reemplaza la ilustración (o la foto anterior)
+      const mediaExistente = info.parentElement.querySelector('.parrilla-media, .vino-media');
+      if (plato.imagen && mediaExistente) {
+        let img = mediaExistente.querySelector('img');
+        if (!img) {
+          mediaExistente.classList.remove('sin-foto');
+          mediaExistente.removeAttribute('aria-hidden');
+          mediaExistente.querySelectorAll('i, span:not(.parrilla-badge)').forEach((el) => el.remove());
+          img = document.createElement('img');
+          img.loading = 'lazy';
+          mediaExistente.prepend(img);
+        }
+        img.src = plato.imagen;
+        img.alt = plato.nombre;
+      }
       return;
     }
 

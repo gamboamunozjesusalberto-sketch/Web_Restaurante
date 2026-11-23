@@ -117,12 +117,104 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cancelar = crear('button', 'btn-cancelar', 'Cancelar');
         cancelar.type = 'button';
         cancelar.addEventListener('click', () => cancelarReserva(r));
-        acciones.append(cancelar);
+        const cambiar = crear('button', 'btn-cambiar', 'Cambiar fecha');
+        cambiar.type = 'button';
+        cambiar.addEventListener('click', () => abrirCambio(li, r));
+        acciones.append(cambiar, cancelar);
       }
 
       li.append(fecha, info, acciones);
       listaReservas.append(li);
     });
+  }
+
+  // ---------- CAMBIAR FECHA U HORA (solo reservas pendientes) ----------
+  // Se guarda con la función cambiar_reserva() de Supabase, que vuelve a
+  // validar el horario, los 60 días y el segundo piso.
+  const aISO = (f) => `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
+
+  function horasDelDia(fechaISO) {
+    const dia = new Date(fechaISO + 'T12:00').getDay();
+    const apertura = typeof HORARIO !== 'undefined' ? HORARIO.apertura(dia) : (dia === 0 || dia === 6 ? '12:00' : '18:00');
+    const [h0] = apertura.split(':').map(Number);
+    const horas = [];
+    for (let min = h0 * 60; min <= 22 * 60 + 30; min += 30) {
+      horas.push(`${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`);
+    }
+    const ahora = new Date();
+    const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
+    return horas.filter((hh) => fechaISO !== hoyISO || Number(hh.slice(0, 2)) * 60 + Number(hh.slice(3)) > minutosAhora);
+  }
+
+  function abrirCambio(li, r) {
+    const abierto = li.querySelector('.reserva-cambio');
+    if (abierto) { abierto.remove(); return; }
+    document.querySelectorAll('.reserva-cambio').forEach((el) => el.remove());
+
+    const form = crear('form', 'reserva-cambio');
+    form.noValidate = true;
+    const etFecha = crear('label', '', 'Nueva fecha');
+    const fecha = crear('input');
+    fecha.type = 'date';
+    fecha.required = true;
+    fecha.min = hoyISO;
+    const limite = new Date();
+    limite.setDate(limite.getDate() + 60);
+    fecha.max = aISO(limite);
+    fecha.value = r.fecha >= hoyISO ? r.fecha : hoyISO;
+    etFecha.append(fecha);
+
+    const etHora = crear('label', '', 'Nueva hora');
+    const hora = crear('select');
+    hora.required = true;
+    etHora.append(hora);
+
+    const llenarHoras = () => {
+      const actual = hora.value || r.hora.slice(0, 5);
+      hora.innerHTML = '';
+      const horas = fecha.value ? horasDelDia(fecha.value) : [];
+      if (!horas.length) hora.append(new Option('Sin horarios ese día', ''));
+      horas.forEach((hh) => hora.append(new Option(hora12(hh), hh, false, hh === actual)));
+    };
+    fecha.addEventListener('change', llenarHoras);
+    llenarHoras();
+
+    const guardar = crear('button', 'btn btn-celeste btn-sm px-3', 'Guardar cambio');
+    guardar.type = 'submit';
+    const cerrar = crear('button', 'btn-cancelar', 'Cerrar');
+    cerrar.type = 'button';
+    cerrar.addEventListener('click', () => form.remove());
+    const aviso = crear('p', 'form-feedback');
+    aviso.setAttribute('role', 'status');
+    const botones = crear('div', 'reserva-cambio-botones');
+    botones.append(guardar, cerrar);
+    form.append(etFecha, etHora, botones, aviso);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!fecha.value || !hora.value) {
+        aviso.textContent = 'Elige una fecha y una hora disponibles.';
+        return;
+      }
+      if (fecha.value === r.fecha && hora.value === r.hora.slice(0, 5)) {
+        aviso.textContent = 'Es la misma fecha y hora que ya tienes.';
+        return;
+      }
+      guardar.disabled = true;
+      aviso.classList.add('ok');
+      aviso.textContent = 'Guardando…';
+      const { error } = await db.rpc('cambiar_reserva', { p_id: r.id, p_fecha: fecha.value, p_hora: hora.value });
+      guardar.disabled = false;
+      if (error) {
+        aviso.classList.remove('ok');
+        aviso.textContent = 'No se pudo cambiar: ' + error.message;
+        return;
+      }
+      cargarReservas();
+    });
+
+    li.append(form);
+    fecha.focus();
   }
 
   async function cancelarReserva(r) {
