@@ -18,11 +18,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css de la cuenta (tarjetas) + css propio del admin -->
-  <link rel="stylesheet" href="css/variables.css?v=11" />
-  <link rel="stylesheet" href="css/components.css?v=11" />
-  <link rel="stylesheet" href="css/paginas.css?v=11" />
-  <link rel="stylesheet" href="css/cuenta.css?v=11" />
-  <link rel="stylesheet" href="css/admin.css?v=11" />
+  <link rel="stylesheet" href="css/variables.css?v=12" />
+  <link rel="stylesheet" href="css/components.css?v=12" />
+  <link rel="stylesheet" href="css/paginas.css?v=12" />
+  <link rel="stylesheet" href="css/cuenta.css?v=12" />
+  <link rel="stylesheet" href="css/admin.css?v=12" />
 </head>
 <body class="inner-page page-cuenta page-admin">
 
@@ -88,7 +88,7 @@
           <li class="resumen-item reveal" style="--delay: .05s"><i class="bi bi-hourglass-split" aria-hidden="true"></i><strong id="r-pendientes">0</strong><span>Reservas por confirmar</span></li>
           <li class="resumen-item reveal" style="--delay: .1s"><i class="bi bi-calendar-day" aria-hidden="true"></i><strong id="r-hoy">0</strong><span>Reservas para hoy</span></li>
           <li class="resumen-item reveal" style="--delay: .15s"><i class="bi bi-people" aria-hidden="true"></i><strong id="r-personas">0</strong><span>Personas esperadas hoy</span></li>
-          <li class="resumen-item reveal" style="--delay: .2s"><i class="bi bi-person-check" aria-hidden="true"></i><strong id="r-clientes">0</strong><span>Clientes registrados</span></li>
+          <li class="resumen-item resumen-clic reveal" style="--delay: .2s" id="r-clientes-card" role="button" tabindex="0" aria-controls="panel-clientes" title="Ver la lista de clientes"><i class="bi bi-person-check" aria-hidden="true"></i><strong id="r-clientes">0</strong><span>Clientes registrados</span><em class="resumen-ver">Ver lista <i class="bi bi-arrow-right" aria-hidden="true"></i></em></li>
         </ul>
 
         <!-- PESTAÑAS -->
@@ -98,6 +98,7 @@
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-promos" id="tab-promos" type="button"><i class="bi bi-megaphone"></i> Promociones</button>
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-dashboard" id="tab-dashboard" type="button"><i class="bi bi-bar-chart-line"></i> Dashboard</button>
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-opiniones" id="tab-opiniones" type="button"><i class="bi bi-chat-heart"></i> Opiniones</button>
+          <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-clientes" id="tab-clientes" type="button"><i class="bi bi-person-lines-fill"></i> Clientes</button>
         </div>
 
         <!-- ========== RESERVAS ========== -->
@@ -313,6 +314,38 @@
           </div>
         </div>
 
+        <!-- ========== CLIENTES (js/admin-dashboard.js) ========== -->
+        <div class="admin-panel" id="panel-clientes" role="tabpanel" aria-labelledby="tab-clientes" hidden>
+          <div class="tarjeta-cuenta">
+            <h2 class="tarjeta-titulo"><i class="bi bi-person-lines-fill" aria-hidden="true"></i> Clientes registrados</h2>
+            <p class="dash-nota">Personas que crearon su cuenta en la web (no cuenta las de administrador). Sirve para ver si la clientela crece mes a mes.</p>
+            <ul class="dash-kpis" id="cli-kpis"></ul>
+          </div>
+          <div class="row g-4 mt-1">
+            <div class="col-lg-5">
+              <div class="tarjeta-cuenta h-100">
+                <h3 class="dash-titulo"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Registros por mes</h3>
+                <p class="dash-nota" id="cli-crecimiento"></p>
+                <div class="dash-barras" id="cli-meses"></div>
+              </div>
+            </div>
+            <div class="col-lg-7">
+              <div class="tarjeta-cuenta h-100">
+                <div class="tarjeta-cabecera">
+                  <h3 class="dash-titulo mb-0"><i class="bi bi-people" aria-hidden="true"></i> Lista de clientes</h3>
+                  <input type="search" class="buscador" id="buscar-cliente" placeholder="Buscar cliente o celular…" aria-label="Buscar cliente">
+                </div>
+                <div class="tabla-clientes-envoltura">
+                  <table class="tabla-clientes">
+                    <thead><tr><th>Cliente</th><th>Celular</th><th>Registro</th><th>Reservas</th><th>Promos</th></tr></thead>
+                    <tbody id="lista-clientes"><tr><td colspan="5" class="cargando">Cargando…</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   </main>
@@ -400,11 +433,11 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=11"></script>
-  <script src="js/sesion.js?v=11"></script>
-  <script src="js/main.js?v=11"></script>
-  <script src="js/admin.js?v=11"></script>
-  <script src="js/admin-dashboard.js?v=11"></script>
+  <script src="js/supabase-config.js?v=12"></script>
+  <script src="js/sesion.js?v=12"></script>
+  <script src="js/main.js?v=12"></script>
+  <script src="js/admin.js?v=12"></script>
+  <script src="js/admin-dashboard.js?v=12"></script>
 
 </body>
 </html>

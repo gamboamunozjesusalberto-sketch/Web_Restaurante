@@ -239,3 +239,20 @@
   .opinion-admin-controles { flex-direction: row; width: 100%; }
 }
 .etiqueta-paquete { display: inline-block; margin: 4px 0 2px; padding: 2px 8px; border-radius: 999px; background: #14110e; color: var(--arg-celeste); font-size: 0.72rem; font-weight: 700; }
+
+/* ---------- Clientes registrados ---------- */
+.resumen-clic { cursor: pointer; }
+.resumen-clic:focus-visible { outline: 3px solid var(--arg-celeste-dark); outline-offset: 3px; }
+.resumen-ver { grid-column: 2; margin-top: 4px; color: var(--arg-celeste-dark); font-size: 0.75rem; font-style: normal; font-weight: 700; }
+.resumen-ver i { display: inline; grid-row: auto; font-size: 0.75rem; color: inherit; transition: margin-left 0.2s ease; }
+.resumen-clic:hover .resumen-ver i { margin-left: 4px; }
+.tabla-clientes-envoltura { max-height: 420px; overflow: auto; }
+.tabla-clientes { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.tabla-clientes th { position: sticky; top: 0; padding: 8px 10px; background: var(--pa-paper); color: var(--pa-muted); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-align: left; text-transform: uppercase; border-bottom: 1px solid var(--pa-cream-line); }
+.tabla-clientes td { padding: 10px; border-bottom: 1px solid var(--pa-cream-line); color: var(--pa-ink-soft); white-space: nowrap; }
+.tabla-clientes tbody tr:hover { background: #faf6f0; }
+.tabla-clientes .cli-nombre { color: var(--pa-ink-warm); font-weight: 700; white-space: normal; }
+.tabla-clientes .cli-num { font-weight: 800; text-align: center; }
+.tabla-clientes .si { color: #15803d; }
+.tabla-clientes .no { color: var(--pa-muted); }
+.tabla-clientes td.vacio { white-space: normal; text-align: center; }

@@ -5,6 +5,7 @@
  *   fechas con más reservas. Se calcula con las reservas que el admin ve
  *   (RLS solo deja leerlas todas al rol admin).
  * - Opiniones: ocultar / mostrar o eliminar comentarios de clientes.
+ * - Clientes: cuántos hay, registros por mes y lista (la tarjeta del resumen la abre).
  * Los gráficos son barras hechas con HTML y CSS (sin librerías).
  * ==========================================================================
  */
@@ -207,4 +208,112 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('tab-opiniones').addEventListener('click', cargarOpiniones);
   cargarOpiniones();
+
+  // ==========================================================
+  // CLIENTES REGISTRADOS
+  // Para saber cuántos clientes tiene la web y si crecen mes a mes.
+  // ==========================================================
+  const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+  const tbodyClientes = document.getElementById('lista-clientes');
+  const buscarCliente = document.getElementById('buscar-cliente');
+  let clientes = [];
+
+  async function cargarClientes() {
+    const [{ data: perfiles }, { data: res }] = await Promise.all([
+      db.from('perfiles').select('id, nombre, telefono, acepta_promos, creado_en').eq('rol', 'cliente').order('creado_en', { ascending: false }),
+      db.from('reservas').select('usuario_id, estado')
+    ]);
+    const porCliente = contar((res || []).filter((r) => r.estado !== 'cancelada' && r.estado !== 'rechazada'), (r) => r.usuario_id);
+    clientes = (perfiles || []).map((p) => ({ ...p, reservas: porCliente.get(p.id) || 0 }));
+    pintarClientes();
+  }
+
+  function pintarClientes() {
+    const ahora = new Date();
+    const claveMes = (f) => `${f.getFullYear()}-${f.getMonth()}`;
+    const esteMes = claveMes(ahora);
+    const anterior = claveMes(new Date(ahora.getFullYear(), ahora.getMonth() - 1, 1));
+    const porMes = contar(clientes, (c) => claveMes(new Date(c.creado_en)));
+    const nuevos = porMes.get(esteMes) || 0;
+    const pasados = porMes.get(anterior) || 0;
+
+    // KPIs
+    const kpis = [
+      ['bi-people-fill', clientes.length, 'Clientes en total'],
+      ['bi-person-plus', nuevos, 'Nuevos este mes'],
+      ['bi-calendar-check', clientes.filter((c) => c.reservas > 0).length, 'Ya reservaron'],
+      ['bi-megaphone', clientes.filter((c) => c.acepta_promos).length, 'Reciben promociones']
+    ];
+    const ul = document.getElementById('cli-kpis');
+    ul.innerHTML = '';
+    kpis.forEach(([icono, valor, texto]) => {
+      const li = crear('li', 'dash-kpi');
+      const i = crear('i', 'bi ' + icono);
+      i.setAttribute('aria-hidden', 'true');
+      li.append(i, crear('strong', '', String(valor)), crear('span', '', texto));
+      ul.append(li);
+    });
+
+    // registros de los últimos 6 meses
+    const meses = [];
+    for (let k = 5; k >= 0; k--) meses.push(new Date(ahora.getFullYear(), ahora.getMonth() - k, 1));
+    barras(document.getElementById('cli-meses'), meses.map((f) => ({
+      etiqueta: `${MESES[f.getMonth()]} ${f.getFullYear()}`,
+      valor: porMes.get(claveMes(f)) || 0
+    })), 'Todavía no hay clientes registrados.');
+
+    let crecimiento = `Este mes se registraron ${nuevos} ${nuevos === 1 ? 'cliente' : 'clientes'}`;
+    if (pasados) {
+      const cambio = Math.round(((nuevos - pasados) / pasados) * 100);
+      crecimiento += ` (${cambio >= 0 ? '+' : ''}${cambio}% frente al mes pasado).`;
+    } else {
+      crecimiento += nuevos ? ' (el mes pasado no hubo registros).' : '.';
+    }
+    document.getElementById('cli-crecimiento').textContent = crecimiento;
+
+    pintarTablaClientes();
+  }
+
+  function pintarTablaClientes() {
+    const q = buscarCliente.value.trim().toLowerCase();
+    const lista = clientes.filter((c) => !q || c.nombre.toLowerCase().includes(q) || (c.telefono || '').includes(q));
+    tbodyClientes.innerHTML = '';
+    if (!lista.length) {
+      const tr = crear('tr');
+      const td = crear('td', 'vacio', clientes.length ? 'Nadie coincide con la búsqueda.' : 'Todavía no hay clientes registrados.');
+      td.colSpan = 5;
+      tr.append(td);
+      tbodyClientes.append(tr);
+      return;
+    }
+    lista.forEach((c) => {
+      const tr = crear('tr');
+      const promo = crear('td');
+      const i = crear('i', 'bi ' + (c.acepta_promos ? 'bi-check-circle-fill si' : 'bi-dash-circle no'));
+      i.title = c.acepta_promos ? 'Acepta promociones' : 'No acepta promociones';
+      promo.append(i);
+      tr.append(
+        crear('td', 'cli-nombre', c.nombre),
+        crear('td', '', c.telefono || '—'),
+        crear('td', '', new Date(c.creado_en).toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' })),
+        crear('td', 'cli-num', String(c.reservas)),
+        promo
+      );
+      tbodyClientes.append(tr);
+    });
+  }
+
+  buscarCliente.addEventListener('input', pintarTablaClientes);
+  document.getElementById('tab-clientes').addEventListener('click', cargarClientes);
+
+  // la tarjeta "Clientes registrados" del resumen abre esta pestaña
+  const tarjetaClientes = document.getElementById('r-clientes-card');
+  const abrirClientes = () => {
+    document.getElementById('tab-clientes').click();
+    document.querySelector('.admin-tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  tarjetaClientes.addEventListener('click', abrirClientes);
+  tarjetaClientes.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrirClientes(); }
+  });
 });
