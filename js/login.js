@@ -34,7 +34,9 @@
   function paginaDeRegreso(perfil) {
     const volver = new URLSearchParams(location.search).get('volver') || '';
     if (/^[a-z0-9_-]+\.html(#[a-z0-9_-]+)?$/i.test(volver)) return volver;
-    return perfil && perfil.rol === 'admin' ? 'admin.html' : 'cuenta.html';
+    if (perfil && perfil.rol === 'admin') return 'admin.html';
+    if (perfil && perfil.rol === 'mozo') return 'personal.html';
+    return 'cuenta.html';
   }
 
   function mostrar(texto, tipo = '') {

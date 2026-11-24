@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   let filtroEstado = 'pendiente';
 
   async function cargarReservas() {
+    // las pendientes que ya pasaron sin confirmarse quedan vencidas (no se muestran como por confirmar)
+    await db.rpc('vencer_reservas');
     // perfiles(...) trae el nombre y celular del cliente (relación usuario_id → perfiles)
     const { data, error } = await db.from('reservas')
       .select('*, perfiles(nombre, telefono, dni)')
@@ -116,6 +118,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const tdDetalle = celda('Detalle');
       tdDetalle.append(crear('span', '', `${r.tipo} · ${r.ubicacion}${r.mesa ? ' · Mesa ' + r.mesa : ''}`));
       if (r.paquete) tdDetalle.append(crear('span', 'etiqueta-paquete', 'Paquete ' + r.paquete));
+      if (r.descuento) tdDetalle.append(crear('span', 'etiqueta-paquete', `${r.descuento}% de descuento`));
+      if (r.motivo) tdDetalle.append(crear('small', 'detalle-motivo', 'Motivo enviado: ' + r.motivo));
+      if (r.oferta_mesa) tdDetalle.append(crear('small', '', `Se le ofreció la mesa ${r.oferta_mesa} el ${fechaCorta(r.oferta_fecha)} a las ${hora12(r.oferta_hora)}${r.oferta_aceptada ? ' (la aceptó)' : ''}`));
       if (r.pedido && r.pedido.length) tdDetalle.append(crear('small', '', 'Piensa pedir: ' + r.pedido.join(', ')));
       if (r.preferencias) tdDetalle.append(crear('small', '', r.preferencias));
       if (r.mensaje) tdDetalle.append(crear('small', '', '“' + r.mensaje + '”'));
@@ -131,9 +136,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const rechazar = crear('button', 'btn-accion btn-rechazar', 'Rechazar');
         confirmar.type = rechazar.type = 'button';
         confirmar.addEventListener('click', () => cambiarEstado(r, 'confirmada', [confirmar, rechazar]));
-        rechazar.addEventListener('click', () => cambiarEstado(r, 'rechazada', [confirmar, rechazar]));
+        rechazar.addEventListener('click', () => abrirAviso(r));
         acciones.append(confirmar, rechazar);
         tdAcciones.append(acciones);
+      } else if (r.estado === 'confirmada' && r.fecha >= hoyISO) {
+        const cancelar = crear('button', 'btn-accion btn-rechazar', 'Cancelar');
+        cancelar.type = 'button';
+        cancelar.addEventListener('click', () => abrirAviso(r));
+        tdAcciones.append(cancelar);
       } else {
         tdAcciones.append(crear('small', '', '—'));
       }
@@ -154,6 +164,132 @@ document.addEventListener('DOMContentLoaded', async () => {
     r.estado = nuevo;
     pintarReservas();
     pintarResumen();
+  }
+
+  // ---------- Rechazar o cancelar con aviso al cliente ----------
+  // El admin explica el motivo y, si quiere, ofrece otra mesa (el asistente
+  // sugiere las mejores libres) con un descuento. El cliente la acepta en Mi cuenta.
+  const MOTIVOS = ['No tenemos mesas libres a esa hora', 'Ese día hay un evento privado', 'Mantenimiento del local', 'Problema con la parrilla'];
+  const dialogo = crear('dialog', 'aviso-dialogo');
+  document.body.append(dialogo);
+
+  async function abrirAviso(r) {
+    const rechazo = r.estado === 'pendiente';
+    const cliente = r.perfiles || {};
+    dialogo.innerHTML = '';
+    const formAviso = crear('form', 'aviso-form');
+    formAviso.method = 'dialog';
+    formAviso.append(crear('h3', '', rechazo ? 'Rechazar reserva' : 'Cancelar reserva'));
+    formAviso.append(crear('p', 'aviso-sub', `${cliente.nombre || 'Cliente'} · ${fechaCorta(r.fecha)} a las ${hora12(r.hora)} · ${r.personas} personas${r.mesa ? ' · mesa ' + r.mesa : ''}`));
+
+    const lblMotivo = crear('label', 'aviso-label', 'Motivo para el cliente');
+    const motivo = crear('textarea', '');
+    motivo.rows = 2;
+    motivo.maxLength = 300;
+    motivo.required = true;
+    motivo.id = 'aviso-motivo';
+    lblMotivo.htmlFor = 'aviso-motivo';
+    const chips = crear('div', 'aviso-chips');
+    MOTIVOS.forEach((t) => {
+      const c = crear('button', 'aviso-chip', t);
+      c.type = 'button';
+      c.addEventListener('click', () => { motivo.value = t + '.'; vista(); });
+      chips.append(c);
+    });
+    formAviso.append(lblMotivo, chips, motivo);
+
+    const cajaOferta = crear('fieldset', 'aviso-ofertas');
+    cajaOferta.append(crear('legend', '', '✨ El asistente sugiere ofrecerle'));
+    const cargando = crear('p', 'aviso-cargando', 'Buscando mesas libres…');
+    cajaOferta.append(cargando);
+    formAviso.append(cajaOferta);
+
+    const lblDesc = crear('label', 'aviso-label', 'Descuento de compensación');
+    const descuento = crear('select', '');
+    [0, 10, 15, 20, 25].forEach((n) => descuento.append(new Option(n ? n + '%' : 'Sin descuento', n)));
+    descuento.value = '15';
+    lblDesc.append(descuento);
+    formAviso.append(lblDesc);
+
+    formAviso.append(crear('p', 'aviso-label', 'Así le llega la notificación'));
+    const previa = crear('p', 'aviso-previa');
+    formAviso.append(previa);
+    const error = crear('p', 'form-feedback');
+    formAviso.append(error);
+
+    const botones = crear('div', 'aviso-botones');
+    const whatsapp = crear('a', 'btn-accion aviso-wsp');
+    whatsapp.target = '_blank';
+    whatsapp.rel = 'noopener';
+    whatsapp.innerHTML = '<i class="bi bi-whatsapp" aria-hidden="true"></i> Escribirle';
+    const volver = crear('button', 'btn-accion', 'Volver');
+    volver.type = 'button';
+    volver.addEventListener('click', () => dialogo.close());
+    const enviar = crear('button', 'btn-accion btn-rechazar', rechazo ? 'Rechazar y avisar' : 'Cancelar y avisar');
+    enviar.type = 'submit';
+    botones.append(whatsapp, volver, enviar);
+    formAviso.append(botones);
+    dialogo.append(formAviso);
+    dialogo.showModal();
+
+    let ofertas = [];
+    const elegida = () => ofertas[Number((formAviso.querySelector('[name="oferta"]:checked') || {}).value)] || null;
+    function texto() {
+      const o = elegida();
+      let t = `Reserva del ${fechaCorta(r.fecha)} (${hora12(r.hora)}). Motivo: ${motivo.value.trim() || '…'}`;
+      if (!/[.!?…]$/.test(t)) t += '.';
+      if (o) {
+        t += ` Te ofrecemos la mesa ${o.mesa} (${o.piso.toLowerCase()}, ${o.zona}) el ${fechaCorta(o.fecha)} a las ${hora12(o.hora)}`;
+        t += Number(descuento.value) ? `, con ${descuento.value}% de descuento en tu consumo.` : '.';
+        t += ' Acéptala con un toque desde Mi cuenta.';
+      }
+      return t;
+    }
+    function vista() {
+      previa.textContent = texto();
+      descuento.disabled = !elegida();
+      const tel = String(cliente.telefono || '').replace(/\D/g, '');
+      whatsapp.hidden = !tel;
+      whatsapp.href = `https://wa.me/51${tel.slice(-9)}?text=${encodeURIComponent(`Hola ${cliente.nombre || ''}, te escribimos de Punto Asado. ${texto()}`)}`;
+    }
+    motivo.addEventListener('input', vista);
+    descuento.addEventListener('change', vista);
+    vista();
+
+    const { data } = await db.rpc('sugerir_mesas', { p_id: r.id });
+    ofertas = (data || []).map((o) => ({ ...o, hora: String(o.hora).slice(0, 5) }));
+    cargando.remove();
+    const opcion = (valor, etiqueta, marcada) => {
+      const l = crear('label', 'aviso-opcion');
+      const i = crear('input', '');
+      i.type = 'radio';
+      i.name = 'oferta';
+      i.value = valor;
+      i.checked = marcada;
+      i.addEventListener('change', vista);
+      l.append(i, crear('span', '', etiqueta));
+      cajaOferta.append(l);
+    };
+    ofertas.forEach((o, i) => opcion(i, `Mesa ${o.mesa} · ${o.piso}, ${o.zona} · ${hora12(o.hora)}${o.hora === String(r.hora).slice(0, 5) ? ' (misma hora)' : ''}`, i === 0));
+    if (!ofertas.length) cajaOferta.append(crear('p', 'aviso-cargando', 'No hay mesas libres ese día para este grupo.'));
+    opcion('', 'No ofrecer otra mesa', !ofertas.length);
+    vista();
+
+    formAviso.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!motivo.value.trim()) { motivo.focus(); return; }
+      const o = elegida();
+      enviar.disabled = true;
+      const { error: err } = await db.rpc('cancelar_con_aviso', {
+        p_id: r.id, p_motivo: motivo.value.trim(),
+        p_oferta_mesa: o ? o.mesa : null, p_oferta_fecha: o ? o.fecha : null,
+        p_oferta_hora: o ? o.hora : null, p_descuento: o ? Number(descuento.value) : null
+      });
+      enviar.disabled = false;
+      if (err) { error.textContent = 'No se pudo: ' + err.message; return; }
+      dialogo.close();
+      await cargarReservas();
+    });
   }
 
   document.querySelectorAll('#panel-reservas .filtro-btn').forEach((boton) => {

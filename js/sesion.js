@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <li><a class="dropdown-item" href="cuenta.html#mis-reservas"><i class="bi bi-calendar-check me-2"></i>Mis reservas</a></li>
       <li><a class="dropdown-item" href="cuenta.html#notificaciones"><i class="bi bi-bell me-2"></i>Notificaciones <span class="nav-badge-item"></span></a></li>
       <li class="solo-admin" hidden><a class="dropdown-item" href="admin.html"><i class="bi bi-speedometer2 me-2"></i>Panel de administrador</a></li>
+      <li class="solo-personal" hidden><a class="dropdown-item" href="personal.html"><i class="bi bi-grid-3x3-gap me-2"></i>Salón en vivo (mozos)</a></li>
       <li><hr class="dropdown-divider"></li>
       <li><button class="dropdown-item" type="button" data-cerrar-sesion><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</button></li>
     </ul>`;
@@ -94,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (perfil.rol === 'admin') item.querySelector('.solo-admin').hidden = false;
+  if (perfil.rol === 'admin' || perfil.rol === 'mozo') item.querySelector('.solo-personal').hidden = false;
 
   item.querySelector('[data-cerrar-sesion]').addEventListener('click', () => Sesion.cerrar());
 });

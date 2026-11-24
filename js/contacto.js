@@ -275,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // función mesas_ocupadas de Supabase: solo mesa y horario, nunca nombres.
   const mesaInput = form.elements.mesa;
   const mesaAyuda = document.getElementById('r-mesa-ayuda');
+  const botonRecomendada = document.getElementById('r-mesa-recomendada');
   const ocupacion = {}; // fecha → [{ mesa, desde, hasta, motivo }]
   let mesaSoltada = null; // mesa que dejó de servir al cambiar hora o personas
 
@@ -282,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     planoMesas = PlanoMesas.crear(document.getElementById('mapa-mesas'), {
       alElegir(codigo, soltada) {
         mesaInput.value = codigo || '';
+        if (botonRecomendada) botonRecomendada.hidden = !planoMesas || !planoMesas.recomendada || planoMesas.recomendada === codigo;
         if (codigo) {
           const mesa = PlanoMesas.mesa(codigo);
           form.elements.ubicacion.value = mesa.piso;
@@ -294,14 +296,19 @@ document.addEventListener('DOMContentLoaded', () => {
     form.elements.ubicacion.addEventListener('change', () => {
       planoMesas.piso(form.elements.ubicacion.value);
       if (mesaInput.value && PlanoMesas.mesa(mesaInput.value).piso !== form.elements.ubicacion.value) soltarMesa();
+      refrescarMesas();
     });
     document.getElementById('r-mesa-cualquiera').addEventListener('click', () => {
       soltarMesa();
-      mesaAyuda.textContent = 'Listo: el restaurante elegirá la mejor mesa libre para tu grupo.';
+      mesaAyuda.textContent = 'Listo: al guardar, nuestro asistente te asigna la mejor mesa libre según tu grupo, el piso y tus preferencias.';
     });
+    botonRecomendada.addEventListener('click', () => planoMesas.elegirRecomendada());
     personasInput.addEventListener('input', () => refrescarMesas());
+    // el tipo de reserva y las preferencias cambian la mesa que recomienda el asistente
+    form.querySelectorAll('[name="tipo"], [name="preferencia"]').forEach((el) => el.addEventListener('change', () => refrescarMesas()));
   } else {
     document.getElementById('r-mesa-cualquiera')?.remove();
+    botonRecomendada?.remove();
   }
 
   function soltarMesa() {
@@ -334,7 +341,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const reservas = fecha ? await ocupacionDe(fecha) : [];
     if (fecha !== fechaInput.value) return; // cambió de día mientras cargaba
     const hora = horaInput.value || null;
-    planoMesas.actualizar({ reservas, hora, personas, bloqueo, apertura: fecha ? horariosDelDia(fecha)[0] : '12:00' });
+    const perfilMesa = {
+      ubicacion: form.elements.ubicacion.value,
+      preferencias: [...form.querySelectorAll('[name="preferencia"]:checked')].map((c) => c.value).join(', '),
+      tipo: (form.querySelector('[name="tipo"]:checked') || {}).value,
+      paquete: paqueteElegido ? paqueteElegido.id : null
+    };
+    planoMesas.actualizar({ reservas, hora, personas, bloqueo, perfil: perfilMesa, apertura: fecha ? horariosDelDia(fecha)[0] : '12:00' });
+    const rec = planoMesas.recomendada;
+    botonRecomendada.hidden = !rec || mesaInput.value === rec;
+    if (rec) {
+      const m = PlanoMesas.mesa(rec);
+      botonRecomendada.querySelector('span').textContent = `Elegir la recomendada: ${rec} (${m.piso.toLowerCase()}, ${m.zona})`;
+    }
 
     if (!fecha) mesaAyuda.textContent = 'Elige día, hora y personas, y toca la mesa que más te guste. Cada reserva tiene su mesa por 2 horas.';
     else if (!hora) mesaAyuda.textContent = 'Ahora elige la hora para ver qué mesas están libres. Abajo ves de qué hora a qué hora está tomada cada una.';
@@ -521,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
     boton.disabled = true;
     mostrar('Guardando tu reserva…', true);
 
-    const { error } = await db.from('reservas').insert({
+    const { data: guardada, error } = await db.from('reservas').insert({
       fecha: d.get('fecha'),
       hora: d.get('hora'),
       personas: Number(d.get('personas')),
@@ -532,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pedido,
       preferencias: d.getAll('preferencia').join(', ') || null,
       mensaje: (d.get('mensaje') || '').trim() || null
-    });
+    }).select('mesa, ubicacion').single(); // la mesa puede venir elegida por el asistente
 
     boton.disabled = false;
     if (error) {
@@ -553,5 +572,12 @@ document.addEventListener('DOMContentLoaded', () => {
     elegirPaquete('');
     feedback.classList.add('ok');
     feedback.innerHTML = '¡Reserva enviada! Está <strong>pendiente</strong> de confirmación. Puedes verla en <a href="cuenta.html#mis-reservas">Mi cuenta</a>.';
+    if (guardada && guardada.mesa) {
+      const m = PlanoMesas.mesa(guardada.mesa);
+      const nota = document.createElement('span');
+      nota.className = 'd-block mt-1';
+      nota.textContent = `Tu mesa: ${guardada.mesa}${m ? ` (${m.piso.toLowerCase()}, ${m.zona})` : ''}.`;
+      feedback.append(nota);
+    }
   });
 });

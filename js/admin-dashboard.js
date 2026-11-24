@@ -306,6 +306,45 @@ document.addEventListener('DOMContentLoaded', async () => {
   buscarCliente.addEventListener('input', pintarTablaClientes);
   document.getElementById('tab-clientes').addEventListener('click', cargarClientes);
 
+  // ---------- Personal: nombrar o quitar mozos (supabase/11-personal.sql) ----------
+  const formPersonal = document.getElementById('form-personal');
+  const listaPersonal = document.getElementById('personal-lista');
+  async function cargarPersonal() {
+    const { data, error } = await db.rpc('lista_personal');
+    listaPersonal.innerHTML = '';
+    if (error) { listaPersonal.append(crear('li', 'dash-nota', 'Ejecuta supabase/11-personal.sql para activar las cuentas de mozo.')); return; }
+    data.forEach((p) => {
+      const li = crear('li', 'personal-item');
+      const info = crear('div', '');
+      info.append(crear('strong', '', p.nombre), crear('small', '', p.correo));
+      const rol = crear('span', 'estado', p.rol === 'admin' ? 'admin' : 'mozo');
+      rol.dataset.estado = p.rol === 'admin' ? 'confirmada' : 'pendiente';
+      li.append(info, rol);
+      if (p.rol === 'mozo') {
+        const quitar = crear('button', 'btn-accion btn-rechazar', 'Quitar');
+        quitar.type = 'button';
+        quitar.addEventListener('click', async () => {
+          if (!confirm(`¿Quitar a ${p.nombre} del personal? Vuelve a ser cliente.`)) return;
+          const { error: err } = await db.rpc('cambiar_rol', { p_correo: p.correo, p_rol: 'cliente' });
+          if (err) alert(err.message);
+          cargarPersonal();
+        });
+        li.append(quitar);
+      }
+      listaPersonal.append(li);
+    });
+  }
+  formPersonal.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fb = formPersonal.querySelector('.form-feedback');
+    const correo = document.getElementById('personal-correo');
+    const { data, error } = await db.rpc('cambiar_rol', { p_correo: correo.value.trim(), p_rol: 'mozo' });
+    fb.textContent = error ? error.message : `Listo: ${data} ya es mozo.`;
+    fb.classList.toggle('ok', !error);
+    if (!error) { correo.value = ''; cargarPersonal(); }
+  });
+  document.getElementById('tab-clientes').addEventListener('click', cargarPersonal);
+
   // la tarjeta "Clientes registrados" del resumen abre esta pestaña
   const tarjetaClientes = document.getElementById('r-clientes-card');
   const abrirClientes = () => {

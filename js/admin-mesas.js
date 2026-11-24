@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const listaSinMesa = document.getElementById('sin-mesa');
   const totalSinMesa = document.getElementById('sin-mesa-total');
   let reservas = [];
+  let apartadas = []; // mesas ofrecidas a clientes tras una cancelación, aún sin aceptar
   let mesaVista = null;
 
   const plano = PlanoMesas.crear(document.getElementById('mapa-admin'), {
@@ -46,6 +47,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (let m = (dia === 0 || dia === 6 ? 12 : 18) * 60; m <= 22 * 60 + 30; m += 30) {
       lista.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
     }
+    apartadas.forEach((o) => lista.push({
+      id: 'oferta-' + o.id, mesa: o.oferta_mesa, desde: hhmm(o.oferta_hora), hasta: masDos(hhmm(o.oferta_hora)),
+      motivo: 'reserva', nombre: (o.perfiles?.nombre || 'Cliente') + ' (ofrecida)', personas: o.personas, estado: 'pendiente'
+    }));
     return lista;
   }
 
@@ -66,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function cargar() {
     const { data, error } = await db.from('reservas')
-      .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, perfiles(nombre, telefono)')
+      .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, tipo, preferencias, origen, nombre_mesa, llegada_en, liberada_en, perfiles(nombre, telefono)')
       .eq('fecha', inputDia.value)
       .in('estado', ['pendiente', 'confirmada'])
       .order('hora', { ascending: true });
@@ -75,8 +80,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       detalle.append(crear('p', 'form-feedback', 'No se pudieron cargar las reservas del día. ¿Ya ejecutaste supabase/09-mesas.sql?'));
       reservas = [];
     } else {
-      reservas = data;
+      // las mesas liberadas por el mozo (clientes que ya se fueron) no ocupan lugar
+      reservas = data.filter((r) => !r.liberada_en)
+        .map((r) => (r.nombre_mesa || r.origen === 'local' ? { ...r, perfiles: { ...(r.perfiles || {}), nombre: r.nombre_mesa || 'Sin reserva (salón)' } } : r));
     }
+    const ofertas = await db.from('reservas')
+      .select('id, oferta_mesa, oferta_hora, personas, perfiles(nombre)')
+      .eq('oferta_fecha', inputDia.value)
+      .eq('oferta_aceptada', false);
+    apartadas = (ofertas.data || []).filter((o) => o.oferta_mesa);
     pintar();
   }
 
@@ -133,6 +145,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       listaSinMesa.append(crear('li', 'sin-mesa-vacio', conMesa ? 'Todas las reservas del día tienen mesa.' : 'No hay reservas activas este día.'));
     }
     sinMesa.forEach((r) => listaSinMesa.append(filaReserva(r, true)));
+    const asignables = sinMesa.filter((r) => r.personas <= 10);
+    if (asignables.length) {
+      const li = crear('li', 'sin-mesa-auto');
+      const boton = crear('button', 'btn-accion btn-confirmar');
+      boton.type = 'button';
+      boton.innerHTML = '<i class="bi bi-stars" aria-hidden="true"></i> Asignar todas con el asistente';
+      boton.addEventListener('click', () => asignarTodas(asignables, boton));
+      li.append(boton, crear('small', '', 'Elige para cada una la mesa libre que mejor encaja con su grupo, piso y preferencias.'));
+      listaSinMesa.prepend(li);
+    }
     pintarDetalle();
   }
 
@@ -159,7 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const select = crear('select', 'reserva-mesa-select');
       select.setAttribute('aria-label', 'Mesa para ' + (r.perfiles?.nombre || 'el cliente'));
       select.append(new Option(sinMesa ? 'Elegir mesa…' : 'Mover a…', ''));
-      ['Primer piso', 'Segundo piso'].forEach((piso) => {
+      ['Primer piso', 'Segundo piso', 'Área libre'].forEach((piso) => {
         const grupo = document.createElement('optgroup');
         grupo.label = piso;
         libres.filter((m) => m.piso === piso)
@@ -208,6 +230,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ul = crear('ul', 'sin-mesa');
     suyas.forEach((r) => ul.append(filaReserva(r, false)));
     detalle.append(ul);
+  }
+
+  // El asistente (función mejor_mesa de la base de datos) elige y se guarda una por una
+  async function asignarTodas(lista, boton) {
+    boton.disabled = true;
+    let ok = 0;
+    for (const r of lista) {
+      const { data: mesa } = await db.rpc('mejor_mesa', {
+        p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: r.personas, p_ubicacion: r.ubicacion,
+        p_preferencias: r.preferencias || null, p_tipo: r.tipo || null, p_paquete: r.paquete || null, p_excluir: r.id
+      });
+      if (!mesa) continue;
+      const { error } = await db.from('reservas').update({ mesa }).eq('id', r.id);
+      if (!error) ok++;
+    }
+    await cargar();
+    detalle.innerHTML = '';
+    detalle.append(crear('p', 'dash-nota mb-0', ok
+      ? `✨ El asistente ubicó ${ok} de ${lista.length} reserva${lista.length === 1 ? '' : 's'}.`
+      : 'No quedaban mesas libres que alcancen para esas reservas.'));
   }
 
   async function guardarMesa(r, mesa, li) {

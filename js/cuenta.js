@@ -64,7 +64,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   let reservas = [];
   let filtro = 'proximas';
 
+  // una reserva cancelada por el restaurante puede traer otra mesa ofrecida para aceptar
+  const conOferta = (r) => r.oferta_mesa && !r.oferta_aceptada && r.oferta_fecha >= hoyISO;
+
   async function cargarReservas() {
+    await db.rpc('vencer_reservas'); // las pendientes que ya pasaron sin confirmar quedan vencidas
     const { data, error } = await db.from('reservas')
       .select('*')
       .order('fecha', { ascending: true })
@@ -80,8 +84,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function pintarReservas() {
     const visibles = reservas.filter((r) => {
-      if (filtro === 'proximas') return r.fecha >= hoyISO && (r.estado === 'pendiente' || r.estado === 'confirmada');
-      if (filtro === 'pasadas') return r.fecha < hoyISO || r.estado === 'cancelada' || r.estado === 'rechazada';
+      if (filtro === 'proximas') return (r.fecha >= hoyISO && (r.estado === 'pendiente' || r.estado === 'confirmada')) || conOferta(r);
+      if (filtro === 'pasadas') return !conOferta(r) && (r.fecha < hoyISO || ['cancelada', 'rechazada', 'vencida'].includes(r.estado));
       return true;
     });
     if (filtro !== 'proximas') visibles.reverse(); // las más recientes primero
@@ -108,6 +112,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         crear('h3', '', `${r.paquete ? 'Paquete ' + r.paquete : r.tipo} · ${r.personas} ${r.personas === 1 ? 'persona' : 'personas'}`),
         crear('p', '', `${hora12(r.hora)} · ${r.ubicacion}${r.mesa ? ' · Mesa ' + r.mesa : ''}${r.preferencias ? ' · ' + r.preferencias : ''}`)
       );
+      if (r.descuento) info.append(crear('p', 'reserva-descuento', `🎁 Tienes ${r.descuento}% de descuento en tu consumo`));
+      if (r.motivo) info.append(crear('p', 'reserva-motivo', 'Motivo: ' + r.motivo));
+      if (r.estado === 'vencida') info.append(crear('p', 'reserva-motivo', 'Venció sin confirmarse. Puedes hacer una nueva reserva.'));
+      if (conOferta(r)) {
+        const oferta = crear('div', 'reserva-oferta');
+        const [, om, od] = r.oferta_fecha.split('-');
+        oferta.append(crear('p', '', `Te ofrecemos la mesa ${r.oferta_mesa} el ${od}/${om} a las ${hora12(r.oferta_hora)}${r.oferta_descuento ? ` con ${r.oferta_descuento}% de descuento` : ''}.`));
+        const aceptar = crear('button', 'btn-aceptar-oferta', 'Aceptar esta mesa');
+        aceptar.type = 'button';
+        aceptar.addEventListener('click', async () => {
+          aceptar.disabled = true;
+          const { error } = await db.rpc('aceptar_oferta', { p_id: r.id });
+          if (error) {
+            aceptar.disabled = false;
+            oferta.append(crear('small', 'reserva-error', 'No se pudo: ' + error.message));
+            return;
+          }
+          await cargarReservas();
+        });
+        oferta.append(aceptar);
+        info.append(oferta);
+      } else if (r.oferta_aceptada) {
+        info.append(crear('p', 'reserva-descuento', 'Aceptaste la mesa que te ofrecimos ✔'));
+      }
 
       const acciones = crear('div', 'reserva-acciones');
       const estado = crear('span', 'estado', r.estado);

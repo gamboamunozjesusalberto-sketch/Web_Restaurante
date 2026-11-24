@@ -280,3 +280,35 @@
 .reserva-mesa-ver { padding: 0; border: 0; background: none; color: var(--arg-celeste-dark); font-size: 0.78rem; font-weight: 700; text-decoration: underline; }
 .reserva-mesa-nota { color: #9a5b16; font-size: 0.8rem; }
 .reserva-mesa-error { color: #b3261e; font-size: 0.8rem; }
+
+/* ---------- Aviso al rechazar o cancelar una reserva ---------- */
+.aviso-dialogo { width: min(520px, calc(100% - 32px)); max-height: calc(100% - 32px); padding: 0; border: 0; border-radius: 18px; background: #fffdf9; color: var(--pa-ink-soft, #3b302a); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }
+.aviso-dialogo::backdrop { background: rgba(10, 8, 7, 0.65); backdrop-filter: blur(3px); }
+.aviso-form { display: grid; gap: 10px; padding: 22px; }
+.aviso-form h3 { margin: 0; font: 900 1.15rem var(--font-title); text-transform: uppercase; color: var(--pa-ink-warm, #2a1f1a); }
+.aviso-sub { margin: -4px 0 4px; color: var(--pa-muted); font-size: 0.85rem; }
+.aviso-label { display: grid; gap: 6px; margin: 4px 0 0; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--pa-muted); }
+.aviso-form textarea, .aviso-form select { width: 100%; padding: 8px 10px; border: 1px solid #ddd2c5; border-radius: 10px; font: 500 0.9rem var(--font-text); }
+.aviso-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.aviso-chip { padding: 4px 10px; border: 1px solid #ddd2c5; border-radius: 999px; background: #fff; color: var(--pa-ink-soft); font-size: 0.75rem; font-weight: 600; }
+.aviso-chip:hover { border-color: var(--arg-celeste-dark); }
+.aviso-ofertas { display: grid; gap: 6px; margin: 4px 0 0; padding: 12px; border: 1px solid #f0d58a; border-radius: 12px; background: #fff8e3; }
+.aviso-ofertas legend { float: none; width: auto; margin: 0 0 4px; padding: 0; font-size: 0.82rem; font-weight: 800; color: #6b4a00; }
+.aviso-opcion { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; }
+.aviso-cargando { margin: 0; color: var(--pa-muted); font-size: 0.82rem; }
+.aviso-previa { margin: 0; padding: 10px 12px; border-left: 3px solid var(--arg-celeste-dark); border-radius: 8px; background: var(--pa-cream-deep); font-size: 0.85rem; }
+.aviso-botones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.aviso-wsp { margin-right: auto; background: #25d366; color: #fff; text-decoration: none; }
+.aviso-wsp[hidden] { display: none; }
+.detalle-motivo { color: #991b1b; }
+.sin-mesa-auto { display: grid; gap: 6px; padding: 12px; border: 1px dashed #e2b23c; border-radius: 12px; background: #fff8e3; }
+.sin-mesa-auto small { color: #6b4a00; font-size: 0.78rem; }
+
+/* ---------- Personal (mozos) ---------- */
+.personal-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.personal-form input { flex: 1 1 220px; padding: 8px 12px; border: 1px solid #ddd2c5; border-radius: 10px; font: 500 0.9rem var(--font-text); }
+.personal-form .form-feedback { flex-basis: 100%; margin: 0; }
+.personal-lista { display: grid; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.personal-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e4d9cc; border-radius: 12px; background: #fff; }
+.personal-item div { display: grid; flex: 1; }
+.personal-item small { color: var(--pa-muted); }

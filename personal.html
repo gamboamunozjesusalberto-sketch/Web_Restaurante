@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Salón en vivo de Punto Asado: mesas libres y ocupadas para los mozos." />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0d0907" />
+  <title>Salón en vivo - Punto Asado</title>
+  <link rel="icon" href="images/logo.jpeg" />
+
+  <!-- Bootstrap Icons y fuente Montserrat -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Vista para el celular del mozo: no usa la barra ni el pie de la web pública -->
+  <link rel="stylesheet" href="css/variables.css?v=22" />
+  <link rel="stylesheet" href="css/mesas.css?v=22" />
+  <link rel="stylesheet" href="css/personal.css?v=22" />
+</head>
+<body class="page-personal">
+
+  <header class="pp-barra">
+    <a href="index.html" class="pp-logo"><img src="images/logo_blanco.png" alt="Punto Asado"></a>
+    <div class="pp-titulo">
+      <strong>Salón en vivo</strong>
+      <span id="pp-quien">Cargando…</span>
+    </div>
+    <div class="pp-reloj" id="pp-reloj" aria-label="Hora actual">--:--</div>
+    <button type="button" class="pp-icono" id="pp-actualizar" aria-label="Actualizar ahora"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i></button>
+    <button type="button" class="pp-icono" data-cerrar-sesion aria-label="Cerrar sesión"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></button>
+  </header>
+
+  <main class="pp-main" id="contenido">
+    <p class="pp-aviso" id="pp-aviso" hidden></p>
+
+    <ul class="pp-kpis" id="pp-kpis" aria-label="Resumen del salón"></ul>
+
+    <div class="pp-hora">
+      <button type="button" class="pp-chip activo" id="pp-ahora"><span class="pp-punto"></span> Ahora</button>
+      <label>Ver otra hora <select id="pp-hora-select"></select></label>
+      <small id="pp-actualizado" aria-live="polite"></small>
+    </div>
+
+    <div id="mapa-personal"></div>
+
+    <!-- Detalle de la mesa tocada (en el celular aparece como hoja desde abajo) -->
+    <section class="pp-hoja" id="pp-hoja" hidden aria-live="polite">
+      <button type="button" class="pp-hoja-cerrar" id="pp-hoja-cerrar" aria-label="Cerrar"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+      <div id="pp-hoja-cuerpo"></div>
+    </section>
+
+    <div class="pp-listas">
+      <section class="pp-lista">
+        <h2><i class="bi bi-clock" aria-hidden="true"></i> Llegan pronto <span class="pp-cuenta" id="pp-n-llegan"></span></h2>
+        <ul id="pp-llegan"></ul>
+      </section>
+      <section class="pp-lista">
+        <h2><i class="bi bi-cup-hot" aria-hidden="true"></i> En mesa ahora <span class="pp-cuenta" id="pp-n-enmesa"></span></h2>
+        <ul id="pp-enmesa"></ul>
+      </section>
+      <section class="pp-lista">
+        <h2><i class="bi bi-inbox" aria-hidden="true"></i> Sin mesa <span class="pp-cuenta" id="pp-n-sinmesa"></span></h2>
+        <ul id="pp-sinmesa"></ul>
+      </section>
+    </div>
+  </main>
+
+  <div class="pp-toast" id="pp-toast" role="status" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js?v=22"></script>
+  <script src="js/sesion.js?v=22"></script>
+  <script src="js/mesas.js?v=22"></script>
+  <script src="js/personal.js?v=22"></script>
+</body>
+</html>

@@ -108,6 +108,7 @@
 .estado[data-estado="confirmada"] { background: #dcfce7; color: #166534; }
 .estado[data-estado="rechazada"]  { background: #fee2e2; color: #991b1b; }
 .estado[data-estado="cancelada"]  { background: #e7e5e4; color: #57534e; }
+.estado[data-estado="vencida"]    { background: #f1ece6; color: #8a7d70; text-decoration: line-through; }
 .btn-cancelar {
   padding: 0;
   border: 0;
@@ -247,3 +248,11 @@
 .reserva-cambio .form-feedback { grid-column: 1 / -1; margin: 0; }
 @keyframes aparecerCambio { from { opacity: 0; transform: translateY(-6px); } }
 @media (max-width: 575.98px) { .reserva-cambio { grid-template-columns: 1fr; } }
+
+/* ---------- motivo de cancelación y mesa ofrecida ---------- */
+.reserva-motivo { margin: 4px 0 0; color: #991b1b; font-size: 0.82rem; }
+.reserva-descuento { margin: 4px 0 0; color: #166534; font-size: 0.82rem; font-weight: 700; }
+.reserva-oferta { display: grid; gap: 8px; margin-top: 8px; padding: 10px 12px; border: 1px solid #f0d58a; border-radius: 12px; background: #fff8e3; }
+.reserva-oferta p { margin: 0; color: #6b4a00; font-size: 0.85rem; font-weight: 600; }
+.btn-aceptar-oferta { justify-self: start; padding: 7px 16px; border: 0; border-radius: 999px; background: #14110e; color: var(--arg-celeste); font: 800 0.8rem var(--font-text); cursor: pointer; }
+.reserva-error { color: #991b1b; }

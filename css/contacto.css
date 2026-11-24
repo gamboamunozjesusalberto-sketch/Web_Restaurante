@@ -541,3 +541,16 @@
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 .page-contacto .mesa-sin-preferencia:hover { border-color: var(--arg-celeste-dark); background: rgba(117, 197, 240, 0.1); }
+.page-contacto .mesa-botones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.page-contacto .mesa-botones .mesa-sin-preferencia { margin-top: 0; }
+.page-contacto .mesa-recomendada {
+  padding: 8px 14px;
+  border: 1px solid #e2b23c;
+  border-radius: 999px;
+  background: #fff6dc;
+  color: #6b4a00;
+  font: 800 0.8rem var(--font-text);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.page-contacto .mesa-recomendada:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(226, 178, 60, 0.35); }

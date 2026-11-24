@@ -13,42 +13,70 @@
 
 'use strict';
 
-// x / y: centro de la mesa en % del ancho y del alto del plano
+// x / y: centro de la mesa en % del ancho y del alto del plano.
+// etiquetas: las usa el asistente para recomendar (igual que mejor_mesa() en 10-asistente-mesas.sql)
+const m_ = (codigo, piso, capacidad, x, y, zona, etiquetas = []) => ({ codigo, piso, capacidad, x, y, zona, etiquetas });
 const MESAS_LOCAL = [
-  { codigo: 'M1', piso: 'Primer piso', capacidad: 2, x: 11, y: 30, zona: 'junto al ventanal' },
-  { codigo: 'M2', piso: 'Primer piso', capacidad: 2, x: 11, y: 50, zona: 'junto al ventanal' },
-  { codigo: 'M3', piso: 'Primer piso', capacidad: 2, x: 11, y: 70, zona: 'junto al ventanal' },
-  { codigo: 'M4', piso: 'Primer piso', capacidad: 4, x: 30, y: 36, zona: 'centro del salón' },
-  { codigo: 'M5', piso: 'Primer piso', capacidad: 4, x: 30, y: 60, zona: 'centro del salón' },
-  { codigo: 'M6', piso: 'Primer piso', capacidad: 4, x: 30, y: 83, zona: 'cerca de la entrada' },
-  { codigo: 'M7', piso: 'Primer piso', capacidad: 6, x: 51, y: 36, zona: 'frente a la parrilla' },
-  { codigo: 'M8', piso: 'Primer piso', capacidad: 6, x: 51, y: 60, zona: 'centro del salón' },
-  { codigo: 'M9', piso: 'Primer piso', capacidad: 8, x: 71, y: 36, zona: 'junto a la barra' },
-  { codigo: 'M10', piso: 'Primer piso', capacidad: 10, x: 66, y: 79, zona: 'mesa larga familiar' },
-  { codigo: 'S1', piso: 'Segundo piso', capacidad: 2, x: 12, y: 26, zona: 'balcón' },
-  { codigo: 'S2', piso: 'Segundo piso', capacidad: 4, x: 31, y: 26, zona: 'balcón' },
-  { codigo: 'S3', piso: 'Segundo piso', capacidad: 4, x: 50, y: 26, zona: 'balcón' },
-  { codigo: 'S4', piso: 'Segundo piso', capacidad: 4, x: 69, y: 26, zona: 'balcón' },
-  { codigo: 'S5', piso: 'Segundo piso', capacidad: 6, x: 26, y: 56, zona: 'salón privado' },
-  { codigo: 'S6', piso: 'Segundo piso', capacidad: 6, x: 50, y: 56, zona: 'salón privado' },
-  { codigo: 'S7', piso: 'Segundo piso', capacidad: 8, x: 72, y: 60, zona: 'junto a la cava de vinos' },
-  { codigo: 'S8', piso: 'Segundo piso', capacidad: 10, x: 46, y: 84, zona: 'mesa larga para grupos' }
+  // Primer piso: 15 mesas
+  m_('M1', 'Primer piso', 2, 10, 25, 'junto al ventanal', ['ventana', 'tranquila']),
+  m_('M2', 'Primer piso', 2, 10, 42, 'junto al ventanal', ['ventana']),
+  m_('M3', 'Primer piso', 2, 10, 59, 'junto al ventanal', ['ventana']),
+  m_('M11', 'Primer piso', 2, 10, 76, 'junto al ventanal', ['ventana', 'tranquila']),
+  m_('M4', 'Primer piso', 4, 26, 28, 'centro del salón'),
+  m_('M5', 'Primer piso', 4, 26, 51, 'centro del salón'),
+  m_('M6', 'Primer piso', 4, 26, 76, 'cerca de la entrada', ['puerta']),
+  m_('M7', 'Primer piso', 6, 44, 28, 'frente a la parrilla', ['parrilla']),
+  m_('M8', 'Primer piso', 6, 44, 51, 'centro del salón'),
+  m_('M13', 'Primer piso', 4, 40, 77, 'cerca de la entrada', ['puerta']),
+  m_('M12', 'Primer piso', 4, 61, 28, 'frente a la parrilla', ['parrilla']),
+  m_('M14', 'Primer piso', 6, 76, 28, 'frente a la parrilla', ['parrilla', 'grupo']),
+  m_('M9', 'Primer piso', 8, 67, 51, 'junto a la barra', ['grupo']),
+  m_('M10', 'Primer piso', 10, 58, 77, 'mesa larga familiar', ['grupo']),
+  m_('M15', 'Primer piso', 8, 79, 72, 'cerca de la entrada', ['puerta', 'grupo']),
+  // Segundo piso: 12 mesas
+  m_('S1', 'Segundo piso', 2, 10, 24, 'balcón', ['ventana', 'tranquila']),
+  m_('S2', 'Segundo piso', 4, 26, 24, 'balcón', ['ventana']),
+  m_('S3', 'Segundo piso', 4, 43, 24, 'balcón', ['ventana']),
+  m_('S4', 'Segundo piso', 4, 60, 24, 'balcón', ['ventana']),
+  m_('S9', 'Segundo piso', 2, 76, 24, 'rincón tranquilo', ['tranquila']),
+  m_('S5', 'Segundo piso', 6, 17, 51, 'salón privado', ['tranquila']),
+  m_('S6', 'Segundo piso', 6, 39, 51, 'salón privado', ['tranquila']),
+  m_('S7', 'Segundo piso', 8, 63, 51, 'junto a la cava de vinos', ['grupo']),
+  m_('S10', 'Segundo piso', 2, 80, 51, 'rincón tranquilo', ['tranquila']),
+  m_('S11', 'Segundo piso', 4, 13, 78, 'salón privado', ['tranquila']),
+  m_('S8', 'Segundo piso', 10, 43, 78, 'mesa larga para grupos', ['grupo']),
+  m_('S12', 'Segundo piso', 6, 72, 78, 'junto a la escalera', ['puerta']),
+  // Área libre: 8 mesas
+  m_('A1', 'Área libre', 2, 11, 30, 'jardín', ['tranquila']),
+  m_('A2', 'Área libre', 2, 11, 62, 'jardín', ['tranquila']),
+  m_('A3', 'Área libre', 4, 30, 22, 'terraza'),
+  m_('A4', 'Área libre', 4, 30, 70, 'terraza'),
+  m_('A5', 'Área libre', 4, 68, 40, 'terraza junto a la fogata', ['parrilla']),
+  m_('A8', 'Área libre', 8, 80, 18, 'mesa larga del jardín', ['grupo', 'puerta']),
+  m_('A6', 'Área libre', 6, 64, 78, 'bajo la pérgola', ['grupo']),
+  m_('A7', 'Área libre', 6, 84, 78, 'bajo la pérgola', ['grupo'])
 ];
 
 // Elementos fijos del local (solo de referencia): x, y, ancho y alto en %
 const ELEMENTOS_LOCAL = {
   'Primer piso': [
-    { texto: 'Parrilla', icono: 'bi-fire', x: 34, y: 3, w: 36, h: 12, clase: 'parrilla' },
-    { texto: 'Ventanal', icono: 'bi-window', x: 0, y: 18, w: 3, h: 66, clase: 'ventana' },
-    { texto: 'Barra', icono: 'bi-cup-straw', x: 85, y: 22, w: 13, h: 46, clase: 'barra' },
-    { texto: 'Entrada', icono: 'bi-door-open', x: 42, y: 93, w: 18, h: 7, clase: 'entrada' },
-    { texto: 'Escalera', icono: 'bi-ladder', x: 85, y: 76, w: 13, h: 20, clase: 'escalera' }
+    { texto: 'Parrilla', icono: 'bi-fire', x: 34, y: 3, w: 36, h: 11, clase: 'parrilla' },
+    { texto: 'Ventanal', icono: 'bi-window', x: 0, y: 16, w: 3, h: 70, clase: 'ventana' },
+    { texto: 'Barra', icono: 'bi-cup-straw', x: 88, y: 18, w: 10, h: 42, clase: 'barra' },
+    { texto: 'Entrada', icono: 'bi-door-open', x: 28, y: 93, w: 18, h: 7, clase: 'entrada' },
+    { texto: 'Escalera', icono: 'bi-ladder', x: 90, y: 80, w: 8, h: 17, clase: 'escalera' }
   ],
   'Segundo piso': [
-    { texto: 'Balcón', icono: 'bi-brightness-alt-high', x: 3, y: 3, w: 78, h: 8, clase: 'balcon' },
-    { texto: 'Cava de vinos', icono: 'bi-cup', x: 86, y: 34, w: 12, h: 38, clase: 'barra' },
-    { texto: 'Baños', icono: 'bi-person-standing-dress', x: 86, y: 3, w: 12, h: 22, clase: 'escalera' },
-    { texto: 'Escalera', icono: 'bi-ladder', x: 86, y: 78, w: 12, h: 20, clase: 'escalera' }
+    { texto: 'Balcón', icono: 'bi-brightness-alt-high', x: 3, y: 3, w: 80, h: 8, clase: 'balcon' },
+    { texto: 'Baños', icono: 'bi-person-standing-dress', x: 88, y: 3, w: 10, h: 20, clase: 'escalera' },
+    { texto: 'Cava', icono: 'bi-cup', x: 89, y: 32, w: 9, h: 38, clase: 'barra' },
+    { texto: 'Escalera', icono: 'bi-ladder', x: 90, y: 80, w: 8, h: 17, clase: 'escalera' }
+  ],
+  'Área libre': [
+    { texto: 'Jardín', icono: 'bi-tree', x: 0, y: 10, w: 3, h: 80, clase: 'jardin' },
+    { texto: 'Fogata', icono: 'bi-fire', x: 43, y: 36, w: 14, h: 20, clase: 'fogata' },
+    { texto: 'Pérgola', icono: 'bi-grid-3x3', x: 53, y: 62, w: 45, h: 34, clase: 'pergola' },
+    { texto: 'Entrada', icono: 'bi-door-open', x: 22, y: 93, w: 18, h: 7, clase: 'entrada' }
   ]
 };
 
@@ -71,7 +99,7 @@ const PlanoMesas = (() => {
     return el;
   };
   const icono = (clase) => { const i = crear('i', 'bi ' + clase); i.setAttribute('aria-hidden', 'true'); return i; };
-  const PISOS = ['Primer piso', 'Segundo piso'];
+  const PISOS = ['Primer piso', 'Segundo piso', 'Área libre'];
 
   /**
    * opciones.admin: muestra nombres y no revisa capacidad
@@ -79,7 +107,8 @@ const PlanoMesas = (() => {
    */
   function crear_(contenedor, opciones = {}) {
     const admin = Boolean(opciones.admin);
-    let estado = { reservas: [], hora: null, personas: null, elegida: null, bloqueo: null, apertura: '12:00' };
+    // perfil: lo que pidió el cliente (piso, preferencias, tipo, paquete) para recomendarle mesa
+    let estado = { reservas: [], hora: null, personas: null, elegida: null, bloqueo: null, apertura: '12:00', perfil: {} };
     let pisoActual = 'Primer piso';
 
     contenedor.classList.add('pm');
@@ -100,9 +129,9 @@ const PlanoMesas = (() => {
       return b;
     });
     const leyenda = crear('ul', 'pm-leyenda');
-    (admin
+    (opciones.leyenda || (admin
       ? [['libre', 'Libre'], ['ocupada', 'Ocupada a esa hora'], ['pendiente', 'Por confirmar'], ['elegida', 'Seleccionada']]
-      : [['libre', 'Libre'], ['ocupada', 'Reservada a esa hora'], ['chica', 'Muy chica'], ['elegida', 'Tu mesa']]
+      : [['libre', 'Libre'], ['ocupada', 'Reservada a esa hora'], ['chica', 'Muy chica'], ['elegida', 'Tu mesa'], ['recomendada', 'Recomendada']])
     ).forEach(([clase, texto]) => {
       const li = crear('li', '', texto);
       li.prepend(crear('span', 'pm-muestra pm-' + clase));
@@ -127,10 +156,40 @@ const PlanoMesas = (() => {
     const reservasDe = (codigo) => estado.reservas.filter((r) => r.mesa === codigo)
       .sort((a, b) => minutos(a.desde) - minutos(b.desde));
 
+    // Asistente: puntúa las mesas libres igual que mejor_mesa() de la base de datos
+    function puntaje(mesa) {
+      const p = estado.perfil || {};
+      const pref = String(p.preferencias || '').toLowerCase();
+      const tiene = (e) => mesa.etiquetas.includes(e);
+      let puntos = -(mesa.capacidad - estado.personas) * 10;
+      if (mesa.piso === p.ubicacion) puntos += 30;
+      if (pref.includes('ventana') && tiene('ventana')) puntos += 15;
+      if (pref.includes('puerta') && tiene('puerta')) puntos += 15;
+      if (p.paquete === 'Parrilla en vivo' && tiene('parrilla')) puntos += 20;
+      if (p.tipo === 'Aniversario' && tiene('tranquila')) puntos += 10;
+      if (estado.personas >= 7 && tiene('grupo')) puntos += 5;
+      // encaja justo antes o después de otra reserva: el horario se aprovecha mejor
+      puntos += 4 * reservasDe(mesa.codigo).filter((r) => {
+        const dif = Math.abs(minutos(r.desde) - minutos(estado.hora));
+        return r.motivo !== 'exclusivo' && dif >= 120 && dif <= 150;
+      }).length;
+      return puntos;
+    }
+
+    function recomendada() {
+      if (admin || !estado.hora || !estado.personas || estado.bloqueo) return null;
+      const libres = MESAS_LOCAL.filter((m) => m.capacidad >= estado.personas &&
+        !reservasDe(m.codigo).some((r) => choca(r, estado.hora)));
+      libres.sort((a, b) => puntaje(b) - puntaje(a) || a.capacidad - b.capacidad);
+      return libres[0] ? libres[0].codigo : null;
+    }
+    let recomendadaActual = null;
+
     function situacion(mesa) {
       const delDia = reservasDe(mesa.codigo);
       const ahora = estado.hora ? delDia.filter((r) => choca(r, estado.hora)) : [];
       if (estado.elegida === mesa.codigo) return { clase: 'elegida', delDia, ahora };
+      if (ahora.length && admin && ahora.some((r) => r.enMesa)) return { clase: 'enmesa', delDia, ahora };
       if (ahora.length) return { clase: admin && ahora.every((r) => r.estado === 'pendiente') ? 'pendiente' : 'ocupada', delDia, ahora };
       if (!admin && estado.personas && mesa.capacidad < estado.personas) return { clase: 'chica', delDia, ahora };
       return { clase: estado.hora ? 'libre' : 'sin-hora', delDia, ahora };
@@ -150,6 +209,7 @@ const PlanoMesas = (() => {
         b.querySelector('.pm-piso-libres').textContent = estado.hora ? `${libres} libre${libres === 1 ? '' : 's'}` : '';
       });
 
+      recomendadaActual = recomendada();
       plano.innerHTML = '';
       plano.dataset.piso = pisoActual;
       (ELEMENTOS_LOCAL[pisoActual] || []).forEach((el) => {
@@ -173,7 +233,14 @@ const PlanoMesas = (() => {
         b.append(cap);
         if (admin && s.ahora.length && s.ahora[0].nombre) b.append(crear('span', 'pm-nombre', s.ahora[0].nombre.split(' ')[0]));
         if (s.delDia.length && !s.ahora.length) b.append(crear('span', 'pm-dia', String(s.delDia.length)));
+        if (mesa.codigo === recomendadaActual) {
+          b.classList.add('pm-recomendada');
+          const estrella = crear('span', 'pm-rec');
+          estrella.append(icono('bi-stars'));
+          b.append(estrella);
+        }
         const partes = [`Mesa ${mesa.codigo}, hasta ${mesa.capacidad} personas`];
+        if (mesa.codigo === recomendadaActual) partes.push('recomendada por el asistente');
         if (s.ahora.length) partes.push('reservada ' + rango(s.ahora[0]));
         else if (s.clase === 'chica') partes.push('muy chica para tu grupo');
         else if (s.clase === 'libre' || s.clase === 'elegida') partes.push('libre a esa hora');
@@ -255,6 +322,7 @@ const PlanoMesas = (() => {
       else if (!estado.hora) texto = 'Primero elige la hora para saber si está libre.';
       else texto = 'Libre a esa hora.';
       info.append(crear('p', '', texto));
+      if (codigo === recomendadaActual && s.clase !== 'elegida') info.append(crear('small', 'pm-info-rec', '✨ Es la que te recomienda nuestro asistente para tu grupo.'));
       const otras = s.delDia.filter((r) => !s.ahora.includes(r));
       if (otras.length) info.append(crear('small', '', 'Otras reservas de esta mesa ese día: ' + otras.map(rango).join(', ')));
     }
@@ -312,6 +380,8 @@ const PlanoMesas = (() => {
         }
       },
       piso(p) { if (PISOS.includes(p)) mostrarPiso(p); },
+      get recomendada() { return recomendadaActual; },
+      elegirRecomendada() { if (recomendadaActual) tocar(recomendadaActual); },
       get elegida() { return estado.elegida; },
       libresPara(hora, personas) {
         return MESAS_LOCAL.filter((m) => m.capacidad >= personas && !reservasDe(m.codigo).some((r) => choca(r, hora)));
