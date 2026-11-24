@@ -64,12 +64,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function pintarDashboard() {
-    let lista = reservas.filter((r) => r.estado === 'pendiente' || r.estado === 'confirmada');
+    let todas = reservas;
     if (periodo !== 'todo') {
       const desde = new Date();
       desde.setDate(desde.getDate() - Number(periodo));
-      lista = lista.filter((r) => r.fecha >= aISO(desde));
+      todas = todas.filter((r) => r.fecha >= aISO(desde));
     }
+    // demanda: las que siguen en pie y las que ya se atendieron
+    const lista = todas.filter((r) => ['pendiente', 'confirmada', 'atendida'].includes(r.estado));
+    // asistencia: solo las reservas web cuya hora ya pasó y quedaron cerradas
+    const vinieron = todas.filter((r) => r.estado === 'atendida' && r.origen !== 'local');
+    const noVinieron = todas.filter((r) => r.estado === 'no_vino');
+    const cerradas = vinieron.length + noVinieron.length;
+    const tasaNoVino = cerradas ? Math.round((noVinieron.length / cerradas) * 100) : 0;
 
     // KPIs
     const personas = lista.reduce((t, r) => t + r.personas, 0);
@@ -78,7 +85,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       ['bi-calendar-check', lista.length, 'Reservas'],
       ['bi-people', personas, 'Personas'],
       ['bi-person-lines-fill', lista.length ? (personas / lista.length).toFixed(1) : '0', 'Personas por mesa'],
-      ['bi-gift', lista.length ? Math.round((conPaquete / lista.length) * 100) + '%' : '0%', 'Con paquete']
+      ['bi-gift', lista.length ? Math.round((conPaquete / lista.length) * 100) + '%' : '0%', 'Con paquete'],
+      ['bi-person-x', `${tasaNoVino}%`, `No se presentaron (${noVinieron.length} de ${cerradas})`]
     ];
     const ulKpis = document.getElementById('dash-kpis');
     ulKpis.innerHTML = '';
@@ -138,10 +146,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       olFechas.append(li);
     });
     if (!olFechas.children.length) olFechas.append(crear('li', 'dash-vacio', 'Sin reservas en este periodo.'));
+
+    // Asistencia: vinieron / no vinieron, por día de la semana y clientes que más faltan
+    barras(document.getElementById('dash-asistencia'), [
+      { etiqueta: 'Vinieron', valor: vinieron.length, detalle: `${vinieron.length} · ${cerradas ? 100 - tasaNoVino : 0}%` },
+      { etiqueta: 'No vinieron', valor: noVinieron.length, detalle: `${noVinieron.length} · ${tasaNoVino}%` }
+    ], 'Todavía no hay reservas cerradas en este periodo.');
+    const faltasDia = contar(noVinieron, (r) => new Date(r.fecha + 'T12:00').getDay());
+    barras(document.getElementById('dash-faltas-dia'), [1, 2, 3, 4, 5, 6, 0].map((d) => ({ etiqueta: DIAS[d], valor: faltasDia.get(d) || 0 })),
+      'Nadie faltó a su reserva en este periodo. 🎉');
+    const faltasCliente = contar(noVinieron, (r) => r.perfiles?.nombre || 'Cliente');
+    const olFaltas = document.getElementById('dash-faltas-clientes');
+    olFaltas.innerHTML = '';
+    [...faltasCliente].sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(([nombre, n]) => {
+      const li = crear('li');
+      li.append(crear('span', '', nombre), crear('strong', '', `${n} ${n === 1 ? 'vez' : 'veces'}`));
+      olFaltas.append(li);
+    });
+    if (!olFaltas.children.length) olFaltas.append(crear('li', 'dash-vacio', 'Ningún cliente faltó.'));
   }
 
   async function cargarDashboard() {
-    const { data, error } = await db.from('reservas').select('fecha, hora, personas, estado, paquete, pedido');
+    const { data, error } = await db.from('reservas').select('fecha, hora, personas, estado, paquete, pedido, origen, perfiles!usuario_id(nombre)');
     reservas = error || !data ? [] : data;
     pintarDashboard();
   }

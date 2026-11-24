@@ -270,7 +270,7 @@ const PlanoMesas = (() => {
     function pintarLinea() {
       lineaCuerpo.innerHTML = '';
       const inicio = minutos(estado.apertura || '12:00');
-      const fin = 24 * 60 + 30; // 22:30 + 2 horas
+      const fin = 23 * 60 + 30; // última reserva 21:30 + 2 horas
       const total = fin - inicio;
       const pos = (min) => Math.max(0, Math.min(100, ((min - inicio) / total) * 100));
 

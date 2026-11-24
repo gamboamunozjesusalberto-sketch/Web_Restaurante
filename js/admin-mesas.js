@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     alElegir(codigo) { mesaVista = codigo; pintarDetalle(); }
   });
 
-  // horarios del día: fines de semana desde las 12:00, el resto desde las 18:00, hasta las 22:30
+  // horarios del día: fines de semana desde las 12:00, el resto desde las 18:00, hasta las 22:30 (para mirar)
   function horarios(fechaISO) {
     const dia = new Date(fechaISO + 'T12:00').getDay();
     const lista = [];
-    for (let m = (dia === 0 || dia === 6 ? 12 : 18) * 60; m <= 22 * 60 + 30; m += 30) {
+    for (let m = (dia === 0 || dia === 6 ? 12 : 18) * 60; m <= 22 * 60 + 30; m += 30) { // para mirar el salón (se reserva hasta las 21:30)
       lista.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
     }
     apartadas.forEach((o) => lista.push({

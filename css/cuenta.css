@@ -109,6 +109,8 @@
 .estado[data-estado="rechazada"]  { background: #fee2e2; color: #991b1b; }
 .estado[data-estado="cancelada"]  { background: #e7e5e4; color: #57534e; }
 .estado[data-estado="vencida"]    { background: #f1ece6; color: #8a7d70; text-decoration: line-through; }
+.estado[data-estado="atendida"]   { background: #dbeafe; color: #1e40af; }
+.estado[data-estado="no_vino"]    { background: #ffedd5; color: #9a3412; }
 .btn-cancelar {
   padding: 0;
   border: 0;

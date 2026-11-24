@@ -36,8 +36,10 @@ Hay que ejecutar los scripts de `supabase/` en el SQL Editor **en este orden**:
 6. `12-confirmar-con-mesa.sql`: solo se confirma una reserva si hay mesa libre
 7. `13-juntar-mesas.sql`: juntar mesas para grupos grandes
 8. `14-seguridad.sql`: limita qué columnas puede llenar un cliente al reservar
+9. `15-ultima-reserva.sql`: la última reserva es a las 9:30 p. m. (cada reserva ocupa la mesa 2 horas y cerramos a las 11:00 p. m.)
+10. `16-asistencia.sql`: estados "atendida" y "no vino", 15 minutos de tolerancia con aviso al cliente
 
-Los scripts 11 y 13 amplían funciones de los anteriores. Si vuelves a ejecutar uno de los primeros, ejecuta otra vez todos los que van después.
+Los scripts 11, 13 y 15 amplían funciones de los anteriores. Si vuelves a ejecutar uno de los primeros, ejecuta otra vez todos los que van después.
 
 La clave que usa la web (`js/supabase-config.js`) es la *publishable key*: es pública a propósito y la seguridad la dan las políticas RLS. **Nunca** se pone la `service_role` key en el código.
 

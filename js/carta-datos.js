@@ -14,7 +14,7 @@ const HORARIO = {
   // 0 = domingo ... 6 = sábado
   apertura: (dia) => (dia === 0 || dia === 6 ? '12:00' : '18:00'),
   cierre: '23:00',
-  ultimaReserva: '22:30',
+  ultimaReserva: '21:30', // cada reserva ocupa la mesa 2 horas: la última termina a las 11:30 p. m.
   texto: 'Lunes a viernes de 6:00 p. m. a 11:00 p. m.; sábados y domingos de 12:00 m. a 11:00 p. m.'
 };
 

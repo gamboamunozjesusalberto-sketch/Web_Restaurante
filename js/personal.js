@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   let hoy = aISO(new Date());
   let reservas = [];
   let apartadas = [];
+  let noVinieron = [];        // hoy, pasaron los 15 minutos: se pueden recuperar si llegan tarde
+  const TOLERANCIA = 15;      // minutos que se guarda la mesa
   let enVivo = true;          // "Ahora": la hora sigue al reloj
   let mesaAbierta = null;
   let ultima = 0;
@@ -87,11 +89,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ---------- datos ----------
   async function cargar() {
     hoy = aISO(new Date());
+    // a los 15 minutos sin llegar: "no vino", la mesa se libera y se avisa al cliente (16-asistencia.sql)
+    await db.rpc('vencer_reservas');
     const [res, ofertas] = await Promise.all([
       db.from('reservas')
         .select('id, fecha, hora, personas, mesa, mesas_extra, estado, paquete, ubicacion, tipo, preferencias, mensaje, origen, nombre_mesa, llegada_en, liberada_en, perfiles!usuario_id(nombre, telefono)')
         .eq('fecha', hoy)
-        .in('estado', ['pendiente', 'confirmada'])
+        .in('estado', ['pendiente', 'confirmada', 'no_vino'])
         .order('hora', { ascending: true }),
       db.from('reservas').select('id, oferta_mesa, oferta_hora, personas, perfiles!usuario_id(nombre)')
         .eq('oferta_fecha', hoy).eq('oferta_aceptada', false)
@@ -102,7 +106,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     aviso.hidden = true;
-    reservas = res.data.filter((r) => !r.liberada_en);
+    reservas = res.data.filter((r) => !r.liberada_en && r.estado !== 'no_vino');
+    noVinieron = res.data.filter((r) => r.estado === 'no_vino' && !r.llegada_en);
     apartadas = (ofertas.data || []).filter((o) => o.oferta_mesa);
     ultima = Date.now();
     pintar();
@@ -145,8 +150,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const tomadas = new Set(ocup.filter((o) => choca(o, hora)).map((o) => o.mesa));
     const enMesa = reservas.filter((r) => r.llegada_en);
-    const llegan = reservas.filter((r) => !r.llegada_en && minutos(hhmm(r.hora)) >= minutos(ahoraHHMM()) - 30)
+    const llegan = reservas.filter((r) => !r.llegada_en && minutos(hhmm(r.hora)) >= minutos(ahoraHHMM()) - TOLERANCIA)
       .filter((r) => minutos(hhmm(r.hora)) - minutos(ahoraHHMM()) <= 180);
+    // los que no vinieron en la última hora y media, por si llegan tarde
+    const tarde = noVinieron.filter((r) => minutos(ahoraHHMM()) - minutos(hhmm(r.hora)) <= 90)
+      .map((r) => ({ ...r, tarde: true }));
     const sinMesa = reservas.filter((r) => !r.mesa && r.paquete !== 'Segundo piso exclusivo');
     const kpis = [
       ['bi-check-circle', MESAS_LOCAL.length - tomadas.size, 'Libres', 'libre'],
@@ -163,8 +171,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       ul.append(li);
     });
 
-    lista('pp-llegan', 'pp-n-llegan', llegan, (r) => {
+    lista('pp-llegan', 'pp-n-llegan', [...llegan, ...tarde], (r) => {
       const acciones = [];
+      if (r.tarde) {
+        acciones.push(boton('pp-ok', '<i class="bi bi-person-check"></i> Llegó tarde', () => accion('mozo_llegada', { p_id: r.id },
+          () => { const x = reservas.find((y) => y.id === r.id); return x && x.mesa ? `${nombreDe(r)} ya está en ${enMesas(x)}.` : `${nombreDe(r)} volvió a la lista: dale mesa.`; })));
+        return acciones;
+      }
+      const espera = minutos(ahoraHHMM()) - minutos(hhmm(r.hora));
+      if (espera >= 0) {
+        acciones.push(boton('pp-liberar', '<i class="bi bi-person-x"></i> No vino', () => {
+          if (confirm(`¿${nombreDe(r)} no vino? Se libera la mesa y se le avisa.`)) accion('marcar_asistencia', { p_id: r.id, p_vino: false }, `Mesa liberada: ${nombreDe(r)} no vino.`);
+        }));
+      }
       if (r.mesa) acciones.push(boton('pp-ok', '<i class="bi bi-person-check"></i> Llegó', () => accion('mozo_llegada', { p_id: r.id }, `${nombreDe(r)} ya está en ${enMesas(r)}.`)));
       else acciones.push(botonAsistente(r));
       return acciones;
@@ -183,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ul.innerHTML = '';
     if (!items.length) { ul.append(crear('li', 'pp-vacio', vacio)); return; }
     items.forEach((r) => {
-      const li = crear('li', 'pp-item');
+      const li = crear('li', 'pp-item' + (r.tarde ? ' pp-tarde' : ''));
       const mesa = crear('button', 'pp-mesa-chip' + (mesasDe(r).length > 1 ? ' pp-mesa-junta' : ''), r.mesa ? textoMesas(r) : '—');
       mesa.type = 'button';
       mesa.disabled = !r.mesa;
@@ -194,6 +213,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const detalle = [`${hora12(hhmm(r.hora))}`, `${r.personas} pers.`];
       if (r.paquete) detalle.push(r.paquete);
       if (r.estado === 'pendiente') detalle.push('por confirmar');
+      if (r.tarde) detalle.push('no vino · mesa liberada');
+      else if (!r.llegada_en) {
+        const espera = minutos(ahoraHHMM()) - minutos(hhmm(r.hora));
+        if (espera >= 0 && espera <= TOLERANCIA) detalle.push(`⏱ esperando: se libera en ${TOLERANCIA - espera} min`);
+      }
       if (r.preferencias) detalle.push(r.preferencias);
       info.append(crear('small', '', detalle.join(' · ')));
       const caja = crear('div', 'pp-item-acciones');

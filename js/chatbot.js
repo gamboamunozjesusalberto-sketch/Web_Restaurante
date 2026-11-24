@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const soles = (n) => 'S/ ' + Number(n).toFixed(2);
 
-  // horas de reserva de un día: cada 30 min desde la apertura hasta 22:30
+  // horas de reserva de un día: cada 30 min desde la apertura hasta las 21:30 (última reserva)
   function horasDelDia(fecha) {
     const [h0] = HORARIO.apertura(fecha.getDay()).split(':').map(Number);
     const lista = [];
-    for (let m = h0 * 60; m <= 22 * 60 + 30; m += 30) {
+    for (let m = h0 * 60; m <= 21 * 60 + 30; m += 30) {
       lista.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
     }
     if (aISO(fecha) !== aISO(hoy())) return lista;
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const min = ahora.getHours() * 60 + ahora.getMinutes();
     const [ha] = HORARIO.apertura(ahora.getDay()).split(':').map(Number);
     const abierto = min >= ha * 60 && min < 23 * 60;
-    bot(['Atendemos ', { negrita: HORARIO.texto }, { salto: true }, abierto ? 'Ahora mismo estamos abiertos.' : 'Ahora mismo estamos cerrados.', { salto: true }, 'Las reservas se toman hasta las 10:30 p. m.']);
+    bot(['Atendemos ', { negrita: HORARIO.texto }, { salto: true }, abierto ? 'Ahora mismo estamos abiertos.' : 'Ahora mismo estamos cerrados.', { salto: true }, 'Las reservas se toman hasta las 9:30 p. m.']);
     responderDias();
   }
 
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const f = new Date(reserva.fecha + 'T12:00');
     const [hh, mm] = h.split(':').map(Number);
     if (mm % 30 !== 0 || !horasDelDia(f).includes(h)) {
-      bot(`A esa hora no puedo reservar. Ese día atendemos de ${hora12(HORARIO.apertura(f.getDay()))} a 10:30 p. m., cada media hora.`);
+      bot(`A esa hora no puedo reservar. Ese día atendemos de ${hora12(HORARIO.apertura(f.getDay()))} a 9:30 p. m. (última reserva), cada media hora.`);
       return elegirDia(f);
     }
     reserva.hora = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;

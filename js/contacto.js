@@ -137,14 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ---------- horarios en botones (en vez del reloj del navegador) ----------
-  // Lunes a viernes de 18:00 a 22:30 · sábado y domingo de 12:00 a 22:30, cada 30 minutos.
+  // Lunes a viernes de 18:00 a 21:30 · sábado y domingo de 12:00 a 21:30 (última reserva), cada 30 minutos.
   const contenedorHoras = document.getElementById('horas-reserva');
 
   function horariosDelDia(fechaISO) {
     const dia = new Date(fechaISO + 'T12:00').getDay();
     const desde = (dia === 0 || dia === 6) ? 12 * 60 : 18 * 60;
     const lista = [];
-    for (let m = desde; m <= 22 * 60 + 30; m += 30) {
+    for (let m = desde; m <= 21 * 60 + 30; m += 30) {
       lista.push(String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'));
     }
     return lista;

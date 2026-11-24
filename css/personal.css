@@ -81,6 +81,7 @@ body.page-personal {
 .pp-ocupante small { color: #cfc6ba; }
 .pp-ocupante .pp-junta { color: #fff; font-weight: 700; }
 .pp-sentar-pista { color: #ffd36b; font-size: 0.8rem; }
+.pp-tarde { opacity: 0.7; border-style: dashed !important; }
 .pp-sentar-pista:empty { display: none; }
 .pp-hoja-acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 .pp-libre { margin: 0; color: #8be0b4; font-weight: 700; }

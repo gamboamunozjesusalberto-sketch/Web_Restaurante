@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function pintarReservas() {
     const visibles = reservas.filter((r) => {
       if (filtro === 'proximas') return (r.fecha >= hoyISO && (r.estado === 'pendiente' || r.estado === 'confirmada')) || conOferta(r);
-      if (filtro === 'pasadas') return !conOferta(r) && (r.fecha < hoyISO || ['cancelada', 'rechazada', 'vencida'].includes(r.estado));
+      if (filtro === 'pasadas') return !conOferta(r) && (r.fecha < hoyISO || ['cancelada', 'rechazada', 'vencida', 'atendida', 'no_vino'].includes(r.estado));
       return true;
     });
     if (filtro !== 'proximas') visibles.reverse(); // las más recientes primero
@@ -115,6 +115,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (r.descuento) info.append(crear('p', 'reserva-descuento', `🎁 Tienes ${r.descuento}% de descuento en tu consumo`));
       if (r.motivo) info.append(crear('p', 'reserva-motivo', 'Motivo: ' + r.motivo));
       if (r.estado === 'vencida') info.append(crear('p', 'reserva-motivo', 'Venció sin confirmarse. Puedes hacer una nueva reserva.'));
+      if (r.estado === 'no_vino') info.append(crear('p', 'reserva-motivo', 'Te esperamos 15 minutos y no llegaste, así que liberamos la mesa. Si fue un error, escríbenos por WhatsApp.'));
+      if (r.estado === 'atendida') {
+        const gracias = crear('p', 'reserva-descuento');
+        gracias.innerHTML = '¡Gracias por venir! <a href="#opinar">Cuéntanos qué tal te fue</a>.';
+        info.append(gracias);
+      }
       if (conOferta(r)) {
         const oferta = crear('div', 'reserva-oferta');
         const [, om, od] = r.oferta_fecha.split('-');
@@ -138,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const acciones = crear('div', 'reserva-acciones');
-      const estado = crear('span', 'estado', r.estado);
+      const estado = crear('span', 'estado', r.estado.replace('_', ' '));
       estado.dataset.estado = r.estado;
       acciones.append(estado);
       if (r.estado === 'pendiente' && r.fecha >= hoyISO) {
@@ -166,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const apertura = typeof HORARIO !== 'undefined' ? HORARIO.apertura(dia) : (dia === 0 || dia === 6 ? '12:00' : '18:00');
     const [h0] = apertura.split(':').map(Number);
     const horas = [];
-    for (let min = h0 * 60; min <= 22 * 60 + 30; min += 30) {
+    for (let min = h0 * 60; min <= 21 * 60 + 30; min += 30) {
       horas.push(`${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`);
     }
     const ahora = new Date();

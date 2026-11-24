@@ -125,9 +125,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (r.preferencias) tdDetalle.append(crear('small', '', r.preferencias));
       if (r.mensaje) tdDetalle.append(crear('small', '', '“' + r.mensaje + '”'));
 
-      const estado = crear('span', 'estado', r.estado);
+      const estado = crear('span', 'estado', r.estado.replace('_', ' '));
       estado.dataset.estado = r.estado;
-      celda('Estado').append(estado);
+      const tdEstado = celda('Estado');
+      tdEstado.append(estado);
+      if (r.llegada_en && ['confirmada', 'atendida'].includes(r.estado)) {
+        tdEstado.append(crear('small', 'd-block mt-1', 'Llegó ' + new Date(r.llegada_en).toLocaleTimeString('es-PE', { hour: 'numeric', minute: '2-digit' })));
+      }
 
       const tdAcciones = celda('Acciones');
       if (r.estado === 'pendiente') {
@@ -139,11 +143,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         rechazar.addEventListener('click', () => abrirAviso(r));
         acciones.append(confirmar, rechazar);
         tdAcciones.append(acciones);
-      } else if (r.estado === 'confirmada' && r.fecha >= hoyISO) {
+      } else if (r.estado === 'confirmada' && !yaEsLaHora(r)) {
         const cancelar = crear('button', 'btn-accion btn-rechazar', 'Cancelar');
         cancelar.type = 'button';
         cancelar.addEventListener('click', () => abrirAviso(r));
         tdAcciones.append(cancelar);
+      } else if (['confirmada', 'atendida', 'no_vino'].includes(r.estado)) {
+        // asistencia: marcar o corregir si el cliente vino (16-asistencia.sql)
+        const acciones = crear('div', 'acciones-reserva');
+        const vino = crear('button', 'btn-accion btn-confirmar', r.estado === 'no_vino' ? 'Sí vino' : 'Vino');
+        const noVino = crear('button', 'btn-accion btn-rechazar', 'No vino');
+        vino.type = noVino.type = 'button';
+        vino.addEventListener('click', () => marcarAsistencia(r, true, [vino, noVino]));
+        noVino.addEventListener('click', () => marcarAsistencia(r, false, [vino, noVino]));
+        if (r.estado !== 'atendida') acciones.append(vino);
+        if (r.estado !== 'no_vino') acciones.append(noVino);
+        tdAcciones.append(acciones);
       } else {
         tdAcciones.append(crear('small', '', '—'));
       }
@@ -193,6 +208,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     toast.hidden = false;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
+  }
+
+  // ¿ya empezó la reserva? (hora de Lima)
+  function yaEsLaHora(r) {
+    const ahora = new Date().toLocaleString('sv-SE', { timeZone: 'America/Lima' }).slice(0, 16).replace(' ', 'T');
+    return `${r.fecha}T${String(r.hora).slice(0, 5)}` <= ahora;
+  }
+
+  async function marcarAsistencia(r, vino, botones) {
+    if (!vino && !confirm('¿Marcar que el cliente no vino? Se libera su mesa y recibe un aviso.')) return;
+    botones.forEach((b) => { b.disabled = true; });
+    const { error } = await db.rpc('marcar_asistencia', { p_id: r.id, p_vino: vino });
+    if (error) {
+      botones.forEach((b) => { b.disabled = false; });
+      alert('No se pudo marcar: ' + error.message);
+      return;
+    }
+    aviso(vino ? 'Marcada como atendida.' : 'Marcada como "no vino": la mesa quedó libre.');
+    await cargarReservas();
   }
 
   async function cambiarEstado(r, nuevo, botones) {

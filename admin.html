@@ -18,12 +18,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css de la cuenta (tarjetas) + css propio del admin -->
-  <link rel="stylesheet" href="css/variables.css?v=26" />
-  <link rel="stylesheet" href="css/components.css?v=26" />
-  <link rel="stylesheet" href="css/paginas.css?v=26" />
-  <link rel="stylesheet" href="css/cuenta.css?v=26" />
-  <link rel="stylesheet" href="css/admin.css?v=26" />
-  <link rel="stylesheet" href="css/mesas.css?v=26" />
+  <link rel="stylesheet" href="css/variables.css?v=27" />
+  <link rel="stylesheet" href="css/components.css?v=27" />
+  <link rel="stylesheet" href="css/paginas.css?v=27" />
+  <link rel="stylesheet" href="css/cuenta.css?v=27" />
+  <link rel="stylesheet" href="css/admin.css?v=27" />
+  <link rel="stylesheet" href="css/mesas.css?v=27" />
 </head>
 <body class="inner-page page-cuenta page-admin">
 
@@ -114,6 +114,8 @@
             <button type="button" class="filtro-btn" data-estado="confirmada">Confirmadas</button>
             <button type="button" class="filtro-btn" data-estado="rechazada">Rechazadas</button>
             <button type="button" class="filtro-btn" data-estado="cancelada">Canceladas</button>
+            <button type="button" class="filtro-btn" data-estado="atendida">Atendidas</button>
+            <button type="button" class="filtro-btn" data-estado="no_vino">No vinieron</button>
             <button type="button" class="filtro-btn" data-estado="vencida">Vencidas</button>
             <button type="button" class="filtro-btn" data-estado="todas">Todas</button>
           </div>
@@ -304,7 +306,7 @@
                 <button type="button" class="filtro-btn" data-periodo="todo">Todo</button>
               </div>
             </div>
-            <p class="dash-nota">Cuenta las reservas pendientes y confirmadas (no las canceladas ni rechazadas), incluidas las que vienen.</p>
+            <p class="dash-nota">Cuenta las reservas pendientes, confirmadas y atendidas (no las canceladas ni rechazadas), incluidas las que vienen. "No se presentaron" compara las que no vinieron con las ya cerradas.</p>
             <ul class="dash-kpis" id="dash-kpis"></ul>
           </div>
           <div class="row g-4 mt-1">
@@ -333,6 +335,21 @@
                 <div class="dash-barras" id="dash-paquetes"></div>
                 <h3 class="dash-titulo mt-4"><i class="bi bi-calendar-heart" aria-hidden="true"></i> Fechas con más reservas</h3>
                 <ol class="dash-fechas" id="dash-fechas"></ol>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="tarjeta-cuenta h-100">
+                <h3 class="dash-titulo"><i class="bi bi-person-check" aria-hidden="true"></i> Asistencia</h3>
+                <p class="dash-nota">Si el cliente no llega en 15 minutos, la reserva pasa a "no vino", la mesa se libera y se le avisa.</p>
+                <div class="dash-barras" id="dash-asistencia"></div>
+                <h3 class="dash-titulo mt-4"><i class="bi bi-person-x" aria-hidden="true"></i> Clientes que más faltan</h3>
+                <ol class="dash-fechas" id="dash-faltas-clientes"></ol>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="tarjeta-cuenta h-100">
+                <h3 class="dash-titulo"><i class="bi bi-calendar-x" aria-hidden="true"></i> Días con más faltas</h3>
+                <div class="dash-barras" id="dash-faltas-dia"></div>
               </div>
             </div>
           </div>
@@ -476,14 +493,14 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=26"></script>
-  <script src="js/sesion.js?v=26"></script>
-  <script src="js/main.js?v=26"></script>
-  <script src="js/carta-datos.js?v=26"></script>
-  <script src="js/admin.js?v=26"></script>
-  <script src="js/admin-dashboard.js?v=26"></script>
-  <script src="js/mesas.js?v=26"></script>
-  <script src="js/admin-mesas.js?v=26"></script>
+  <script src="js/supabase-config.js?v=27"></script>
+  <script src="js/sesion.js?v=27"></script>
+  <script src="js/main.js?v=27"></script>
+  <script src="js/carta-datos.js?v=27"></script>
+  <script src="js/admin.js?v=27"></script>
+  <script src="js/admin-dashboard.js?v=27"></script>
+  <script src="js/mesas.js?v=27"></script>
+  <script src="js/admin-mesas.js?v=27"></script>
 
 </body>
 </html>
