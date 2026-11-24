@@ -39,7 +39,8 @@ alter table public.reservas add column if not exists origen       text not null 
 alter table public.reservas add column if not exists nombre_mesa  text check (char_length(nombre_mesa) <= 60);  -- cliente sin reserva
 alter table public.reservas add column if not exists llegada_en   timestamptz;
 alter table public.reservas add column if not exists liberada_en  timestamptz;
-alter table public.reservas add column if not exists atendido_por uuid references public.perfiles (id);
+alter table public.reservas add column if not exists atendido_por uuid;  -- sin llave foránea: una 2.ª relación con perfiles confunde a la API (perfiles(...))
+alter table public.reservas drop constraint if exists reservas_atendido_por_fkey;
 
 -- Una mesa liberada (los clientes ya se fueron) vuelve a estar libre
 create or replace function public.mesa_ocupada(p_mesa text, p_fecha date, p_hora time, p_id bigint default null)
