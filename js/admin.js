@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const confirmar = crear('button', 'btn-accion btn-confirmar', 'Confirmar');
         const rechazar = crear('button', 'btn-accion btn-rechazar', 'Rechazar');
         confirmar.type = rechazar.type = 'button';
-        confirmar.addEventListener('click', () => cambiarEstado(r, 'confirmada', [confirmar, rechazar]));
+        confirmar.addEventListener('click', () => confirmarReserva(r, [confirmar, rechazar]));
         rechazar.addEventListener('click', () => abrirAviso(r));
         acciones.append(confirmar, rechazar);
         tdAcciones.append(acciones);
@@ -150,6 +150,46 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       tablaReservas.append(tr);
     });
+  }
+
+  // Confirmar: la base de datos (12-confirmar-con-mesa.sql) revisa que haya mesa.
+  // Si no tiene, el asistente le da la mejor libre; si no hay ninguna, no deja confirmar.
+  async function confirmarReserva(r, botones) {
+    if (r.paquete === 'Segundo piso exclusivo') {
+      const afectadas = reservas.filter((x) => x.id !== r.id && x.fecha === r.fecha && x.ubicacion === 'Segundo piso' &&
+        ['pendiente', 'confirmada'].includes(x.estado)).length;
+      if (afectadas && !confirm(`Al confirmar el evento se cerrará el segundo piso: ${afectadas} reserva${afectadas === 1 ? '' : 's'} de ese día se cancelará${afectadas === 1 ? '' : 'n'} y cada cliente recibirá una disculpa con otra mesa y 15% de descuento. ¿Confirmar?`)) return;
+    }
+    botones.forEach((b) => { b.disabled = true; });
+    const mesaAntes = r.mesa;
+    const { data, error } = await db.from('reservas').update({ estado: 'confirmada' }).eq('id', r.id).select('mesa').single();
+    botones.forEach((b) => { b.disabled = false; });
+    if (error) {
+      if (/mesa libre/i.test(error.message)) {
+        if (confirm(error.message + '\n\n¿Quieres rechazarla ahora y ofrecerle otro horario? El asistente te sugerirá mesas libres.')) abrirAviso(r, 'No tenemos mesas libres a esa hora.');
+      } else {
+        alert('No se pudo confirmar: ' + error.message);
+      }
+      return;
+    }
+    const mesa = data && data.mesa;
+    aviso(mesa && mesa !== mesaAntes
+      ? `Confirmada. ✨ El asistente le asignó la mesa ${mesa}.`
+      : `Confirmada${mesa ? ' en la mesa ' + mesa : ''}.`);
+    await cargarReservas();
+  }
+
+  // aviso flotante del panel
+  const toast = crear('div', 'admin-toast');
+  toast.setAttribute('role', 'status');
+  toast.hidden = true;
+  document.body.append(toast);
+  let toastTimer;
+  function aviso(texto) {
+    toast.textContent = texto;
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
   }
 
   async function cambiarEstado(r, nuevo, botones) {
@@ -173,7 +213,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const dialogo = crear('dialog', 'aviso-dialogo');
   document.body.append(dialogo);
 
-  async function abrirAviso(r) {
+  async function abrirAviso(r, motivoInicial = '') {
     const rechazo = r.estado === 'pendiente';
     const cliente = r.perfiles || {};
     dialogo.innerHTML = '';
@@ -188,6 +228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     motivo.maxLength = 300;
     motivo.required = true;
     motivo.id = 'aviso-motivo';
+    motivo.value = motivoInicial;
     lblMotivo.htmlFor = 'aviso-motivo';
     const chips = crear('div', 'aviso-chips');
     MOTIVOS.forEach((t) => {
