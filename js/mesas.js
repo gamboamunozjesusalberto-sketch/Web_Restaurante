@@ -6,6 +6,9 @@
  *   y escoge la suya (los datos vienen de la función mesas_ocupadas, sin
  *   nombres de otros clientes)
  * - admin.html (pestaña Mesas): el admin ve quién tiene cada mesa y la asigna
+ * - personal.html: el Salón en vivo de los mozos
+ * Un grupo grande puede ocupar varias mesas juntas (reservas.mesas_extra,
+ * supabase/13-juntar-mesas.sql): cada mesa juntada se marca con un eslabón.
  * Cada reserva ocupa su mesa 2 horas. Las capacidades deben coincidir con la
  * tabla public.mesas de supabase/09-mesas.sql.
  * ==========================================================================
@@ -232,6 +235,12 @@ const PlanoMesas = (() => {
         cap.append(icono('bi-person-fill'), document.createTextNode(' ' + mesa.capacidad));
         b.append(cap);
         if (admin && s.ahora.length && s.ahora[0].nombre) b.append(crear('span', 'pm-nombre', s.ahora[0].nombre.split(' ')[0]));
+        if (admin && s.ahora.length && s.ahora[0].junta) {
+          b.classList.add('pm-juntada');
+          const enlace = crear('span', 'pm-junta');
+          enlace.append(icono('bi-link-45deg'));
+          b.append(enlace);
+        }
         if (s.delDia.length && !s.ahora.length) b.append(crear('span', 'pm-dia', String(s.delDia.length)));
         if (mesa.codigo === recomendadaActual) {
           b.classList.add('pm-recomendada');
@@ -242,6 +251,7 @@ const PlanoMesas = (() => {
         const partes = [`Mesa ${mesa.codigo}, hasta ${mesa.capacidad} personas`];
         if (mesa.codigo === recomendadaActual) partes.push('recomendada por el asistente');
         if (s.ahora.length) partes.push('reservada ' + rango(s.ahora[0]));
+        if (s.ahora.length && s.ahora[0].junta) partes.push('mesas juntas: ' + s.ahora[0].junta);
         else if (s.clase === 'chica') partes.push('muy chica para tu grupo');
         else if (s.clase === 'libre' || s.clase === 'elegida') partes.push('libre a esa hora');
         if (s.delDia.length) partes.push('reservas del día: ' + s.delDia.map(rango).join(', '));
@@ -389,5 +399,9 @@ const PlanoMesas = (() => {
     };
   }
 
-  return { crear: crear_, hora12, minutos, masDos, choca, mesa: (c) => MESAS_LOCAL.find((m) => m.codigo === c) };
+  // Todas las mesas de una reserva: la principal y las que se juntaron (grupos grandes)
+  const mesasDe = (r) => [r.mesa, ...(r.mesas_extra || [])].filter(Boolean);
+  const textoMesas = (r) => mesasDe(r).join(' + ');
+
+  return { crear: crear_, hora12, minutos, masDos, choca, mesasDe, textoMesas, mesa: (c) => MESAS_LOCAL.find((m) => m.codigo === c) };
 })();

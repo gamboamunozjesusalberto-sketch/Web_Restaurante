@@ -79,6 +79,9 @@ body.page-personal {
 .pp-ocupante.en-mesa { background: rgba(229, 72, 77, 0.14); border: 1px solid rgba(229, 72, 77, 0.4); }
 .pp-ocupante.reservada { background: rgba(117, 197, 240, 0.1); border: 1px solid rgba(117, 197, 240, 0.3); }
 .pp-ocupante small { color: #cfc6ba; }
+.pp-ocupante .pp-junta { color: #fff; font-weight: 700; }
+.pp-sentar-pista { color: #ffd36b; font-size: 0.8rem; }
+.pp-sentar-pista:empty { display: none; }
 .pp-hoja-acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 .pp-libre { margin: 0; color: #8be0b4; font-weight: 700; }
 .pp-nota { margin: 0; color: #ffd9a3; font-size: 0.85rem; }
@@ -134,6 +137,8 @@ body.page-personal {
 .pp-item-info strong { overflow: hidden; color: #fff; text-overflow: ellipsis; white-space: nowrap; }
 .pp-item-info small { color: #b0a8a0; font-size: 0.75rem; }
 .pp-mesa-chip { min-width: 46px; height: 46px; border: 1px solid rgba(117, 197, 240, 0.4); border-radius: 12px; background: rgba(117, 197, 240, 0.1); color: var(--arg-celeste); font: 900 0.85rem var(--font-text); }
+/* mesas juntadas: el chip muestra "M10 + M15" en dos líneas si hace falta */
+.pp-mesa-chip.pp-mesa-junta { max-width: 74px; height: auto; min-height: 46px; padding: 4px 6px; border-style: dashed; font-size: 0.72rem; line-height: 1.15; }
 .pp-mesa-chip:disabled { border-color: rgba(242, 163, 58, 0.5); background: rgba(242, 163, 58, 0.1); color: #f2a33a; }
 .pp-vacio { padding: 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); color: #8d847a; font-size: 0.82rem; }
 

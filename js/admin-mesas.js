@@ -4,7 +4,8 @@
  * - Mapa del local (js/mesas.js) para un día y una hora: qué mesas están
  *   ocupadas, por quién y de qué hora a qué hora
  * - Tocar una mesa: ver sus reservas del día, cambiarlas de mesa o quitarla
- * - Reservas sin mesa: asignarles una mesa libre que alcance para el grupo
+ * - Reservas sin mesa: asignarles una mesa libre que alcance para el grupo o,
+ *   si son más de 10, juntar mesas vecinas (13-juntar-mesas.sql)
  * La base de datos (supabase/09-mesas.sql) vuelve a revisar capacidad y choques.
  * ==========================================================================
  */
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return el;
   };
   const aISO = (f) => `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
-  const { hora12, minutos, masDos, choca } = PlanoMesas;
+  const { hora12, minutos, masDos, choca, mesasDe, textoMesas } = PlanoMesas;
   const hhmm = (t) => String(t).slice(0, 5);
 
   const inputDia = document.getElementById('mesas-dia');
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function cargar() {
     const { data, error } = await db.from('reservas')
-      .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, tipo, preferencias, origen, nombre_mesa, llegada_en, liberada_en, perfiles!usuario_id(nombre, telefono)')
+      .select('id, fecha, hora, personas, mesa, mesas_extra, estado, paquete, ubicacion, tipo, preferencias, origen, nombre_mesa, llegada_en, liberada_en, perfiles!usuario_id(nombre, telefono)')
       .eq('fecha', inputDia.value)
       .in('estado', ['pendiente', 'confirmada'])
       .order('hora', { ascending: true });
@@ -97,7 +98,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const lista = [];
     reservas.forEach((r) => {
       const base = { id: r.id, nombre: r.perfiles?.nombre || 'Cliente', personas: r.personas, estado: r.estado };
-      if (r.mesa) lista.push({ ...base, mesa: r.mesa, desde: hhmm(r.hora), hasta: masDos(hhmm(r.hora)), motivo: 'reserva' });
+      const suyas = mesasDe(r); // un grupo grande ocupa todas sus mesas juntadas
+      const junta = suyas.length > 1 ? textoMesas(r) : null;
+      suyas.forEach((mesa) => lista.push({ ...base, mesa, junta, desde: hhmm(r.hora), hasta: masDos(hhmm(r.hora)), motivo: 'reserva' }));
       if (r.paquete === 'Segundo piso exclusivo') {
         MESAS_LOCAL.filter((m) => m.piso === 'Segundo piso')
           .forEach((m) => lista.push({ ...base, mesa: m.codigo, desde: '00:00', hasta: '23:59', motivo: 'exclusivo' }));
@@ -145,14 +148,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       listaSinMesa.append(crear('li', 'sin-mesa-vacio', conMesa ? 'Todas las reservas del día tienen mesa.' : 'No hay reservas activas este día.'));
     }
     sinMesa.forEach((r) => listaSinMesa.append(filaReserva(r, true)));
-    const asignables = sinMesa.filter((r) => r.personas <= 10);
+    const asignables = sinMesa;
     if (asignables.length) {
       const li = crear('li', 'sin-mesa-auto');
       const boton = crear('button', 'btn-accion btn-confirmar');
       boton.type = 'button';
       boton.innerHTML = '<i class="bi bi-stars" aria-hidden="true"></i> Asignar todas con el asistente';
       boton.addEventListener('click', () => asignarTodas(asignables, boton));
-      li.append(boton, crear('small', '', 'Elige para cada una la mesa libre que mejor encaja con su grupo, piso y preferencias.'));
+      li.append(boton, crear('small', '', 'Elige para cada una la mesa libre que mejor encaja con su grupo, piso y preferencias. A los grupos de más de 10 les junta mesas vecinas.'));
       listaSinMesa.prepend(li);
     }
     pintarDetalle();
@@ -165,17 +168,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     const quien = crear('div', '');
     quien.append(crear('strong', '', r.perfiles?.nombre || 'Cliente'));
     quien.append(crear('small', '', `${hora12(hhmm(r.hora))} a ${hora12(masDos(hhmm(r.hora)))} · ${r.personas} personas${r.paquete ? ' · ' + r.paquete : ''}`));
+    if (mesasDe(r).length > 1) {
+      const junta = crear('small', 'reserva-mesa-junta');
+      junta.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i> ';
+      junta.append(`Mesas juntas: ${textoMesas(r)}`);
+      quien.append(junta);
+    }
     const estado = crear('span', 'estado', r.estado);
     estado.dataset.estado = r.estado;
     cab.append(quien, estado);
     li.append(cab);
 
-    const libres = mesasLibresPara(r).filter((m) => m.codigo !== r.mesa);
+    const libres = mesasLibresPara(r).filter((m) => !mesasDe(r).includes(m.codigo));
     const acciones = crear('div', 'reserva-mesa-acciones');
-    if (!libres.length && sinMesa) {
-      acciones.append(crear('small', 'reserva-mesa-nota', r.personas > 10
-        ? 'Grupo grande: no entra en una sola mesa. Junten mesas y anótalo en el mensaje.'
-        : 'No hay mesas libres para este grupo a esa hora.'));
+    // grupo grande (o ninguna mesa sola alcanza): el asistente junta mesas vecinas
+    if (r.paquete !== 'Segundo piso exclusivo' && (r.personas > 10 || (!libres.length && sinMesa))) {
+      const juntar = crear('button', 'btn-accion btn-confirmar');
+      juntar.type = 'button';
+      juntar.innerHTML = `<i class="bi bi-link-45deg" aria-hidden="true"></i> ${r.mesa ? 'Juntar otras mesas' : 'Juntar mesas'}`;
+      juntar.addEventListener('click', () => juntarMesas(r, li));
+      acciones.append(juntar);
     }
     if (libres.length) {
       const select = crear('select', 'reserva-mesa-select');
@@ -222,7 +234,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (mesa.piso === 'Segundo piso' && exclusiva) {
       detalle.append(crear('p', 'reserva-mesa-nota', `Todo el segundo piso es de ${exclusiva.perfiles?.nombre || 'un cliente'} (Segundo piso exclusivo, ${exclusiva.personas} personas, desde las ${hora12(hhmm(exclusiva.hora))}).`));
     }
-    const suyas = reservas.filter((r) => r.mesa === mesa.codigo);
+    const suyas = reservas.filter((r) => mesasDe(r).includes(mesa.codigo));
     if (!suyas.length) {
       detalle.append(crear('p', 'sin-mesa-vacio', 'Libre todo el día.'));
       return;
@@ -237,12 +249,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     boton.disabled = true;
     let ok = 0;
     for (const r of lista) {
-      const { data: mesa } = await db.rpc('mejor_mesa', {
-        p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: r.personas, p_ubicacion: r.ubicacion,
-        p_preferencias: r.preferencias || null, p_tipo: r.tipo || null, p_paquete: r.paquete || null, p_excluir: r.id
-      });
-      if (!mesa) continue;
-      const { error } = await db.from('reservas').update({ mesa }).eq('id', r.id);
+      const mesas = await buscarMesas(r);
+      if (!mesas) continue;
+      const { error } = mesas.length > 1
+        ? await db.rpc('mozo_juntar', { p_id: r.id, p_mesas: mesas })
+        : await db.rpc('mozo_asignar', { p_id: r.id, p_mesa: mesas[0] });
       if (!error) ok++;
     }
     await cargar();
@@ -252,9 +263,45 @@ document.addEventListener('DOMContentLoaded', async () => {
       : 'No quedaban mesas libres que alcancen para esas reservas.'));
   }
 
+  // Una mesa sola (mejor_mesa) o, si el grupo no entra en ninguna, mesas juntas (mejor_juntas)
+  async function buscarMesas(r) {
+    if (r.personas <= 10) {
+      const { data: mesa } = await db.rpc('mejor_mesa', {
+        p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: r.personas, p_ubicacion: r.ubicacion,
+        p_preferencias: r.preferencias || null, p_tipo: r.tipo || null, p_paquete: r.paquete || null, p_excluir: r.id
+      });
+      if (mesa) return [mesa];
+    }
+    const { data: juntas } = await db.rpc('mejor_juntas', {
+      p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: r.personas, p_ubicacion: r.ubicacion, p_excluir: r.id
+    });
+    return juntas && juntas.length ? juntas : null;
+  }
+
+  async function juntarMesas(r, li) {
+    li.querySelectorAll('button, select').forEach((el) => { el.disabled = true; });
+    li.querySelector('.reserva-mesa-error')?.remove();
+    const { data: juntas } = await db.rpc('mejor_juntas', {
+      p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: r.personas, p_ubicacion: r.ubicacion, p_excluir: r.id
+    });
+    const { error } = juntas && juntas.length
+      ? await db.rpc('mozo_juntar', { p_id: r.id, p_mesas: juntas })
+      : { error: { message: `no hay mesas libres que alcancen para ${r.personas} personas a esa hora, ni juntando mesas del mismo piso.` } };
+    if (error) {
+      li.querySelectorAll('button, select').forEach((el) => { el.disabled = false; });
+      li.append(crear('small', 'reserva-mesa-error', 'No se pudo: ' + error.message));
+      return;
+    }
+    mesaVista = juntas[0];
+    plano.actualizar({ elegida: juntas[0] });
+    await cargar();
+    detalle.prepend(crear('p', 'dash-nota', `✨ El asistente juntó las mesas ${juntas.join(' + ')} (${PlanoMesas.mesa(juntas[0]).piso.toLowerCase()}) para ${r.perfiles?.nombre || 'el grupo'}.`));
+  }
+
+  // Siempre por la función de la base de datos: al cambiar a una mesa sola se sueltan las juntadas
   async function guardarMesa(r, mesa, li) {
     li.querySelectorAll('button, select').forEach((el) => { el.disabled = true; });
-    const { error } = await db.from('reservas').update({ mesa }).eq('id', r.id);
+    const { error } = await db.rpc('mozo_asignar', { p_id: r.id, p_mesa: mesa });
     if (error) {
       li.querySelectorAll('button, select').forEach((el) => { el.disabled = false; });
       li.querySelector('.reserva-mesa-error')?.remove();

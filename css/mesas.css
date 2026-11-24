@@ -156,6 +156,22 @@
   box-shadow: 0 0 10px rgba(255, 211, 107, 0.8);
 }
 .pm-info-rec { color: #ffd36b !important; }
+/* mesas juntadas para un grupo grande: eslabón y borde punteado */
+.pm-mesa.pm-juntada { outline: 2px dashed rgba(255, 255, 255, 0.55); outline-offset: 3px; }
+.pm-junta {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  font-size: 0.8rem;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
 /* en el panel, ocupada también se puede tocar para ver quién la tiene */
 .pm-admin .pm-mesa.pm-ocupada { cursor: pointer; }
 

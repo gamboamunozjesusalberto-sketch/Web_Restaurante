@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       celda('Personas').append(crear('strong', '', r.personas));
 
       const tdDetalle = celda('Detalle');
-      tdDetalle.append(crear('span', '', `${r.tipo} · ${r.ubicacion}${r.mesa ? ' · Mesa ' + r.mesa : ''}`));
+      tdDetalle.append(crear('span', '', `${r.tipo} · ${r.ubicacion}${r.mesa ? ((r.mesas_extra || []).length ? ' · Mesas juntas ' : ' · Mesa ') + [r.mesa, ...(r.mesas_extra || [])].join(' + ') : ''}`));
       if (r.paquete) tdDetalle.append(crear('span', 'etiqueta-paquete', 'Paquete ' + r.paquete));
       if (r.descuento) tdDetalle.append(crear('span', 'etiqueta-paquete', `${r.descuento}% de descuento`));
       if (r.motivo) tdDetalle.append(crear('small', 'detalle-motivo', 'Motivo enviado: ' + r.motivo));
@@ -152,8 +152,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Confirmar: la base de datos (12-confirmar-con-mesa.sql) revisa que haya mesa.
-  // Si no tiene, el asistente le da la mejor libre; si no hay ninguna, no deja confirmar.
+  // Confirmar: la base de datos (12 y 13-juntar-mesas.sql) revisa que haya mesa.
+  // Si no tiene, el asistente le da la mejor libre (o junta mesas para un grupo
+  // grande); si no hay lugar, no deja confirmar.
   async function confirmarReserva(r, botones) {
     if (r.paquete === 'Segundo piso exclusivo') {
       const afectadas = reservas.filter((x) => x.id !== r.id && x.fecha === r.fecha && x.ubicacion === 'Segundo piso' &&
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     botones.forEach((b) => { b.disabled = true; });
     const mesaAntes = r.mesa;
-    const { data, error } = await db.from('reservas').update({ estado: 'confirmada' }).eq('id', r.id).select('mesa').single();
+    const { data, error } = await db.from('reservas').update({ estado: 'confirmada' }).eq('id', r.id).select('mesa, mesas_extra').single();
     botones.forEach((b) => { b.disabled = false; });
     if (error) {
       if (/mesa libre/i.test(error.message)) {
@@ -173,7 +174,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     const mesa = data && data.mesa;
-    aviso(mesa && mesa !== mesaAntes
+    const juntas = data && (data.mesas_extra || []).length ? [data.mesa, ...data.mesas_extra].join(' + ') : null;
+    if (juntas) aviso(`Confirmada. ✨ Para ${r.personas} personas el asistente juntó las mesas ${juntas}.`);
+    else aviso(mesa && mesa !== mesaAntes
       ? `Confirmada. ✨ El asistente le asignó la mesa ${mesa}.`
       : `Confirmada${mesa ? ' en la mesa ' + mesa : ''}.`);
     await cargarReservas();

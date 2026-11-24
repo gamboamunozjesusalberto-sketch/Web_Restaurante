@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const info = crear('div', 'reserva-info');
       info.append(
         crear('h3', '', `${r.paquete ? 'Paquete ' + r.paquete : r.tipo} · ${r.personas} ${r.personas === 1 ? 'persona' : 'personas'}`),
-        crear('p', '', `${hora12(r.hora)} · ${r.ubicacion}${r.mesa ? ' · Mesa ' + r.mesa : ''}${r.preferencias ? ' · ' + r.preferencias : ''}`)
+        crear('p', '', `${hora12(r.hora)} · ${r.ubicacion}${r.mesa ? ((r.mesas_extra || []).length ? ' · Mesas juntas ' : ' · Mesa ') + [r.mesa, ...(r.mesas_extra || [])].join(' + ') : ''}${r.preferencias ? ' · ' + r.preferencias : ''}`)
       );
       if (r.descuento) info.append(crear('p', 'reserva-descuento', `🎁 Tienes ${r.descuento}% de descuento en tu consumo`));
       if (r.motivo) info.append(crear('p', 'reserva-motivo', 'Motivo: ' + r.motivo));

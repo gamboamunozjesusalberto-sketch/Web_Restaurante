@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (paqueteElegido && paqueteElegido.id === 'Segundo piso exclusivo') {
       bloqueo = 'Con el Segundo piso exclusivo tienes todo el segundo piso para tu grupo: no hace falta elegir mesa.';
     } else if (personas > 10) {
-      bloqueo = `Para ${personas} personas juntamos varias mesas: el restaurante prepara el espacio y te lo confirma.`;
+      bloqueo = `Para ${personas} personas nuestro asistente junta varias mesas cercanas por ti: el restaurante prepara el espacio y te lo confirma.`;
     }
     const reservas = fecha ? await ocupacionDe(fecha) : [];
     if (fecha !== fechaInput.value) return; // cambió de día mientras cargaba
@@ -551,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pedido,
       preferencias: d.getAll('preferencia').join(', ') || null,
       mensaje: (d.get('mensaje') || '').trim() || null
-    }).select('mesa, ubicacion').single(); // la mesa puede venir elegida por el asistente
+    }).select('mesa, mesas_extra, ubicacion').single(); // la mesa puede venir elegida por el asistente
 
     boton.disabled = false;
     if (error) {
@@ -576,7 +576,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const m = PlanoMesas.mesa(guardada.mesa);
       const nota = document.createElement('span');
       nota.className = 'd-block mt-1';
-      nota.textContent = `Tu mesa: ${guardada.mesa}${m ? ` (${m.piso.toLowerCase()}, ${m.zona})` : ''}.`;
+      nota.textContent = (guardada.mesas_extra || []).length
+        ? `✨ Te juntamos las mesas ${PlanoMesas.textoMesas(guardada)} (${m ? m.piso.toLowerCase() : guardada.ubicacion.toLowerCase()}).`
+        : `Tu mesa: ${guardada.mesa}${m ? ` (${m.piso.toLowerCase()}, ${m.zona})` : ''}.`;
       feedback.append(nota);
     }
   });

@@ -280,6 +280,7 @@
 .reserva-mesa-ver { padding: 0; border: 0; background: none; color: var(--arg-celeste-dark); font-size: 0.78rem; font-weight: 700; text-decoration: underline; }
 .reserva-mesa-nota { color: #9a5b16; font-size: 0.8rem; }
 .reserva-mesa-error { color: #b3261e; font-size: 0.8rem; }
+.reserva-mesa-junta { display: block; color: #1f6f8b; font-weight: 700; font-size: 0.8rem; }
 
 /* ---------- Aviso al rechazar o cancelar una reserva ---------- */
 .aviso-dialogo { width: min(520px, calc(100% - 32px)); max-height: calc(100% - 32px); padding: 0; border: 0; border-radius: 18px; background: #fffdf9; color: var(--pa-ink-soft, #3b302a); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }

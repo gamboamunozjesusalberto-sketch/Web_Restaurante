@@ -6,6 +6,7 @@
  * - Tocar una mesa: quién la tiene, "llegó", "liberar", "mover a…" o, si está
  *   libre, sentar clientes que llegan sin reserva
  * - Listas: llegan pronto, en mesa ahora y reservas sin mesa (con asistente)
+ * - Grupos grandes: "Juntar mesas" (13-juntar-mesas.sql) les junta mesas vecinas
  * Cada acción pasa por una función de Supabase (supabase/11-personal.sql) que
  * revisa el rol y que la mesa siga libre: dos mozos no pueden darla a la vez.
  * Se actualiza sola cada 20 segundos.
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   document.getElementById('pp-quien').textContent = `${perfil.nombre.split(' ')[0]} · ${perfil.rol === 'admin' ? 'administrador' : 'mozo'}`;
 
-  const { hora12, minutos, masDos, choca } = PlanoMesas;
+  const { hora12, minutos, masDos, choca, mesasDe, textoMesas } = PlanoMesas;
   const hhmm = (t) => String(t).slice(0, 5);
   const crear = (etiqueta, clase, texto) => {
     const el = document.createElement(etiqueta);
@@ -88,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     hoy = aISO(new Date());
     const [res, ofertas] = await Promise.all([
       db.from('reservas')
-        .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, tipo, preferencias, mensaje, origen, nombre_mesa, llegada_en, liberada_en, perfiles!usuario_id(nombre, telefono)')
+        .select('id, fecha, hora, personas, mesa, mesas_extra, estado, paquete, ubicacion, tipo, preferencias, mensaje, origen, nombre_mesa, llegada_en, liberada_en, perfiles!usuario_id(nombre, telefono)')
         .eq('fecha', hoy)
         .in('estado', ['pendiente', 'confirmada'])
         .order('hora', { ascending: true }),
@@ -118,7 +119,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tope = Math.max(minutos(desde), minutos(ahoraHHMM()) - 60);
         desde = `${String(Math.floor(tope / 60)).padStart(2, '0')}:${String(tope % 60).padStart(2, '0')}`;
       }
-      if (r.mesa) lista.push({ ...base, mesa: r.mesa, desde, hasta: masDos(desde), motivo: 'reserva' });
+      // un grupo grande ocupa todas sus mesas juntadas
+      const suyas = mesasDe(r);
+      const junta = suyas.length > 1 ? textoMesas(r) : null;
+      suyas.forEach((mesa) => lista.push({ ...base, mesa, junta, desde, hasta: masDos(desde), motivo: 'reserva' }));
       if (r.paquete === 'Segundo piso exclusivo') {
         MESAS_LOCAL.filter((m) => m.piso === 'Segundo piso')
           .forEach((m) => lista.push({ ...base, mesa: m.codigo, desde: '00:00', hasta: '23:59', motivo: 'exclusivo' }));
@@ -161,12 +165,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     lista('pp-llegan', 'pp-n-llegan', llegan, (r) => {
       const acciones = [];
-      if (r.mesa) acciones.push(boton('pp-ok', '<i class="bi bi-person-check"></i> Llegó', () => accion('mozo_llegada', { p_id: r.id }, `${nombreDe(r)} ya está en la mesa ${r.mesa}.`)));
+      if (r.mesa) acciones.push(boton('pp-ok', '<i class="bi bi-person-check"></i> Llegó', () => accion('mozo_llegada', { p_id: r.id }, `${nombreDe(r)} ya está en ${enMesas(r)}.`)));
       else acciones.push(botonAsistente(r));
       return acciones;
     }, 'Nadie más llega en las próximas 3 horas.');
     lista('pp-enmesa', 'pp-n-enmesa', enMesa, (r) => [
-      boton('pp-liberar', '<i class="bi bi-door-open"></i> Se fueron', () => accion('mozo_liberar', { p_id: r.id }, `Mesa ${r.mesa} libre.`))
+      boton('pp-liberar', '<i class="bi bi-door-open"></i> Se fueron', () => accion('mozo_liberar', { p_id: r.id }, `${mesasLibres(r)}.`))
     ], 'No hay mesas comiendo ahora.');
     lista('pp-sinmesa', 'pp-n-sinmesa', sinMesa, (r) => [botonAsistente(r)], 'Todas las reservas de hoy tienen mesa.');
 
@@ -180,10 +184,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!items.length) { ul.append(crear('li', 'pp-vacio', vacio)); return; }
     items.forEach((r) => {
       const li = crear('li', 'pp-item');
-      const mesa = crear('button', 'pp-mesa-chip', r.mesa || '—');
+      const mesa = crear('button', 'pp-mesa-chip' + (mesasDe(r).length > 1 ? ' pp-mesa-junta' : ''), r.mesa ? textoMesas(r) : '—');
       mesa.type = 'button';
       mesa.disabled = !r.mesa;
-      mesa.setAttribute('aria-label', r.mesa ? 'Ver mesa ' + r.mesa : 'Sin mesa');
+      mesa.setAttribute('aria-label', r.mesa ? 'Ver ' + enMesas(r) : 'Sin mesa');
       mesa.addEventListener('click', () => r.mesa && abrirMesa(r.mesa));
       const info = crear('div', 'pp-item-info');
       info.append(crear('strong', '', nombreDe(r)));
@@ -199,16 +203,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // El asistente (mejor_mesa en la base de datos) elige la mejor mesa libre
-  function botonAsistente(r) {
-    return boton('pp-ia', '<i class="bi bi-stars"></i> Dar mesa', async (e) => {
+  const enMesas = (r) => (mesasDe(r).length > 1 ? 'las mesas ' : 'la mesa ') + textoMesas(r);
+  const mesasLibres = (r) => (mesasDe(r).length > 1 ? `Mesas ${textoMesas(r)} libres` : `Mesa ${r.mesa} libre`);
+
+  // El asistente elige la mejor mesa libre (mejor_mesa) o, si el grupo no entra
+  // en una sola, junta las mesas vecinas que mejor encajan (mejor_juntas)
+  function botonAsistente(r, texto) {
+    const grande = r.personas > 10;
+    const etiqueta = texto || (grande ? '<i class="bi bi-link-45deg"></i> Juntar mesas' : '<i class="bi bi-stars"></i> Dar mesa');
+    return boton('pp-ia', etiqueta, async (e) => {
       e.currentTarget.disabled = true;
-      const { data: mesa } = await db.rpc('mejor_mesa', {
-        p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: Math.min(r.personas, 10), p_ubicacion: r.ubicacion,
-        p_preferencias: r.preferencias || null, p_tipo: r.tipo || null, p_paquete: r.paquete || null, p_excluir: r.id
+      let mesa = null;
+      if (!grande) {
+        ({ data: mesa } = await db.rpc('mejor_mesa', {
+          p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: r.personas, p_ubicacion: r.ubicacion,
+          p_preferencias: r.preferencias || null, p_tipo: r.tipo || null, p_paquete: r.paquete || null, p_excluir: r.id
+        }));
+      }
+      if (mesa) { accion('mozo_asignar', { p_id: r.id, p_mesa: mesa }, `✨ Mesa ${mesa} para ${nombreDe(r)}.`); return; }
+      const { data: juntas } = await db.rpc('mejor_juntas', {
+        p_fecha: r.fecha, p_hora: hhmm(r.hora), p_personas: r.personas, p_ubicacion: r.ubicacion, p_excluir: r.id
       });
-      if (!mesa) { avisar('No hay mesa libre que alcance para ese grupo a esa hora.', true); pintar(); return; }
-      accion('mozo_asignar', { p_id: r.id, p_mesa: mesa }, `✨ Mesa ${mesa} para ${nombreDe(r)}.`);
+      if (!juntas || !juntas.length) { avisar(`No hay mesas libres que alcancen para ${r.personas} personas a esa hora, ni juntando mesas.`, true); pintar(); return; }
+      accion('mozo_juntar', { p_id: r.id, p_mesas: juntas },
+        `✨ Para ${r.personas} personas junten las mesas ${juntas.join(' + ')} (${PlanoMesas.mesa(juntas[0]).piso.toLowerCase()}).`);
     });
   }
 
@@ -222,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     mesaAbierta = codigo;
     const mesa = PlanoMesas.mesa(codigo);
     const hora = horaVista();
-    const suyas = reservas.filter((r) => r.mesa === codigo).sort((a, b) => minutos(hhmm(a.hora)) - minutos(hhmm(b.hora)));
+    const suyas = reservas.filter((r) => mesasDe(r).includes(codigo)).sort((a, b) => minutos(hhmm(a.hora)) - minutos(hhmm(b.hora)));
     const exclusivo = mesa.piso === 'Segundo piso' && reservas.find((r) => r.paquete === 'Segundo piso exclusivo');
     const activa = suyas.find((r) => r.llegada_en) || suyas.find((r) => choca({ desde: hhmm(r.hora) }, hora));
     cuerpo.innerHTML = '';
@@ -239,14 +257,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else if (activa) {
       const tarjeta = crear('div', 'pp-ocupante ' + (activa.llegada_en ? 'en-mesa' : 'reservada'));
       tarjeta.append(crear('strong', '', nombreDe(activa)));
+      if (mesasDe(activa).length > 1) {
+        const junta = crear('small', 'pp-junta');
+        junta.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i> ';
+        junta.append(`Mesas juntas: ${textoMesas(activa)}`);
+        tarjeta.append(junta);
+      }
       tarjeta.append(crear('small', '', activa.llegada_en
         ? `Comiendo desde las ${hora12(new Date(activa.llegada_en).toTimeString().slice(0, 5))} · ${activa.personas} personas`
         : `Reserva de ${hora12(hhmm(activa.hora))} a ${hora12(masDos(hhmm(activa.hora)))} · ${activa.personas} personas${activa.estado === 'pendiente' ? ' · por confirmar' : ''}`));
       if (activa.mensaje && activa.origen === 'web') tarjeta.append(crear('small', '', '“' + activa.mensaje + '”'));
       const acciones = crear('div', 'pp-hoja-acciones');
-      if (!activa.llegada_en) acciones.append(boton('pp-ok', '<i class="bi bi-person-check"></i> Llegó', () => accion('mozo_llegada', { p_id: activa.id }, `${nombreDe(activa)} ya está en la mesa ${codigo}.`)));
-      else acciones.append(boton('pp-liberar', '<i class="bi bi-door-open"></i> Se fueron: liberar', () => accion('mozo_liberar', { p_id: activa.id }, `Mesa ${codigo} libre.`)));
-      acciones.append(selectorMover(activa));
+      if (!activa.llegada_en) acciones.append(boton('pp-ok', '<i class="bi bi-person-check"></i> Llegó', () => accion('mozo_llegada', { p_id: activa.id }, `${nombreDe(activa)} ya está en ${enMesas(activa)}.`)));
+      else acciones.append(boton('pp-liberar', '<i class="bi bi-door-open"></i> Se fueron: liberar', () => accion('mozo_liberar', { p_id: activa.id }, `${mesasLibres(activa)}.`)));
+      if (activa.personas > 10) acciones.append(botonAsistente(activa, '<i class="bi bi-link-45deg"></i> Juntar otras'));
+      else acciones.append(selectorMover(activa));
       if (activa.perfiles?.telefono) {
         const tel = crear('a', 'pp-btn pp-tel');
         tel.href = 'tel:+51' + String(activa.perfiles.telefono).replace(/\D/g, '').slice(-9);
@@ -269,7 +294,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const personas = crear('input', '');
         personas.type = 'number';
         personas.min = 1;
-        personas.max = mesa.capacidad;
+        personas.max = 30; // si son más que la mesa, se le juntan las vecinas
         personas.value = Math.min(2, mesa.capacidad);
         personas.setAttribute('aria-label', 'Personas');
         const nombre = crear('input', '');
@@ -279,11 +304,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         const enviar = crear('button', 'pp-btn pp-ok', 'Sentar');
         enviar.type = 'submit';
         fila.append(personas, nombre, enviar);
-        form.append(fila);
+        const pista = crear('small', 'pp-sentar-pista');
+        const actualizarPista = () => {
+          pista.textContent = Number(personas.value) > mesa.capacidad
+            ? `Son más de ${mesa.capacidad}: el asistente le juntará las mesas libres más cercanas.`
+            : '';
+        };
+        personas.addEventListener('input', actualizarPista);
+        form.append(fila, pista);
         form.addEventListener('submit', (e) => {
           e.preventDefault();
           enviar.disabled = true;
-          accion('mozo_sentar', { p_mesa: codigo, p_personas: Number(personas.value), p_nombre: nombre.value.trim() || null }, `Mesa ${codigo} ocupada.`);
+          accion('mozo_sentar', { p_mesa: codigo, p_personas: Number(personas.value), p_nombre: nombre.value.trim() || null },
+            (id) => {
+              const r = reservas.find((x) => x.id === id);
+              return r && mesasDe(r).length > 1 ? `✨ Grupo sentado: junten las mesas ${textoMesas(r)}.` : `Mesa ${codigo} ocupada.`;
+            });
         });
         cuerpo.append(form);
       } else if (enVivo) {
@@ -319,12 +355,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ---------- acciones (siempre por funciones de Supabase) ----------
+  // ok: texto del aviso, o función que lo arma con lo que devolvió la base de datos
   async function accion(fn, args, ok) {
-    const { error } = await db.rpc(fn, args);
-    if (error) avisar(error.message, true);
-    else avisar(ok);
+    const { data, error } = await db.rpc(fn, args);
     if (fn === 'mozo_asignar' && !error) mesaAbierta = args.p_mesa;
+    if (fn === 'mozo_juntar' && !error) mesaAbierta = args.p_mesas[0];
     await cargar();
+    if (error) avisar(error.message, true);
+    else avisar(typeof ok === 'function' ? ok(data) : ok);
   }
 
   let toastTimer;
