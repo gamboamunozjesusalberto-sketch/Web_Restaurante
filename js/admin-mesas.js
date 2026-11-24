@@ -71,13 +71,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function cargar() {
     const { data, error } = await db.from('reservas')
-      .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, tipo, preferencias, origen, nombre_mesa, llegada_en, liberada_en, perfiles(nombre, telefono)')
+      .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, tipo, preferencias, origen, nombre_mesa, llegada_en, liberada_en, perfiles!usuario_id(nombre, telefono)')
       .eq('fecha', inputDia.value)
       .in('estado', ['pendiente', 'confirmada'])
       .order('hora', { ascending: true });
     if (error) {
       detalle.innerHTML = '';
-      detalle.append(crear('p', 'form-feedback', 'No se pudieron cargar las reservas del día. ¿Ya ejecutaste supabase/09-mesas.sql?'));
+      detalle.append(crear('p', 'form-feedback', 'No se pudieron cargar las reservas del día: ' + error.message));
       reservas = [];
     } else {
       // las mesas liberadas por el mozo (clientes que ya se fueron) no ocupan lugar
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .map((r) => (r.nombre_mesa || r.origen === 'local' ? { ...r, perfiles: { ...(r.perfiles || {}), nombre: r.nombre_mesa || 'Sin reserva (salón)' } } : r));
     }
     const ofertas = await db.from('reservas')
-      .select('id, oferta_mesa, oferta_hora, personas, perfiles(nombre)')
+      .select('id, oferta_mesa, oferta_hora, personas, perfiles!usuario_id(nombre)')
       .eq('oferta_fecha', inputDia.value)
       .eq('oferta_aceptada', false);
     apartadas = (ofertas.data || []).filter((o) => o.oferta_mesa);

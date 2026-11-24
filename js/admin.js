@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await db.rpc('vencer_reservas');
     // perfiles(...) trae el nombre y celular del cliente (relación usuario_id → perfiles)
     const { data, error } = await db.from('reservas')
-      .select('*, perfiles(nombre, telefono, dni)')
+      .select('*, perfiles!usuario_id(nombre, telefono, dni)')
       .order('fecha', { ascending: true })
       .order('hora', { ascending: true });
     if (error) {

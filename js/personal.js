@@ -88,16 +88,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     hoy = aISO(new Date());
     const [res, ofertas] = await Promise.all([
       db.from('reservas')
-        .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, tipo, preferencias, mensaje, origen, nombre_mesa, llegada_en, liberada_en, perfiles(nombre, telefono)')
+        .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, tipo, preferencias, mensaje, origen, nombre_mesa, llegada_en, liberada_en, perfiles!usuario_id(nombre, telefono)')
         .eq('fecha', hoy)
         .in('estado', ['pendiente', 'confirmada'])
         .order('hora', { ascending: true }),
-      db.from('reservas').select('id, oferta_mesa, oferta_hora, personas, perfiles(nombre)')
+      db.from('reservas').select('id, oferta_mesa, oferta_hora, personas, perfiles!usuario_id(nombre)')
         .eq('oferta_fecha', hoy).eq('oferta_aceptada', false)
     ]);
     if (res.error) {
       aviso.hidden = false;
-      aviso.textContent = 'No se pudieron cargar las mesas. ¿Ya se ejecutó supabase/11-personal.sql?';
+      aviso.textContent = 'No se pudieron cargar las mesas: ' + res.error.message;
       return;
     }
     aviso.hidden = true;
