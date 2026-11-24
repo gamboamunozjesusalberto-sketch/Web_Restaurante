@@ -84,7 +84,7 @@ async function cargarPlatosDeLaBase() {
       if (h3 && ocultos.has(normalizar(h3.textContent))) tarjeta.remove();
     });
   }
-  const precioTexto = (n) => 'S/. ' + Number(n).toFixed(2);
+  const precioTexto = (n) => 'S/ ' + Number(n).toFixed(2);
 
   data.forEach((plato) => {
     const seccion = document.getElementById(String(plato.categoria).toLowerCase());

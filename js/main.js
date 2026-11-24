@@ -61,12 +61,17 @@ document.addEventListener('DOMContentLoaded', () => {
     flotante.className = 'reservar-flotante';
     flotante.innerHTML = '<i class="bi bi-calendar-check" aria-hidden="true"></i> Reservar';
     document.body.append(flotante);
-    // se esconde cuando ya se ve el pie de página, para no tapar sus enlaces
+    // se esconde mientras se ve la portada (ya tiene su propio botón de reservar)
+    // y cuando se ve el pie de página, para no tapar sus enlaces
     const pie = document.querySelector('footer');
-    if (pie && 'IntersectionObserver' in window) {
-      new IntersectionObserver(([entrada]) => {
-        flotante.classList.toggle('oculto', entrada.isIntersecting);
-      }).observe(pie);
+    const portada = document.querySelector('main > :first-child');
+    if ('IntersectionObserver' in window) {
+      const visibles = new Set();
+      const observador = new IntersectionObserver((entradas) => {
+        entradas.forEach((e) => (e.isIntersecting ? visibles.add(e.target) : visibles.delete(e.target)));
+        flotante.classList.toggle('oculto', visibles.size > 0);
+      }, { threshold: 0.25 });
+      [pie, portada].filter(Boolean).forEach((el) => observador.observe(el));
     }
   }
 });

@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function guardarReserva() {
     const espera = bot('Guardando tu reserva…');
     const exclusivo = reserva.paquete === 'Segundo piso exclusivo';
-    const { error } = await db.from('reservas').insert({
+    const { data: guardada, error } = await db.from('reservas').insert({
       fecha: reserva.fecha,
       hora: reserva.hora,
       personas: reserva.personas,
@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ubicacion: exclusivo ? 'Segundo piso' : 'Primer piso',
       paquete: reserva.paquete,
       mensaje: 'Reserva hecha con el asistente Asadito'
-    });
+    }).select('mesa, mesas_extra').single(); // el asistente de mesas le aparta una
     espera.remove();
     if (error) {
       // los mensajes de la base de datos ya vienen en español
@@ -433,7 +433,10 @@ document.addEventListener('DOMContentLoaded', () => {
       chips([{ texto: 'Intentar con otro día', accion: pedirDia }, { texto: 'Hablar con una persona', accion: responderContacto }]);
       return;
     }
-    bot(['¡Listo! Tu reserva quedó ', { negrita: 'pendiente de confirmación' }, '. Te avisaremos en ', { enlace: 'cuenta.html#mis-reservas', texto: 'Mi cuenta' }, ' cuando la confirmemos.']);
+    const mesas = guardada && guardada.mesa ? [guardada.mesa, ...(guardada.mesas_extra || [])] : [];
+    bot(['¡Listo! Tu reserva quedó ', { negrita: 'pendiente de confirmación' },
+      ...(mesas.length ? [mesas.length > 1 ? '. Te apartamos las mesas ' : '. Te apartamos la mesa ', { negrita: mesas.join(' + ') }] : []),
+      '. Te avisaremos en ', { enlace: 'cuenta.html#mis-reservas', texto: 'Mi cuenta' }, ' cuando la confirmemos.']);
     reserva = null;
     menuPrincipal();
   }

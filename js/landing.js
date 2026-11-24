@@ -201,3 +201,19 @@ async function cargarOpiniones() {
   seccion.hidden = false;
   document.dispatchEvent(new Event('fotos-agregadas')); // el visor de fotos las toma
 }
+
+// Recomendaciones del chef: usan el precio que el admin puso en el Panel y
+// se quitan los platos que el admin sacó de la carta (cartaVisible, carta-datos.js)
+document.addEventListener('DOMContentLoaded', async () => {
+  const tarjetas = document.querySelectorAll('.plato-tarjeta');
+  if (!tarjetas.length || typeof cartaVisible !== 'function') return;
+  const carta = await cartaVisible();
+  tarjetas.forEach((tarjeta) => {
+    const nombre = tarjeta.querySelector('.plato-nombre')?.textContent.trim().toLowerCase();
+    const plato = carta.find((p) => p.nombre.toLowerCase() === nombre);
+    const columna = tarjeta.closest('[class*="col-"]') || tarjeta;
+    if (!plato) { columna.remove(); return; }
+    const precio = tarjeta.querySelector('.plato-precio');
+    if (precio && plato.precio != null) precio.textContent = 'S/ ' + Number(plato.precio).toFixed(2);
+  });
+});

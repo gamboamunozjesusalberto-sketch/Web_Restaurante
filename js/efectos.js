@@ -282,7 +282,7 @@ function cartaInteractiva(sinMovimiento) {
     vino.hidden = !sugerir;
     if (sugerir) {
       const v = lista[[...nombre].reduce((t, c) => t + c.charCodeAt(0), 0) % lista.length];
-      vino.querySelector('span').textContent = `Va muy bien con un ${v.nombre}` + (v.precio != null ? ` (S/. ${Number(v.precio).toFixed(2)})` : '');
+      vino.querySelector('span').textContent = `Va muy bien con un ${v.nombre}` + (v.precio != null ? ` (S/ ${Number(v.precio).toFixed(2)})` : '');
     }
     ficha.querySelector('.ficha-precio').textContent = tarjeta.querySelector('.parrilla-price')?.textContent || '';
     ficha.querySelector('.ficha-reservar').href = `contacto.html?plato=${encodeURIComponent(nombre)}#reserva`;
