@@ -277,12 +277,14 @@ function cartaInteractiva(sinMovimiento) {
     coccion.querySelector('span').textContent = dato.coccion || '';
     // sugerencia de vino para carnes y platos de fondo
     const vino = ficha.querySelector('.ficha-vino');
-    const lista = vinos();
-    const sugerir = ['parrilla', 'platos', 'entradas'].includes(categoria) && lista.length;
-    vino.hidden = !sugerir;
-    if (sugerir) {
-      const v = lista[[...nombre].reduce((t, c) => t + c.charCodeAt(0), 0) % lista.length];
-      vino.querySelector('span').textContent = `Va muy bien con un ${v.nombre}` + (v.precio != null ? ` (S/ ${Number(v.precio).toFixed(2)})` : '');
+    // maridaje por reglas (carta-datos.js): estilo según el tipo de carne, nivel según el precio
+    const precioTarjeta = Number((tarjeta.querySelector('.parrilla-price')?.textContent || '').replace(/[^\d.]/g, '')) || dato.precio;
+    const sugerencia = typeof maridaje === 'function'
+      ? maridaje({ nombre, categoria, precio: precioTarjeta, coccion: dato.coccion || descTexto }, datos) : null;
+    vino.hidden = !sugerencia;
+    if (sugerencia) {
+      const v = sugerencia.vino;
+      vino.querySelector('span').textContent = `Va muy bien con un ${v.nombre}` + (v.precio != null ? ` (S/ ${Number(v.precio).toFixed(2)})` : '') + `: ${sugerencia.razon}.`;
     }
     ficha.querySelector('.ficha-precio').textContent = tarjeta.querySelector('.parrilla-price')?.textContent || '';
     ficha.querySelector('.ficha-reservar').href = `contacto.html?plato=${encodeURIComponent(nombre)}#reserva`;

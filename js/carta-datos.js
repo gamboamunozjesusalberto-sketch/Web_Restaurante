@@ -45,7 +45,7 @@ const PAQUETES = [
   }
 ];
 
-// categoria: entradas | parrilla | platos | postres | vinos
+// categoria: entradas | parrilla | platos | postres | vinos | bebidas
 // imagen: foto que usa menu.html (null = todavía sin foto; el admin la sube desde el Panel)
 // coccion: cómo se prepara (sale de la descripción de la carta)
 const CARTA = [
@@ -86,7 +86,21 @@ const CARTA = [
   { nombre: 'Durigutti', categoria: 'vinos', precio: 110, coccion: 'Malbec argentino intenso y de final largo.', imagen: 'images/durigutti.jpeg' },
   { nombre: 'Malbec Pampas', categoria: 'vinos', precio: 65, coccion: 'Malbec sabroso y redondo de Bodega Pampas.', imagen: 'images/malbec_pampas.webp' },
   { nombre: 'Nostrum Tacama', categoria: 'vinos', precio: 75, coccion: 'Tinto ícono de Tacama, de los valles de Ica.', imagen: 'images/nostrum_tacama.jpeg' },
-  { nombre: 'Tonuz Tacama', categoria: 'vinos', precio: 70, coccion: 'Tinto de Tacama para acompañar parrilladas.', imagen: 'images/tonuz_tacama.png' }
+  { nombre: 'Tonuz Tacama', categoria: 'vinos', precio: 70, coccion: 'Tinto de Tacama para acompañar parrilladas.', imagen: 'images/tonuz_tacama.png' },
+  // Bebidas: precios provisionales hasta tener los reales. Sin foto todavía:
+  // el admin la sube desde el Panel → Carta (mismo nombre) y reemplaza el ícono.
+  { nombre: 'Chicha Morada', categoria: 'bebidas', precio: 22, coccion: 'Hecha en casa con maíz morado, piña, canela y clavo. Jarra de 1 litro (también por vaso).', imagen: null },
+  { nombre: 'Limonada Clásica', categoria: 'bebidas', precio: 20, coccion: 'Limón recién exprimido, bien helada. Jarra de 1 litro.', imagen: null },
+  { nombre: 'Limonada Frozen de Hierbabuena', categoria: 'bebidas', precio: 12, coccion: 'Limón y hierbabuena licuados con hielo.', imagen: null },
+  { nombre: 'Jugo de Maracuyá', categoria: 'bebidas', precio: 10, coccion: 'Maracuyá natural, refrescante y ácido; va muy bien con la parrilla.', imagen: null },
+  { nombre: 'Gaseosa Personal', categoria: 'bebidas', precio: 6, coccion: 'Botella personal de 500 ml, bien fría.', imagen: null },
+  { nombre: 'Agua Mineral', categoria: 'bebidas', precio: 5, coccion: 'Con o sin gas, 625 ml.', imagen: null },
+  { nombre: 'Pisco Sour', categoria: 'bebidas', precio: 22, coccion: 'Pisco quebranta de Ica, limón, jarabe de goma, clara de huevo y amargo de angostura.', imagen: null },
+  { nombre: 'Chilcano de Pisco', categoria: 'bebidas', precio: 20, coccion: 'Pisco, ginger ale, limón y amargo de angostura, con mucho hielo.', imagen: null },
+  { nombre: 'Machu Picchu', categoria: 'bebidas', precio: 24, coccion: 'Cóctel en tres capas: granadina, jugo de naranja y licor de menta con pisco.', imagen: null },
+  { nombre: 'Fernet con Cola', categoria: 'bebidas', precio: 22, coccion: 'El clásico argentino para la sobremesa: fernet con cola y mucho hielo.', imagen: null },
+  { nombre: 'Clericó', categoria: 'bebidas', precio: 45, coccion: 'La sangría argentina: vino blanco con frutas de estación picadas. Jarra de 1 litro.', imagen: null },
+  { nombre: 'Cerveza Nacional', categoria: 'bebidas', precio: 10, coccion: 'Botella de 620 ml, bien helada.', imagen: null }
 ];
 
 // ---------- Platos quitados desde el Panel ----------
@@ -141,3 +155,58 @@ function cartaVisible() {
   return _cartaLista;
 }
 
+
+// ---------- Maridaje: qué vino sugerir con cada plato ----------
+// Reglas de sommelier (no es al azar):
+//   1. El tipo de plato define el estilo de vino:
+//      - carnes rojas de res (bife, entraña, picaña, parrilladas…) → tinto intenso
+//      - cerdo, cordero, achuras y embutidos → tinto frutado
+//      - pollo, milanesas, entradas y platos de fondo suaves → tinto ligero
+//   2. El precio del plato define el nivel del vino dentro de ese estilo:
+//      platos para compartir (S/ 100 o más) → el mejor; de S/ 60 a 99 → el del medio;
+//      menos de S/ 60 → el más accesible
+//   3. Un plato nuevo del Panel se clasifica por las palabras de su nombre y
+//      descripción; si no coincide con ninguna, por su categoría.
+//   Los vinos nuevos del Panel se clasifican por su descripción (intenso,
+//   cuerpo, taninos → intenso; fresco, frutado, suave → frutado).
+const ESTILO_VINO = {
+  'Vaca Sagrada': 'intenso', Zapa: 'intenso', Durigutti: 'intenso',
+  'Minimalista Malbec': 'frutado', 'Malbec Pampas': 'frutado', 'Nostrum Tacama': 'frutado',
+  'Tonuz Tacama': 'ligero'
+};
+const RAZON_VINO = {
+  intenso: 'un tinto con cuerpo acompaña la grasa y el sabor a brasa de la carne de res',
+  frutado: 'su fruta equilibra la grasa del cerdo, el cordero y los embutidos',
+  ligero: 'un tinto ligero no tapa el sabor de platos más suaves'
+};
+
+function estiloDePlato(plato) {
+  const t = `${plato.nombre} ${plato.coccion || ''}`.toLowerCase();
+  if (/(parrillada|parrilla para|tomahawk|bife|entra[ñn]a|pica[ñn]a|cuadril)/.test(t)) return 'intenso';
+  if (/(cerdo|panceta|costillar|cordero|chorizo|morcilla|molleja|achura|bondiola)/.test(t)) return 'frutado';
+  if (/(pollo|suprema|milanesa|pastel|empanada|provoleta|papas|queso)/.test(t)) return 'ligero';
+  if (/(matambr|lomo|asado de tira|angus|\bres\b)/.test(t)) return 'intenso';
+  return plato.categoria === 'parrilla' ? 'intenso' : 'ligero';
+}
+
+function estiloDeVino(vino) {
+  if (ESTILO_VINO[vino.nombre]) return ESTILO_VINO[vino.nombre];
+  const t = (vino.coccion || '').toLowerCase();
+  if (/intens|cuerpo|tanin/.test(t)) return 'intenso';
+  if (/fresc|frutad|suave|redond/.test(t)) return 'frutado';
+  return 'ligero';
+}
+
+// Devuelve { vino, razon } o null (postres, bebidas, vinos, o carta sin vinos)
+function maridaje(plato, carta = CARTA) {
+  if (!plato || ['postres', 'vinos', 'bebidas'].includes(plato.categoria)) return null;
+  const vinos = carta.filter((p) => p.categoria === 'vinos' && p.precio != null);
+  if (!vinos.length) return null;
+  const estilo = estiloDePlato(plato);
+  let opciones = vinos.filter((v) => estiloDeVino(v) === estilo);
+  if (!opciones.length) opciones = vinos;
+  opciones.sort((a, b) => a.precio - b.precio);
+  const precio = Number(plato.precio) || 0;
+  const nivel = precio >= 100 ? opciones.length - 1 : precio >= 60 ? Math.floor((opciones.length - 1) / 2) : 0;
+  return { vino: opciones[nivel], razon: RAZON_VINO[estilo] };
+}

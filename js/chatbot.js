@@ -255,7 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function responderRecomendados(texto) {
     const t = normalizar(texto);
-    const categoria = /vino|tomar|maridaj/.test(t) ? 'vinos' : /postre|dulce/.test(t) ? 'postres' : /entrada|comenzar|picar/.test(t) ? 'entradas' : null;
+    const categoria = /vino|maridaj/.test(t) ? 'vinos'
+      : /bebida|tomar|trago|coctel|chicha|pisco|limonada|refresco|cerveza/.test(t) ? 'bebidas'
+        : /postre|dulce/.test(t) ? 'postres' : /entrada|comenzar|picar/.test(t) ? 'entradas' : null;
     let populares = [];
     if (conDb && !categoria) {
       const { data } = await db.rpc('platos_populares', { limite: 5 });
@@ -265,7 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let intro;
     if (categoria) {
       lista = CARTA.filter((p) => p.categoria === categoria).slice(0, 4);
-      intro = categoria === 'vinos' ? 'Para acompañar la parrilla te recomiendo:' : 'Te recomiendo:';
+      intro = categoria === 'vinos' ? 'Para acompañar la parrilla te recomiendo:'
+        : categoria === 'bebidas' ? 'Para tomar te recomiendo:' : 'Te recomiendo:';
     } else if (populares.length >= 3) {
       lista = populares;
       intro = 'Estos son los platos que más piden nuestros clientes:';
@@ -285,7 +288,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function responderPlato(p) {
-    bot([{ negrita: p.nombre }, p.precio != null ? ` · ${soles(p.precio)}` : ' · precio a consultar', { salto: true }, p.coccion || 'Pregúntanos por WhatsApp cómo lo preparamos.']);
+    const m = typeof maridaje === 'function' ? maridaje(p) : null;
+    bot([{ negrita: p.nombre }, p.precio != null ? ` · ${soles(p.precio)}` : ' · precio a consultar', { salto: true }, p.coccion || 'Pregúntanos por WhatsApp cómo lo preparamos.',
+      ...(m ? [{ salto: true }, '🍷 Para acompañar: ', { negrita: m.vino.nombre }, ` (${soles(m.vino.precio)}), porque ${m.razon}.`] : [])]);
     chips([
       { texto: 'Otro plato', accion: preguntarPlato },
       { texto: 'Platos recomendados', accion: () => responderRecomendados('') },

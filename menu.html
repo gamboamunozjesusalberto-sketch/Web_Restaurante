@@ -17,15 +17,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css propio de la carta -->
-  <link rel="stylesheet" href="css/variables.css?v=27" />
-  <link rel="stylesheet" href="css/components.css?v=27" />
-  <link rel="stylesheet" href="css/chatbot.css?v=27" />
-  <link rel="stylesheet" href="css/efectos.css?v=27" />
-  <link rel="stylesheet" href="css/paginas.css?v=27" />
-  <link rel="stylesheet" href="css/menu.css?v=27" />
+  <link rel="stylesheet" href="css/variables.css?v=28" />
+  <link rel="stylesheet" href="css/components.css?v=28" />
+  <link rel="stylesheet" href="css/chatbot.css?v=28" />
+  <link rel="stylesheet" href="css/efectos.css?v=28" />
+  <link rel="stylesheet" href="css/paginas.css?v=28" />
+  <link rel="stylesheet" href="css/menu.css?v=28" />
   <!-- Interacción en todo el sitio: carga, transiciones, cursor, chispas (js/interaccion.js) -->
-  <link rel="stylesheet" href="css/interaccion.css?v=27" />
-  <script src="js/interaccion.js?v=27"></script>
+  <link rel="stylesheet" href="css/interaccion.css?v=28" />
+  <script src="js/interaccion.js?v=28"></script>
 </head>
 <body class="inner-page page-menu">
 
@@ -557,15 +557,158 @@
       </div>
     </section>
 
-    <!-- BEBIDAS: se llena sola con lo que el admin agregue en el Panel (categoría Bebidas).
-         Si no hay ninguna, menu.js quita esta sección y su botón. -->
+    <!-- BEBIDAS: refrescos, cócteles con pisco de Ica y clásicos argentinos.
+         Sin foto todavía (ícono): el admin la sube en el Panel y reemplaza el ícono.
+         Las que el admin agregue en el Panel (categoría Bebidas) se suman solas. -->
     <section class="section-pa section-pa-alt menu-block" id="bebidas" data-category="bebidas">
       <div class="container">
         <div class="menu-block-head reveal">
           <h2 class="section-heading">Bebidas</h2>
-          <p class="section-sub">Para refrescar la parrillada.</p>
+          <p class="section-sub">Para refrescar la parrillada: chicha, limonadas, cócteles con pisco de Ica y clásicos argentinos.</p>
         </div>
-        <div class="parrilla-grid"></div>
+        <div class="parrilla-grid">
+          <article class="parrilla-card reveal">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup-straw"></i>
+              <span>Chicha Morada</span>
+              <span class="parrilla-badge">Jarra 1 L</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Chicha Morada</h3>
+              <p>Hecha en casa con maíz morado, piña, canela y clavo. Jarra de 1 litro (también por vaso).</p>
+              <div class="parrilla-price">S/ 22.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.08s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-droplet-half"></i>
+              <span>Limonada Clásica</span>
+              <span class="parrilla-badge">Jarra 1 L</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Limonada Clásica</h3>
+              <p>Limón recién exprimido, bien helada. Jarra de 1 litro.</p>
+              <div class="parrilla-price">S/ 20.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.16s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-snow"></i>
+              <span>Limonada Frozen de Hierbabuena</span>
+              <span class="parrilla-badge">Sin alcohol</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Limonada Frozen de Hierbabuena</h3>
+              <p>Limón y hierbabuena licuados con hielo.</p>
+              <div class="parrilla-price">S/ 12.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.24s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup"></i>
+              <span>Jugo de Maracuyá</span>
+              <span class="parrilla-badge">Sin alcohol</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Jugo de Maracuyá</h3>
+              <p>Maracuyá natural, refrescante y ácido; va muy bien con la parrilla.</p>
+              <div class="parrilla-price">S/ 10.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup-straw"></i>
+              <span>Gaseosa Personal</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Gaseosa Personal</h3>
+              <p>Botella personal de 500 ml, bien fría.</p>
+              <div class="parrilla-price">S/ 6.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.08s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-droplet"></i>
+              <span>Agua Mineral</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Agua Mineral</h3>
+              <p>Con o sin gas, 625 ml.</p>
+              <div class="parrilla-price">S/ 5.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.16s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup"></i>
+              <span>Pisco Sour</span>
+              <span class="parrilla-badge">Ica</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Pisco Sour</h3>
+              <p>Pisco quebranta de Ica, limón, jarabe de goma, clara de huevo y amargo de angostura.</p>
+              <div class="parrilla-price">S/ 22.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.24s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup-straw"></i>
+              <span>Chilcano de Pisco</span>
+              <span class="parrilla-badge">Ica</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Chilcano de Pisco</h3>
+              <p>Pisco, ginger ale, limón y amargo de angostura, con mucho hielo.</p>
+              <div class="parrilla-price">S/ 20.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-stars"></i>
+              <span>Machu Picchu</span>
+              <span class="parrilla-badge">Cóctel</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Machu Picchu</h3>
+              <p>Cóctel en tres capas: granadina, jugo de naranja y licor de menta con pisco.</p>
+              <div class="parrilla-price">S/ 24.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.08s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup-straw"></i>
+              <span>Fernet con Cola</span>
+              <span class="parrilla-badge">Argentino</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Fernet con Cola</h3>
+              <p>El clásico argentino para la sobremesa: fernet con cola y mucho hielo.</p>
+              <div class="parrilla-price">S/ 22.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.16s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup"></i>
+              <span>Clericó</span>
+              <span class="parrilla-badge">Jarra 1 L</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Clericó</h3>
+              <p>La sangría argentina: vino blanco con frutas de estación picadas. Jarra de 1 litro.</p>
+              <div class="parrilla-price">S/ 45.00</div>
+            </div>
+          </article>
+          <article class="parrilla-card reveal" style="--delay: 0.24s">
+            <div class="parrilla-media sin-foto" aria-hidden="true">
+              <i class="bi bi-cup"></i>
+              <span>Cerveza Nacional</span>
+            </div>
+            <div class="parrilla-info">
+              <h3>Cerveza Nacional</h3>
+              <p>Botella de 620 ml, bien helada.</p>
+              <div class="parrilla-price">S/ 10.00</div>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -662,13 +805,13 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/carta-datos.js?v=27"></script>
-  <script src="js/supabase-config.js?v=27"></script>
-  <script src="js/sesion.js?v=27"></script>
-  <script src="js/main.js?v=27"></script>
-  <script src="js/chatbot.js?v=27"></script>
-  <script src="js/efectos.js?v=27"></script>
-  <script src="js/menu.js?v=27"></script>
+  <script src="js/carta-datos.js?v=28"></script>
+  <script src="js/supabase-config.js?v=28"></script>
+  <script src="js/sesion.js?v=28"></script>
+  <script src="js/main.js?v=28"></script>
+  <script src="js/chatbot.js?v=28"></script>
+  <script src="js/efectos.js?v=28"></script>
+  <script src="js/menu.js?v=28"></script>
 
 </body>
 </html>
