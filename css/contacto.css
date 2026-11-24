@@ -527,3 +527,17 @@
 @media (max-width: 575.98px) {
   .page-contacto .pedido-agregar { flex-direction: column; }
 }
+
+/* ---------- mapa de mesas (el plano está en css/mesas.css) ---------- */
+.page-contacto .mesa-sin-preferencia {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: 1px dashed #c9b8a4;
+  border-radius: 999px;
+  background: none;
+  color: var(--pa-ink-warm);
+  font: 700 0.8rem var(--font-text);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.page-contacto .mesa-sin-preferencia:hover { border-color: var(--arg-celeste-dark); background: rgba(117, 197, 240, 0.1); }

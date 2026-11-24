@@ -1,0 +1,231 @@
+/**
+ * ==========================================================================
+ * PUNTO ASADO - PESTAÑA MESAS DEL PANEL (ADMIN-MESAS.JS)
+ * - Mapa del local (js/mesas.js) para un día y una hora: qué mesas están
+ *   ocupadas, por quién y de qué hora a qué hora
+ * - Tocar una mesa: ver sus reservas del día, cambiarlas de mesa o quitarla
+ * - Reservas sin mesa: asignarles una mesa libre que alcance para el grupo
+ * La base de datos (supabase/09-mesas.sql) vuelve a revisar capacidad y choques.
+ * ==========================================================================
+ */
+
+'use strict';
+
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!db || !document.getElementById('panel-mesas') || typeof PlanoMesas === 'undefined') return;
+  const perfil = await Sesion.perfil();
+  if (!perfil || perfil.rol !== 'admin') return;
+
+  const crear = (etiqueta, clase, texto) => {
+    const el = document.createElement(etiqueta);
+    if (clase) el.className = clase;
+    if (texto !== undefined && texto !== null) el.textContent = texto;
+    return el;
+  };
+  const aISO = (f) => `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
+  const { hora12, minutos, masDos, choca } = PlanoMesas;
+  const hhmm = (t) => String(t).slice(0, 5);
+
+  const inputDia = document.getElementById('mesas-dia');
+  const selectHora = document.getElementById('mesas-hora');
+  const detalle = document.getElementById('mesa-detalle');
+  const listaSinMesa = document.getElementById('sin-mesa');
+  const totalSinMesa = document.getElementById('sin-mesa-total');
+  let reservas = [];
+  let mesaVista = null;
+
+  const plano = PlanoMesas.crear(document.getElementById('mapa-admin'), {
+    admin: true,
+    alElegir(codigo) { mesaVista = codigo; pintarDetalle(); }
+  });
+
+  // horarios del día: fines de semana desde las 12:00, el resto desde las 18:00, hasta las 22:30
+  function horarios(fechaISO) {
+    const dia = new Date(fechaISO + 'T12:00').getDay();
+    const lista = [];
+    for (let m = (dia === 0 || dia === 6 ? 12 : 18) * 60; m <= 22 * 60 + 30; m += 30) {
+      lista.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+    }
+    return lista;
+  }
+
+  function llenarHoras() {
+    const anterior = selectHora.value;
+    const lista = horarios(inputDia.value);
+    selectHora.innerHTML = '';
+    lista.forEach((h) => selectHora.append(new Option(hora12(h), h)));
+    if (lista.includes(anterior)) selectHora.value = anterior;
+    else {
+      // hoy: la próxima media hora; otro día: las 8:00 p. m.
+      const ahora = new Date();
+      const actual = ahora.getHours() * 60 + ahora.getMinutes();
+      const proxima = inputDia.value === aISO(ahora) && lista.find((h) => minutos(h) >= actual - 30);
+      selectHora.value = proxima || (lista.includes('20:00') ? '20:00' : lista[0]);
+    }
+  }
+
+  async function cargar() {
+    const { data, error } = await db.from('reservas')
+      .select('id, fecha, hora, personas, mesa, estado, paquete, ubicacion, perfiles(nombre, telefono)')
+      .eq('fecha', inputDia.value)
+      .in('estado', ['pendiente', 'confirmada'])
+      .order('hora', { ascending: true });
+    if (error) {
+      detalle.innerHTML = '';
+      detalle.append(crear('p', 'form-feedback', 'No se pudieron cargar las reservas del día. ¿Ya ejecutaste supabase/09-mesas.sql?'));
+      reservas = [];
+    } else {
+      reservas = data;
+    }
+    pintar();
+  }
+
+  // reservas del día en el formato del plano
+  function ocupaciones() {
+    const lista = [];
+    reservas.forEach((r) => {
+      const base = { id: r.id, nombre: r.perfiles?.nombre || 'Cliente', personas: r.personas, estado: r.estado };
+      if (r.mesa) lista.push({ ...base, mesa: r.mesa, desde: hhmm(r.hora), hasta: masDos(hhmm(r.hora)), motivo: 'reserva' });
+      if (r.paquete === 'Segundo piso exclusivo') {
+        MESAS_LOCAL.filter((m) => m.piso === 'Segundo piso')
+          .forEach((m) => lista.push({ ...base, mesa: m.codigo, desde: '00:00', hasta: '23:59', motivo: 'exclusivo' }));
+      }
+    });
+    return lista;
+  }
+
+  // mesas donde puede ir una reserva (alcanza y nadie más la tiene en esas 2 horas)
+  function mesasLibresPara(r) {
+    const ocup = ocupaciones().filter((o) => o.id !== r.id);
+    return MESAS_LOCAL.filter((m) => m.capacidad >= r.personas &&
+      !ocup.some((o) => o.mesa === m.codigo && choca(o, hhmm(r.hora))));
+  }
+
+  function pintar() {
+    const ocup = ocupaciones();
+    const hora = selectHora.value;
+    plano.actualizar({ reservas: ocup, hora, apertura: horarios(inputDia.value)[0] });
+
+    const conMesa = reservas.filter((r) => r.mesa).length;
+    const sinMesa = reservas.filter((r) => !r.mesa && r.paquete !== 'Segundo piso exclusivo');
+    const ocupadasAhora = new Set(ocup.filter((o) => choca(o, hora)).map((o) => o.mesa)).size;
+    const personas = reservas.reduce((s, r) => s + r.personas, 0);
+    const kpis = [
+      ['bi-calendar-check', reservas.length, 'Reservas del día'],
+      ['bi-people-fill', personas, 'Personas esperadas'],
+      ['bi-grid-3x3-gap', `${MESAS_LOCAL.length - ocupadasAhora}/${MESAS_LOCAL.length}`, `Libres a las ${hora12(hora)}`],
+      ['bi-inbox', sinMesa.length, 'Sin mesa asignada']
+    ];
+    const ul = document.getElementById('mesas-kpis');
+    ul.innerHTML = '';
+    kpis.forEach(([icono, valor, texto]) => {
+      const li = crear('li', 'dash-kpi');
+      const i = crear('i', 'bi ' + icono);
+      i.setAttribute('aria-hidden', 'true');
+      li.append(i, crear('strong', '', String(valor)), crear('span', '', texto));
+      ul.append(li);
+    });
+
+    totalSinMesa.hidden = !sinMesa.length;
+    totalSinMesa.textContent = sinMesa.length;
+    listaSinMesa.innerHTML = '';
+    if (!sinMesa.length) {
+      listaSinMesa.append(crear('li', 'sin-mesa-vacio', conMesa ? 'Todas las reservas del día tienen mesa.' : 'No hay reservas activas este día.'));
+    }
+    sinMesa.forEach((r) => listaSinMesa.append(filaReserva(r, true)));
+    pintarDetalle();
+  }
+
+  // Una reserva con su selector de mesa (para "sin mesa" y para el detalle de una mesa)
+  function filaReserva(r, sinMesa) {
+    const li = crear('li', 'reserva-mesa');
+    const cab = crear('div', 'reserva-mesa-cab');
+    const quien = crear('div', '');
+    quien.append(crear('strong', '', r.perfiles?.nombre || 'Cliente'));
+    quien.append(crear('small', '', `${hora12(hhmm(r.hora))} a ${hora12(masDos(hhmm(r.hora)))} · ${r.personas} personas${r.paquete ? ' · ' + r.paquete : ''}`));
+    const estado = crear('span', 'estado', r.estado);
+    estado.dataset.estado = r.estado;
+    cab.append(quien, estado);
+    li.append(cab);
+
+    const libres = mesasLibresPara(r).filter((m) => m.codigo !== r.mesa);
+    const acciones = crear('div', 'reserva-mesa-acciones');
+    if (!libres.length && sinMesa) {
+      acciones.append(crear('small', 'reserva-mesa-nota', r.personas > 10
+        ? 'Grupo grande: no entra en una sola mesa. Junten mesas y anótalo en el mensaje.'
+        : 'No hay mesas libres para este grupo a esa hora.'));
+    }
+    if (libres.length) {
+      const select = crear('select', 'reserva-mesa-select');
+      select.setAttribute('aria-label', 'Mesa para ' + (r.perfiles?.nombre || 'el cliente'));
+      select.append(new Option(sinMesa ? 'Elegir mesa…' : 'Mover a…', ''));
+      ['Primer piso', 'Segundo piso'].forEach((piso) => {
+        const grupo = document.createElement('optgroup');
+        grupo.label = piso;
+        libres.filter((m) => m.piso === piso)
+          .forEach((m) => grupo.append(new Option(`${m.codigo} · ${m.capacidad} personas · ${m.zona}`, m.codigo)));
+        if (grupo.children.length) select.append(grupo);
+      });
+      const boton = crear('button', 'btn-accion btn-confirmar', sinMesa ? 'Asignar' : 'Mover');
+      boton.type = 'button';
+      boton.addEventListener('click', () => {
+        if (!select.value) return select.focus();
+        guardarMesa(r, select.value, li);
+      });
+      acciones.append(select, boton);
+    }
+    if (!sinMesa) {
+      const quitar = crear('button', 'btn-accion btn-rechazar', 'Quitar mesa');
+      quitar.type = 'button';
+      quitar.addEventListener('click', () => guardarMesa(r, null, li));
+      acciones.append(quitar);
+    }
+    if (sinMesa) {
+      const ver = crear('button', 'reserva-mesa-ver', 'Ver a esa hora');
+      ver.type = 'button';
+      ver.addEventListener('click', () => { selectHora.value = hhmm(r.hora); pintar(); });
+      acciones.append(ver);
+    }
+    li.append(acciones);
+    return li;
+  }
+
+  function pintarDetalle() {
+    if (!mesaVista) return;
+    const mesa = PlanoMesas.mesa(mesaVista);
+    detalle.innerHTML = '';
+    detalle.append(crear('h3', 'dash-titulo', `Mesa ${mesa.codigo}`));
+    detalle.append(crear('p', 'dash-nota', `${mesa.piso}, ${mesa.zona} · hasta ${mesa.capacidad} personas`));
+    const exclusiva = reservas.find((r) => r.paquete === 'Segundo piso exclusivo');
+    if (mesa.piso === 'Segundo piso' && exclusiva) {
+      detalle.append(crear('p', 'reserva-mesa-nota', `Todo el segundo piso es de ${exclusiva.perfiles?.nombre || 'un cliente'} (Segundo piso exclusivo, ${exclusiva.personas} personas, desde las ${hora12(hhmm(exclusiva.hora))}).`));
+    }
+    const suyas = reservas.filter((r) => r.mesa === mesa.codigo);
+    if (!suyas.length) {
+      detalle.append(crear('p', 'sin-mesa-vacio', 'Libre todo el día.'));
+      return;
+    }
+    const ul = crear('ul', 'sin-mesa');
+    suyas.forEach((r) => ul.append(filaReserva(r, false)));
+    detalle.append(ul);
+  }
+
+  async function guardarMesa(r, mesa, li) {
+    li.querySelectorAll('button, select').forEach((el) => { el.disabled = true; });
+    const { error } = await db.from('reservas').update({ mesa }).eq('id', r.id);
+    if (error) {
+      li.querySelectorAll('button, select').forEach((el) => { el.disabled = false; });
+      li.querySelector('.reserva-mesa-error')?.remove();
+      li.append(crear('small', 'reserva-mesa-error', 'No se pudo: ' + error.message));
+      return;
+    }
+    if (mesa) { mesaVista = mesa; plano.actualizar({ elegida: mesa }); }
+    await cargar();
+  }
+
+  inputDia.value = aISO(new Date());
+  llenarHoras();
+  inputDia.addEventListener('change', () => { if (!inputDia.value) return; llenarHoras(); mesaVista = null; detalle.innerHTML = '<p class="dash-nota mb-0">Toca una mesa del mapa para ver sus reservas del día.</p>'; cargar(); });
+  selectHora.addEventListener('change', pintar);
+  document.getElementById('tab-mesas').addEventListener('click', cargar); // siempre trae lo último
+});

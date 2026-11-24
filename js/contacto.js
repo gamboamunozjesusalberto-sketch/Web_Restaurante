@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const fechaInput = form.elements.fecha;
   const horaInput = form.elements.hora;
   const DIAS_A_MOSTRAR = 30; // la base de datos acepta hasta 60 días adelante
+  let planoMesas = null; // mapa de mesas: se crea más abajo
 
   // fecha local en formato AAAA-MM-DD (sin pasar por UTC)
   const aISO = (f) => `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
@@ -178,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!contenedorHoras.querySelector('.horario:not(:disabled)')) {
       contenedorHoras.innerHTML = '<p class="horarios-vacio">Ya no quedan horarios para hoy. Elige otra fecha.</p>';
     }
+    refrescarMesas();
   }
 
   // un solo listener para todos los botones (delegación de eventos)
@@ -192,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     boton.setAttribute('aria-checked', 'true');
     horaInput.value = boton.dataset.hora;
     contenedorHoras.classList.remove('campo-error');
+    refrescarMesas();
   });
 
   pintarDias();
@@ -204,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!boton) return;
       const valor = Math.min(Number(input.max), Math.max(Number(input.min), Number(input.value || 0) + Number(boton.dataset.paso)));
       input.value = valor;
+      input.dispatchEvent(new Event('input', { bubbles: true })); // avisa al mapa de mesas
     });
   });
 
@@ -257,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (exclusivo) ubicacion.value = 'Segundo piso';
     ubicacion.disabled = exclusivo;
     if (id === 'Cumpleañero') form.querySelector('[name="tipo"][value="Cumpleaños"]').checked = true;
+    refrescarMesas();
   }
 
   contenedorPaquetes.addEventListener('click', (e) => {
@@ -264,6 +269,85 @@ document.addEventListener('DOMContentLoaded', () => {
     if (boton) elegirPaquete(boton.dataset.paquete);
   });
   pintarPaquetes();
+
+  // ---------- mapa de mesas (plano en js/mesas.js) ----------
+  // Muestra qué mesas están libres a la hora elegida. Los datos vienen de la
+  // función mesas_ocupadas de Supabase: solo mesa y horario, nunca nombres.
+  const mesaInput = form.elements.mesa;
+  const mesaAyuda = document.getElementById('r-mesa-ayuda');
+  const ocupacion = {}; // fecha → [{ mesa, desde, hasta, motivo }]
+  let mesaSoltada = null; // mesa que dejó de servir al cambiar hora o personas
+
+  if (typeof PlanoMesas !== 'undefined' && document.getElementById('mapa-mesas')) {
+    planoMesas = PlanoMesas.crear(document.getElementById('mapa-mesas'), {
+      alElegir(codigo, soltada) {
+        mesaInput.value = codigo || '';
+        if (codigo) {
+          const mesa = PlanoMesas.mesa(codigo);
+          form.elements.ubicacion.value = mesa.piso;
+          mesaAyuda.textContent = `Elegiste la mesa ${codigo} (${mesa.piso.toLowerCase()}, ${mesa.zona}). Se guarda con tu reserva.`;
+        }
+        if (soltada) mesaSoltada = soltada;
+      }
+    });
+    // al cambiar de piso en el desplegable, el mapa también cambia
+    form.elements.ubicacion.addEventListener('change', () => {
+      planoMesas.piso(form.elements.ubicacion.value);
+      if (mesaInput.value && PlanoMesas.mesa(mesaInput.value).piso !== form.elements.ubicacion.value) soltarMesa();
+    });
+    document.getElementById('r-mesa-cualquiera').addEventListener('click', () => {
+      soltarMesa();
+      mesaAyuda.textContent = 'Listo: el restaurante elegirá la mejor mesa libre para tu grupo.';
+    });
+    personasInput.addEventListener('input', () => refrescarMesas());
+  } else {
+    document.getElementById('r-mesa-cualquiera')?.remove();
+  }
+
+  function soltarMesa() {
+    mesaInput.value = '';
+    if (planoMesas) planoMesas.actualizar({ elegida: null });
+  }
+
+  async function ocupacionDe(fecha) {
+    if (!db) return []; // modo WhatsApp: no hay datos, se muestran todas libres
+    if (!ocupacion[fecha]) {
+      const { data, error } = await db.rpc('mesas_ocupadas', { p_fecha: fecha });
+      ocupacion[fecha] = error || !data ? [] : data.map((r) => ({
+        mesa: r.mesa, desde: String(r.desde).slice(0, 5), hasta: String(r.hasta).slice(0, 5), motivo: r.motivo
+      }));
+    }
+    return ocupacion[fecha];
+  }
+
+  async function refrescarMesas(recargar = false) {
+    if (!planoMesas) return;
+    const fecha = fechaInput.value;
+    if (recargar) Object.keys(ocupacion).forEach((f) => delete ocupacion[f]);
+    const personas = Number(personasInput.value) || 1;
+    let bloqueo = null;
+    if (paqueteElegido && paqueteElegido.id === 'Segundo piso exclusivo') {
+      bloqueo = 'Con el Segundo piso exclusivo tienes todo el segundo piso para tu grupo: no hace falta elegir mesa.';
+    } else if (personas > 10) {
+      bloqueo = `Para ${personas} personas juntamos varias mesas: el restaurante prepara el espacio y te lo confirma.`;
+    }
+    const reservas = fecha ? await ocupacionDe(fecha) : [];
+    if (fecha !== fechaInput.value) return; // cambió de día mientras cargaba
+    const hora = horaInput.value || null;
+    planoMesas.actualizar({ reservas, hora, personas, bloqueo, apertura: fecha ? horariosDelDia(fecha)[0] : '12:00' });
+
+    if (!fecha) mesaAyuda.textContent = 'Elige día, hora y personas, y toca la mesa que más te guste. Cada reserva tiene su mesa por 2 horas.';
+    else if (!hora) mesaAyuda.textContent = 'Ahora elige la hora para ver qué mesas están libres. Abajo ves de qué hora a qué hora está tomada cada una.';
+    else if (bloqueo) mesaAyuda.textContent = '';
+    else if (!mesaInput.value) {
+      const libres = planoMesas.libresPara(hora, personas).length;
+      const antes = mesaSoltada ? `La mesa ${mesaSoltada} ya no sirve con esos datos. ` : '';
+      mesaSoltada = null;
+      mesaAyuda.textContent = antes + (libres
+        ? `A las ${hora12(hora)} hay ${libres} mesa${libres === 1 ? '' : 's'} libre${libres === 1 ? '' : 's'} para ${personas} persona${personas === 1 ? '' : 's'}. Toca la que prefieras (opcional).`
+        : `A las ${hora12(hora)} no quedan mesas libres para ${personas} personas. Prueba otra hora o deja que el restaurante te ubique.`);
+    }
+  }
 
   // permite llegar con un paquete ya elegido: contacto.html?paquete=Cumpleañero#reserva
   const paqueteUrl = new URLSearchParams(location.search).get('paquete');
@@ -382,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `• Tipo: ${d.get('tipo')}`,
       `• Ubicación: ${form.elements.ubicacion.value}`
     ];
+    if (mesaInput.value) lineas.push(`• Mesa: ${mesaInput.value}`);
     if (paqueteElegido) lineas.push(`• Paquete: ${paqueteElegido.id}`);
     if (pedido.length) lineas.push(`• Pienso pedir: ${pedido.join(', ')}`);
     if (preferencias.length) lineas.push(`• Preferencias: ${preferencias.join(', ')}`);
@@ -443,6 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tipo: d.get('tipo'),
       ubicacion: form.elements.ubicacion.value, // FormData omite el campo si está deshabilitado
       paquete: paqueteElegido ? paqueteElegido.id : null,
+      mesa: mesaInput.value || null,
       pedido,
       preferencias: d.getAll('preferencia').join(', ') || null,
       mensaje: (d.get('mensaje') || '').trim() || null
@@ -452,10 +538,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (error) {
       // los mensajes de validación de la base de datos ya vienen en español
       mostrar('No se pudo guardar: ' + error.message);
+      if (/mesa|piso/i.test(error.message)) refrescarMesas(true); // alguien la tomó antes: se vuelve a mirar el mapa
       return;
     }
     form.elements.fecha.value = '';
     calendario.value = '';
+    soltarMesa();
+    Object.keys(ocupacion).forEach((f) => delete ocupacion[f]);
     pintarDias();
     pintarHorarios();
     form.elements.mensaje.value = '';

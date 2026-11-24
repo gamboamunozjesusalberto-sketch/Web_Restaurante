@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       celda('Personas').append(crear('strong', '', r.personas));
 
       const tdDetalle = celda('Detalle');
-      tdDetalle.append(crear('span', '', `${r.tipo} · ${r.ubicacion}`));
+      tdDetalle.append(crear('span', '', `${r.tipo} · ${r.ubicacion}${r.mesa ? ' · Mesa ' + r.mesa : ''}`));
       if (r.paquete) tdDetalle.append(crear('span', 'etiqueta-paquete', 'Paquete ' + r.paquete));
       if (r.pedido && r.pedido.length) tdDetalle.append(crear('small', '', 'Piensa pedir: ' + r.pedido.join(', ')));
       if (r.preferencias) tdDetalle.append(crear('small', '', r.preferencias));

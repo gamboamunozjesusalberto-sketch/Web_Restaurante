@@ -263,3 +263,20 @@
 .btn-foto.subiendo { pointer-events: none; opacity: 0.6; }
 .btn-foto.subiendo i { animation: foto-girar 0.9s linear infinite; }
 @keyframes foto-girar { to { transform: rotate(360deg); } }
+
+/* ---------- Pestaña Mesas (el plano está en css/mesas.css) ---------- */
+.mesas-controles { display: flex; flex-wrap: wrap; gap: 10px; }
+.mesas-controles select { margin-left: 6px; padding: 6px 10px; border: 1px solid #ddd2c5; border-radius: 10px; background: #fff; font: 600 0.85rem var(--font-text); }
+.mesa-detalle { padding: 16px; border-radius: 14px; background: var(--pa-cream-deep, #f1e9de); }
+.mesa-detalle .dash-titulo { margin-bottom: 2px; }
+.sin-mesa { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.sin-mesa-vacio { margin: 0; color: var(--pa-muted, #7a6f63); font-size: 0.85rem; }
+.reserva-mesa { display: grid; gap: 8px; padding: 12px; border: 1px solid #e4d9cc; border-radius: 12px; background: #fff; }
+.reserva-mesa-cab { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.reserva-mesa-cab div { display: grid; }
+.reserva-mesa-cab small { color: var(--pa-muted, #7a6f63); }
+.reserva-mesa-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.reserva-mesa-select { flex: 1 1 160px; min-width: 0; padding: 6px 8px; border: 1px solid #ddd2c5; border-radius: 8px; font-size: 0.8rem; }
+.reserva-mesa-ver { padding: 0; border: 0; background: none; color: var(--arg-celeste-dark); font-size: 0.78rem; font-weight: 700; text-decoration: underline; }
+.reserva-mesa-nota { color: #9a5b16; font-size: 0.8rem; }
+.reserva-mesa-error { color: #b3261e; font-size: 0.8rem; }

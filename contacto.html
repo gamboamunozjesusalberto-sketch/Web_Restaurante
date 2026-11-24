@@ -17,15 +17,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css propio de contacto -->
-  <link rel="stylesheet" href="css/variables.css?v=20" />
-  <link rel="stylesheet" href="css/components.css?v=20" />
-  <link rel="stylesheet" href="css/chatbot.css?v=20" />
-  <link rel="stylesheet" href="css/efectos.css?v=20" />
-  <link rel="stylesheet" href="css/paginas.css?v=20" />
-  <link rel="stylesheet" href="css/contacto.css?v=20" />
+  <link rel="stylesheet" href="css/variables.css?v=21" />
+  <link rel="stylesheet" href="css/components.css?v=21" />
+  <link rel="stylesheet" href="css/chatbot.css?v=21" />
+  <link rel="stylesheet" href="css/efectos.css?v=21" />
+  <link rel="stylesheet" href="css/paginas.css?v=21" />
+  <link rel="stylesheet" href="css/contacto.css?v=21" />
+  <link rel="stylesheet" href="css/mesas.css?v=21" />
   <!-- Interacción en todo el sitio: carga, transiciones, cursor, chispas (js/interaccion.js) -->
-  <link rel="stylesheet" href="css/interaccion.css?v=20" />
-  <script src="js/interaccion.js?v=20"></script>
+  <link rel="stylesheet" href="css/interaccion.css?v=21" />
+  <script src="js/interaccion.js?v=21"></script>
 </head>
 <body class="inner-page page-contacto">
 
@@ -272,6 +273,17 @@
                   </fieldset>
                 </div>
 
+                <!-- Mesa: mapa del local (js/mesas.js). Muestra qué mesas están libres a la hora elegida -->
+                <div class="col-12">
+                  <fieldset>
+                    <legend>Mesa <span class="opcional">(opcional)</span></legend>
+                    <input type="hidden" id="r-mesa" name="mesa">
+                    <p class="ayuda-campo mb-2" id="r-mesa-ayuda">Elige día, hora y personas, y toca la mesa que más te guste. Cada reserva tiene su mesa por 2 horas.</p>
+                    <div id="mapa-mesas"></div>
+                    <button type="button" class="mesa-sin-preferencia" id="r-mesa-cualquiera"><i class="bi bi-shuffle" aria-hidden="true"></i> Sin preferencia: que el restaurante elija mi mesa</button>
+                  </fieldset>
+                </div>
+
                 <div class="col-md-6">
                   <fieldset>
                     <legend>Tipo de reserva</legend>
@@ -417,13 +429,14 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/carta-datos.js?v=20"></script>
-  <script src="js/supabase-config.js?v=20"></script>
-  <script src="js/sesion.js?v=20"></script>
-  <script src="js/main.js?v=20"></script>
-  <script src="js/chatbot.js?v=20"></script>
-  <script src="js/efectos.js?v=20"></script>
-  <script src="js/contacto.js?v=20"></script>
+  <script src="js/carta-datos.js?v=21"></script>
+  <script src="js/supabase-config.js?v=21"></script>
+  <script src="js/sesion.js?v=21"></script>
+  <script src="js/main.js?v=21"></script>
+  <script src="js/chatbot.js?v=21"></script>
+  <script src="js/efectos.js?v=21"></script>
+  <script src="js/mesas.js?v=21"></script>
+  <script src="js/contacto.js?v=21"></script>
 
 </body>
 </html>

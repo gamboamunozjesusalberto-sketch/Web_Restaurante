@@ -18,11 +18,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
   <!-- Estilos: variables, componentes y base de páginas internas + css de la cuenta (tarjetas) + css propio del admin -->
-  <link rel="stylesheet" href="css/variables.css?v=20" />
-  <link rel="stylesheet" href="css/components.css?v=20" />
-  <link rel="stylesheet" href="css/paginas.css?v=20" />
-  <link rel="stylesheet" href="css/cuenta.css?v=20" />
-  <link rel="stylesheet" href="css/admin.css?v=20" />
+  <link rel="stylesheet" href="css/variables.css?v=21" />
+  <link rel="stylesheet" href="css/components.css?v=21" />
+  <link rel="stylesheet" href="css/paginas.css?v=21" />
+  <link rel="stylesheet" href="css/cuenta.css?v=21" />
+  <link rel="stylesheet" href="css/admin.css?v=21" />
+  <link rel="stylesheet" href="css/mesas.css?v=21" />
 </head>
 <body class="inner-page page-cuenta page-admin">
 
@@ -94,6 +95,7 @@
         <!-- PESTAÑAS -->
         <div class="admin-tabs" role="tablist" aria-label="Secciones del panel">
           <button class="admin-tab active" role="tab" aria-selected="true" aria-controls="panel-reservas" id="tab-reservas" type="button"><i class="bi bi-calendar-check"></i> Reservas <span class="tab-badge" id="tab-badge-reservas" hidden></span></button>
+          <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-mesas" id="tab-mesas" type="button"><i class="bi bi-grid-3x3-gap"></i> Mesas</button>
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-carta" id="tab-carta" type="button"><i class="bi bi-journal-text"></i> Carta</button>
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-promos" id="tab-promos" type="button"><i class="bi bi-megaphone"></i> Promociones</button>
           <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-dashboard" id="tab-dashboard" type="button"><i class="bi bi-bar-chart-line"></i> Dashboard</button>
@@ -124,6 +126,31 @@
                 <tr><td colspan="6" class="cargando">Cargando reservas…</td></tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- ========== MESAS (js/admin-mesas.js + js/mesas.js) ========== -->
+        <div class="admin-panel" id="panel-mesas" role="tabpanel" aria-labelledby="tab-mesas" hidden>
+          <div class="tarjeta-cuenta">
+            <div class="tarjeta-cabecera">
+              <h2 class="tarjeta-titulo"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Mesas del local</h2>
+              <div class="mesas-controles">
+                <label class="filtro-fecha">Día <input type="date" id="mesas-dia"></label>
+                <label class="filtro-fecha">Hora <select id="mesas-hora"></select></label>
+              </div>
+            </div>
+            <p class="dash-nota">Cada reserva ocupa su mesa 2 horas. Toca una mesa para ver quién la tiene, cambiarla o quitarla. Las reservas que llegaron sin mesa aparecen a la derecha para asignarles una.</p>
+            <ul class="dash-kpis mb-3" id="mesas-kpis"></ul>
+            <div class="row g-4">
+              <div class="col-xl-8"><div id="mapa-admin"></div></div>
+              <div class="col-xl-4">
+                <div class="mesa-detalle" id="mesa-detalle" aria-live="polite">
+                  <p class="dash-nota mb-0"><i class="bi bi-hand-index" aria-hidden="true"></i> Toca una mesa del mapa para ver sus reservas del día.</p>
+                </div>
+                <h3 class="dash-titulo mt-4"><i class="bi bi-inbox" aria-hidden="true"></i> Reservas sin mesa <span class="tab-badge" id="sin-mesa-total" hidden></span></h3>
+                <ul class="sin-mesa" id="sin-mesa"></ul>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -438,12 +465,14 @@
   <!-- JavaScript externo modular (sin JavaScript en línea) -->
   <!-- Supabase (cuentas y base de datos) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-  <script src="js/supabase-config.js?v=20"></script>
-  <script src="js/sesion.js?v=20"></script>
-  <script src="js/main.js?v=20"></script>
-  <script src="js/carta-datos.js?v=20"></script>
-  <script src="js/admin.js?v=20"></script>
-  <script src="js/admin-dashboard.js?v=20"></script>
+  <script src="js/supabase-config.js?v=21"></script>
+  <script src="js/sesion.js?v=21"></script>
+  <script src="js/main.js?v=21"></script>
+  <script src="js/carta-datos.js?v=21"></script>
+  <script src="js/admin.js?v=21"></script>
+  <script src="js/admin-dashboard.js?v=21"></script>
+  <script src="js/mesas.js?v=21"></script>
+  <script src="js/admin-mesas.js?v=21"></script>
 
 </body>
 </html>
