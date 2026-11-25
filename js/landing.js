@@ -215,5 +215,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!plato) { columna.remove(); return; }
     const precio = tarjeta.querySelector('.plato-precio');
     if (precio && plato.precio != null) precio.textContent = 'S/ ' + Number(plato.precio).toFixed(2);
+    // combo del chef: con qué bebida lo recomienda (recomendacionChef, carta-datos.js)
+    const combo = typeof recomendacionChef === 'function' ? recomendacionChef(plato, carta) : null;
+    const bebida = combo && (combo.trago || combo.sinAlcohol);
+    if (bebida && precio && !tarjeta.querySelector('.plato-combo')) {
+      const linea = document.createElement('p');
+      linea.className = 'plato-combo';
+      linea.innerHTML = '<i class="bi bi-cup-straw" aria-hidden="true"></i> ';
+      linea.append(`Con ${bebida.nombre}` + (combo.trago && combo.sinAlcohol ? ` o ${combo.sinAlcohol.nombre}` : ''));
+      precio.before(linea);
+    }
   });
 });

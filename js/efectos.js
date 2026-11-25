@@ -249,7 +249,11 @@ function cartaInteractiva(sinMovimiento) {
         <h2 id="ficha-titulo"></h2>
         <p class="ficha-desc"></p>
         <p class="ficha-coccion"><i class="bi bi-fire" aria-hidden="true"></i> <span></span></p>
-        <p class="ficha-vino"><i class="bi bi-cup-straw" aria-hidden="true"></i> <span></span></p>
+        <div class="ficha-chef">
+          <span class="ficha-chef-titulo"><i class="bi bi-award" aria-hidden="true"></i> Recomendación del chef</span>
+          <p class="ficha-vino"><i class="bi bi-cup-straw" aria-hidden="true"></i> <span></span></p>
+          <p class="ficha-trago"><i class="bi bi-cup" aria-hidden="true"></i> <span></span></p>
+        </div>
         <div class="ficha-pie">
           <strong class="ficha-precio"></strong>
           <a class="btn btn-celeste ficha-reservar" href="contacto.html#reserva"><i class="bi bi-calendar-plus" aria-hidden="true"></i> Lo quiero en mi reserva</a>
@@ -284,8 +288,26 @@ function cartaInteractiva(sinMovimiento) {
     vino.hidden = !sugerencia;
     if (sugerencia) {
       const v = sugerencia.vino;
-      vino.querySelector('span').textContent = `Va muy bien con un ${v.nombre}` + (v.precio != null ? ` (S/ ${Number(v.precio).toFixed(2)})` : '') + `: ${sugerencia.razon}.`;
+      vino.querySelector('span').textContent = `Vino: ${v.nombre}` + (v.precio != null ? ` (S/ ${Number(v.precio).toFixed(2)})` : '') + `, porque ${sugerencia.razon}.`;
     }
+    // combo del chef con las bebidas (carta-datos.js): un trago y una opción sin alcohol
+    const trago = ficha.querySelector('.ficha-trago');
+    const soles = (b) => `${b.nombre}` + (b.precio != null ? ` (S/ ${Number(b.precio).toFixed(2)})` : '');
+    let textoTrago = '';
+    if (categoria === 'bebidas') {
+      const par = typeof platoParaBebida === 'function' ? platoParaBebida({ nombre }, datos) : null;
+      if (par) textoTrago = `Pídela con: ${soles(par.plato)}, porque ${par.razon}.`;
+    } else {
+      const combo = typeof recomendacionChef === 'function'
+        ? recomendacionChef({ nombre, categoria, coccion: dato.coccion || descTexto }, datos) : null;
+      if (combo) {
+        const partes = [combo.trago && soles(combo.trago), combo.sinAlcohol && `sin alcohol, ${soles(combo.sinAlcohol)}`].filter(Boolean);
+        textoTrago = `Para tomar: ${partes.join(' o, ')}, porque ${combo.razon}.`;
+      }
+    }
+    trago.hidden = !textoTrago;
+    trago.querySelector('span').textContent = textoTrago;
+    ficha.querySelector('.ficha-chef').hidden = vino.hidden && trago.hidden;
     ficha.querySelector('.ficha-precio').textContent = tarjeta.querySelector('.parrilla-price')?.textContent || '';
     ficha.querySelector('.ficha-reservar').href = `contacto.html?plato=${encodeURIComponent(nombre)}#reserva`;
 

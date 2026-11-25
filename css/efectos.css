@@ -167,6 +167,12 @@
 }
 .ficha-coccion i { color: #ff9a3c; }
 .ficha-vino i { color: #c45c7a; }
+.ficha-trago i { color: #f2c14e; }
+.ficha-chef { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid rgba(242, 193, 78, 0.35); border-radius: 14px; background: rgba(242, 193, 78, 0.06); }
+.ficha-chef[hidden], .ficha-chef p[hidden] { display: none; }
+.ficha-chef-titulo { color: #f2c14e; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.ficha-chef .ficha-vino, .ficha-chef .ficha-trago { display: flex; gap: 10px; margin: 0; font-size: 0.88rem; line-height: 1.5; }
+.ficha-chef .ficha-vino { padding: 0; background: none; }
 .ficha-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 8px; }
 .ficha-precio { color: var(--arg-celeste); font-family: var(--font-title); font-size: 1.6rem; font-weight: 900; }
 .ficha-cerrar {

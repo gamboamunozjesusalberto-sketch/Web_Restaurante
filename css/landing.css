@@ -510,6 +510,14 @@ body.landing-page main {
   text-align: center;
 }
 
+/* combo del chef: bebida que acompaña el plato */
+.plato-combo {
+  margin: 0 0 10px;
+  color: #f2c14e;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
 /* ========================================================
    4. SECCIÓN RESERVA (FONDO CREMA & FOTO LATERAL)
    ======================================================== */

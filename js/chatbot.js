@@ -287,10 +287,27 @@ document.addEventListener('DOMContentLoaded', () => {
     ]);
   }
 
+  // recomendación del chef: trago + opción sin alcohol (o el plato, si preguntan por una bebida)
+  function comboTexto(p) {
+    if (p.categoria === 'bebidas') {
+      const par = typeof platoParaBebida === 'function' ? platoParaBebida(p) : null;
+      return par ? [{ salto: true }, '👨‍🍳 El chef la recomienda con ', { negrita: par.plato.nombre }, `, porque ${par.razon}.`] : [];
+    }
+    const c = typeof recomendacionChef === 'function' ? recomendacionChef(p) : null;
+    if (!c) return [];
+    const out = [{ salto: true }, '👨‍🍳 Recomendación del chef: '];
+    if (c.trago) out.push({ negrita: c.trago.nombre }, ` (${soles(c.trago.precio)})`);
+    if (c.trago && c.sinAlcohol) out.push(' o, sin alcohol, ');
+    if (c.sinAlcohol) out.push({ negrita: c.sinAlcohol.nombre }, ` (${soles(c.sinAlcohol.precio)})`);
+    out.push(`, porque ${c.razon}.`);
+    return out;
+  }
+
   function responderPlato(p) {
     const m = typeof maridaje === 'function' ? maridaje(p) : null;
     bot([{ negrita: p.nombre }, p.precio != null ? ` · ${soles(p.precio)}` : ' · precio a consultar', { salto: true }, p.coccion || 'Pregúntanos por WhatsApp cómo lo preparamos.',
-      ...(m ? [{ salto: true }, '🍷 Para acompañar: ', { negrita: m.vino.nombre }, ` (${soles(m.vino.precio)}), porque ${m.razon}.`] : [])]);
+      ...(m ? [{ salto: true }, '🍷 Para acompañar: ', { negrita: m.vino.nombre }, ` (${soles(m.vino.precio)}), porque ${m.razon}.`] : []),
+      ...comboTexto(p)]);
     chips([
       { texto: 'Otro plato', accion: preguntarPlato },
       { texto: 'Platos recomendados', accion: () => responderRecomendados('') },

@@ -89,18 +89,18 @@ const CARTA = [
   { nombre: 'Tonuz Tacama', categoria: 'vinos', precio: 70, coccion: 'Tinto de Tacama para acompañar parrilladas.', imagen: 'images/tonuz_tacama.png' },
   // Bebidas: precios provisionales hasta tener los reales. Sin foto todavía:
   // el admin la sube desde el Panel → Carta (mismo nombre) y reemplaza el ícono.
-  { nombre: 'Chicha Morada', categoria: 'bebidas', precio: 22, coccion: 'Hecha en casa con maíz morado, piña, canela y clavo. Jarra de 1 litro (también por vaso).', imagen: null },
-  { nombre: 'Limonada Clásica', categoria: 'bebidas', precio: 20, coccion: 'Limón recién exprimido, bien helada. Jarra de 1 litro.', imagen: null },
-  { nombre: 'Limonada Frozen de Hierbabuena', categoria: 'bebidas', precio: 12, coccion: 'Limón y hierbabuena licuados con hielo.', imagen: null },
-  { nombre: 'Jugo de Maracuyá', categoria: 'bebidas', precio: 10, coccion: 'Maracuyá natural, refrescante y ácido; va muy bien con la parrilla.', imagen: null },
-  { nombre: 'Gaseosa Personal', categoria: 'bebidas', precio: 6, coccion: 'Botella personal de 500 ml, bien fría.', imagen: null },
-  { nombre: 'Agua Mineral', categoria: 'bebidas', precio: 5, coccion: 'Con o sin gas, 625 ml.', imagen: null },
-  { nombre: 'Pisco Sour', categoria: 'bebidas', precio: 22, coccion: 'Pisco quebranta de Ica, limón, jarabe de goma, clara de huevo y amargo de angostura.', imagen: null },
-  { nombre: 'Chilcano de Pisco', categoria: 'bebidas', precio: 20, coccion: 'Pisco, ginger ale, limón y amargo de angostura, con mucho hielo.', imagen: null },
-  { nombre: 'Machu Picchu', categoria: 'bebidas', precio: 24, coccion: 'Cóctel en tres capas: granadina, jugo de naranja y licor de menta con pisco.', imagen: null },
-  { nombre: 'Fernet con Cola', categoria: 'bebidas', precio: 22, coccion: 'El clásico argentino para la sobremesa: fernet con cola y mucho hielo.', imagen: null },
-  { nombre: 'Clericó', categoria: 'bebidas', precio: 45, coccion: 'La sangría argentina: vino blanco con frutas de estación picadas. Jarra de 1 litro.', imagen: null },
-  { nombre: 'Cerveza Nacional', categoria: 'bebidas', precio: 10, coccion: 'Botella de 620 ml, bien helada.', imagen: null }
+  { nombre: 'Chicha Morada', categoria: 'bebidas', precio: 22, coccion: 'Hecha en casa con maíz morado, piña, canela y clavo. Jarra de 1 litro (también por vaso).', imagen: 'images/bebida_chicha_morada.jpg' },
+  { nombre: 'Limonada Clásica', categoria: 'bebidas', precio: 20, coccion: 'Limón recién exprimido, bien helada. Jarra de 1 litro.', imagen: 'images/bebida_limonada.jpg' },
+  { nombre: 'Limonada Frozen de Hierbabuena', categoria: 'bebidas', precio: 12, coccion: 'Limón y hierbabuena licuados con hielo.', imagen: 'images/bebida_frozen_hierbabuena.jpg' },
+  { nombre: 'Jugo de Maracuyá', categoria: 'bebidas', precio: 10, coccion: 'Maracuyá natural, refrescante y ácido; va muy bien con la parrilla.', imagen: 'images/bebida_maracuya.jpg' },
+  { nombre: 'Gaseosa Personal', categoria: 'bebidas', precio: 6, coccion: 'Botella personal de 500 ml, bien fría.', imagen: 'images/bebida_gaseosas.jpg' },
+  { nombre: 'Agua Mineral', categoria: 'bebidas', precio: 5, coccion: 'Con o sin gas, 625 ml.', imagen: 'images/bebida_agua.jpg' },
+  { nombre: 'Pisco Sour', categoria: 'bebidas', precio: 22, coccion: 'Pisco quebranta de Ica, limón, jarabe de goma, clara de huevo y amargo de angostura.', imagen: 'images/bebida_pisco_sour.jpg' },
+  { nombre: 'Chilcano de Pisco', categoria: 'bebidas', precio: 20, coccion: 'Pisco, ginger ale, limón y amargo de angostura, con mucho hielo.', imagen: 'images/bebida_chilcano.jpg' },
+  { nombre: 'Machu Picchu', categoria: 'bebidas', precio: 24, coccion: 'Cóctel en tres capas: granadina, jugo de naranja y licor de menta con pisco.', imagen: 'images/bebida_machu_picchu.jpg' },
+  { nombre: 'Fernet con Cola', categoria: 'bebidas', precio: 22, coccion: 'El clásico argentino para la sobremesa: fernet con cola y mucho hielo.', imagen: 'images/bebida_fernet.jpg' },
+  { nombre: 'Clericó', categoria: 'bebidas', precio: 45, coccion: 'La sangría argentina: vino tinto con frutas de estación picadas. Jarra de 1 litro.', imagen: 'images/bebida_clerico.jpg' },
+  { nombre: 'Cerveza Quilmes', categoria: 'bebidas', precio: 12, coccion: 'La cerveza argentina de siempre, rubia y bien helada. Botella de 660 ml.', imagen: 'images/bebida_quilmes.jpg' }
 ];
 
 // ---------- Platos quitados desde el Panel ----------
@@ -209,4 +209,58 @@ function maridaje(plato, carta = CARTA) {
   const precio = Number(plato.precio) || 0;
   const nivel = precio >= 100 ? opciones.length - 1 : precio >= 60 ? Math.floor((opciones.length - 1) / 2) : 0;
   return { vino: opciones[nivel], razon: RAZON_VINO[estilo] };
+}
+
+// ---------- Recomendación del chef: plato + bebida ----------
+// Mismas reglas que el vino: se mira el tipo de plato (palabras del nombre y la
+// preparación) y a cada tipo le corresponde un trago y una opción sin alcohol.
+const COMBOS_CHEF = [
+  { tipo: 'parrillada', regla: /(parrillada|parrilla para)/,
+    trago: 'Clericó', sinAlcohol: 'Limonada Clásica',
+    razon: 'vienen en jarra de 1 litro, para compartir en la mesa igual que la parrillada' },
+  { tipo: 'res', regla: /(tomahawk|bife|entra[ñn]a|pica[ñn]a|cuadril|matambr|lomo|asado de tira)/,
+    trago: 'Cerveza Quilmes', sinAlcohol: 'Limonada Clásica',
+    razon: 'una cerveza argentina bien helada refresca entre bocado y bocado de carne a la brasa' },
+  { tipo: 'achura', regla: /(chorizo|morcilla|molleja|achura|chinchul)/,
+    trago: 'Fernet con Cola', sinAlcohol: 'Limonada Frozen de Hierbabuena',
+    razon: 'lo amargo del fernet y la hierbabuena limpian el paladar después de las achuras' },
+  { tipo: 'cerdo', regla: /(cerdo|panceta|costillar|bondiola|cordero)/,
+    trago: 'Chilcano de Pisco', sinAlcohol: 'Jugo de Maracuyá',
+    razon: 'el limón del chilcano y lo ácido del maracuyá cortan la grasa del cerdo y el cordero' },
+  { tipo: 'pollo', regla: /(pollo|suprema|milanesa)/,
+    trago: 'Machu Picchu', sinAlcohol: 'Chicha Morada',
+    razon: 'son dulces y frutales, y van bien con carnes suaves como el pollo y la milanesa' },
+  { tipo: 'entrada', regla: /(empanada|provoleta|papas|pastel|queso)/,
+    trago: 'Pisco Sour', sinAlcohol: 'Chicha Morada',
+    razon: 'el pisco sour es el aperitivo clásico: su limón abre el apetito antes de la parrilla' }
+];
+
+// Primero mira el nombre del plato; si no dice nada, su preparación
+function comboDelPlato(plato) {
+  const nombre = (plato.nombre || '').toLowerCase();
+  const prep = (plato.coccion || '').toLowerCase();
+  return COMBOS_CHEF.find((c) => c.regla.test(nombre))
+    || COMBOS_CHEF.find((c) => c.regla.test(prep))
+    || (plato.categoria === 'parrilla' ? COMBOS_CHEF.find((c) => c.tipo === 'res') : null);
+}
+
+// Devuelve { trago, sinAlcohol, razon } con las bebidas de la carta, o null
+function recomendacionChef(plato, carta = CARTA) {
+  if (!plato || ['postres', 'vinos', 'bebidas'].includes(plato.categoria)) return null;
+  const combo = comboDelPlato(plato);
+  if (!combo) return null;
+  const buscar = (n) => carta.find((p) => p.nombre === n && p.categoria === 'bebidas');
+  const trago = buscar(combo.trago);
+  const sinAlcohol = buscar(combo.sinAlcohol);
+  if (!trago && !sinAlcohol) return null;
+  return { trago, sinAlcohol, razon: combo.razon };
+}
+
+// Para la ficha de una bebida: con qué plato de la carta la recomienda el chef
+function platoParaBebida(bebida, carta = CARTA) {
+  const combo = COMBOS_CHEF.find((c) => c.trago === bebida.nombre || c.sinAlcohol === bebida.nombre);
+  if (!combo) return null;
+  const plato = carta.find((p) => !['postres', 'vinos', 'bebidas'].includes(p.categoria)
+    && p.precio != null && comboDelPlato(p) === combo);
+  return plato ? { plato, razon: combo.razon } : null;
 }
