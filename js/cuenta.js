@@ -65,12 +65,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   let filtro = 'proximas';
 
   // una reserva cancelada por el restaurante puede traer otra mesa ofrecida para aceptar
-  const conOferta = (r) => r.oferta_mesa && !r.oferta_aceptada && r.oferta_fecha >= hoyISO;
+  // (y solo mientras la hora ofrecida no haya pasado)
+  const ofertaVigente = (r) => r.oferta_fecha > hoyISO
+    || (r.oferta_fecha === hoyISO && String(r.oferta_hora).slice(0, 5) > new Date().toTimeString().slice(0, 5));
+  const conOferta = (r) => r.oferta_mesa && !r.oferta_aceptada && ofertaVigente(r);
 
   async function cargarReservas() {
     await db.rpc('vencer_reservas'); // las pendientes que ya pasaron sin confirmar quedan vencidas
+    // solo las del usuario: un admin o mozo puede leer todas por RLS, pero aquí son "Mis reservas"
     const { data, error } = await db.from('reservas')
       .select('*')
+      .eq('usuario_id', usuario.id)
       .order('fecha', { ascending: true })
       .order('hora', { ascending: true });
     if (error) {
@@ -320,6 +325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function cargarNotificaciones() {
     const { data, error } = await db.from('notificaciones')
       .select('*')
+      .eq('usuario_id', usuario.id)
       .order('creado_en', { ascending: false })
       .limit(30);
     notificaciones = error ? [] : data;
