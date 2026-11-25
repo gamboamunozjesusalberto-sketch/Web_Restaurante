@@ -258,3 +258,16 @@
 .reserva-oferta p { margin: 0; color: #6b4a00; font-size: 0.85rem; font-weight: 600; }
 .btn-aceptar-oferta { justify-self: start; padding: 7px 16px; border: 0; border-radius: 999px; background: #14110e; color: var(--arg-celeste); font: 800 0.8rem var(--font-text); cursor: pointer; }
 .reserva-error { color: #991b1b; }
+
+/* páginas de Mis reservas (15 por página) */
+.paginador { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin-top: 16px; }
+.paginador:empty { display: none; }
+.pagina-btn {
+  min-width: 36px; height: 36px; padding: 0 10px;
+  border: 1px solid #ddd2c5; border-radius: 10px; background: #fff;
+  color: #2b2118; font-weight: 700; cursor: pointer; transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.pagina-btn:hover:not(:disabled) { border-color: var(--arg-celeste-dark); transform: translateY(-2px); }
+.pagina-btn.active { background: #14110e; border-color: #14110e; color: var(--arg-celeste); }
+.pagina-btn:disabled { opacity: 0.4; cursor: default; }
+.pagina-info { width: 100%; text-align: center; color: #8a7d70; font-size: 0.8rem; }

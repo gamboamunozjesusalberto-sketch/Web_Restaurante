@@ -63,6 +63,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ---------- MIS RESERVAS ----------
   let reservas = [];
   let filtro = 'proximas';
+  let pagina = 1;
+  const POR_PAGINA = 15;
+  // botones de página (1, 2, 3…) debajo de la lista
+  const paginador = crear('nav', 'paginador');
+  paginador.setAttribute('aria-label', 'Páginas de reservas');
+  listaReservas.after(paginador);
 
   // una reserva cancelada por el restaurante puede traer otra mesa ofrecida para aceptar
   // (y solo mientras la hora ofrecida no haya pasado)
@@ -96,6 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (filtro !== 'proximas') visibles.reverse(); // las más recientes primero
 
     listaReservas.innerHTML = '';
+    paginador.innerHTML = '';
     if (!visibles.length) {
       const vacio = crear('li', 'vacio');
       vacio.innerHTML = filtro === 'proximas'
@@ -105,7 +112,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    visibles.forEach((r) => {
+    // máximo 15 por página
+    const totalPaginas = Math.ceil(visibles.length / POR_PAGINA);
+    pagina = Math.min(Math.max(pagina, 1), totalPaginas);
+    pintarPaginador(totalPaginas, visibles.length);
+
+    visibles.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA).forEach((r) => {
       const [, mes, dia] = r.fecha.split('-');
       const li = crear('li', 'reserva-item');
 
@@ -165,6 +177,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       li.append(fecha, info, acciones);
       listaReservas.append(li);
     });
+  }
+
+  function pintarPaginador(total, cantidad) {
+    if (total <= 1) return;
+    const boton = (texto, destino, etiqueta, activo = false) => {
+      const b = crear('button', 'pagina-btn' + (activo ? ' active' : ''), texto);
+      b.type = 'button';
+      b.disabled = destino < 1 || destino > total;
+      b.setAttribute('aria-label', etiqueta);
+      if (activo) b.setAttribute('aria-current', 'page');
+      b.addEventListener('click', () => {
+        pagina = destino;
+        pintarReservas();
+        listaReservas.closest('.tarjeta-cuenta, section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      return b;
+    };
+    paginador.append(boton('‹', pagina - 1, 'Página anterior'));
+    for (let i = 1; i <= total; i++) paginador.append(boton(String(i), i, `Página ${i}`, i === pagina));
+    paginador.append(boton('›', pagina + 1, 'Página siguiente'));
+    const desde = (pagina - 1) * POR_PAGINA + 1;
+    paginador.append(crear('span', 'pagina-info', `${desde}–${Math.min(pagina * POR_PAGINA, cantidad)} de ${cantidad}`));
   }
 
   // ---------- CAMBIAR FECHA U HORA (solo reservas pendientes) ----------
@@ -270,6 +304,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.querySelectorAll('.filtro-btn').forEach((b) => b.classList.remove('active'));
       boton.classList.add('active');
       filtro = boton.dataset.filtro;
+      pagina = 1;
       pintarReservas();
     });
   });
@@ -377,6 +412,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('marcar-todas').addEventListener('click', () => marcarLeidas(notificaciones));
 
   await Promise.all([cargarReservas(), cargarNotificaciones()]);
+
+  // ---------- EN TIEMPO REAL ----------
+  // Cada 20 segundos (y al volver a la pestaña) se vuelve a leer: si el
+  // restaurante confirma, rechaza u ofrece otra mesa, el cliente lo ve sin
+  // recargar. No se refresca mientras está cambiando la fecha de una reserva.
+  const editando = () => listaReservas.querySelector('form, input, select') !== null;
+  const refrescar = () => {
+    if (document.hidden || editando()) return;
+    cargarReservas();
+    cargarNotificaciones();
+  };
+  setInterval(refrescar, 20000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refrescar(); });
   // ir a la sección pedida (ej. cuenta.html#notificaciones)
   if (/^#[a-z-]+$/.test(location.hash)) document.querySelector(location.hash)?.scrollIntoView();
 });
