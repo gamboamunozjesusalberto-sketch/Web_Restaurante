@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const estadoTexto = p.visible ? '' : (enMenu ? ' · eliminado de la carta' : ' · oculto');
       info.append(crear('h3', '', p.nombre), crear('p', '', p.categoria + estadoTexto + (p.deLaCarta ? ' · publicado en la carta' : '')));
 
-      // los platos de la carta solo tienen el botón de foto (sus datos están en menu.html)
+      // los platos de la carta tienen foto, precio y eliminar (sus datos están en menu.html)
       if (p.deLaCarta) {
         const controles = crear('div', 'plato-controles');
         const quitar = crear('button', 'btn-accion btn-eliminar');
@@ -468,29 +468,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (error) return alert('No se pudo eliminar: ' + error.message);
           cargarPlatos();
         });
-        controles.append(cambiarFoto, quitar);
+        const espacio = crear('span', 'switch-espacio'); // alinea el precio con los platos que tienen interruptor
+        controles.append(cambiarFoto, campoPrecio(p), espacio, quitar);
         li.append(info, controles);
         listaPlatos.append(li);
         return;
       }
 
       const controles = crear('div', 'plato-controles');
-      const precio = crear('input');
-      precio.type = 'number';
-      precio.min = '0';
-      precio.step = '0.5';
-      precio.value = p.precio ?? '';
-      precio.placeholder = 'S/';
-      precio.setAttribute('aria-label', 'Precio de ' + p.nombre);
-      precio.addEventListener('change', async () => {
-        const valor = precio.value === '' ? null : Number(precio.value);
-        const { error } = await db.from('platos').update({ precio: valor }).eq('id', p.id);
-        if (!error) {
-          p.precio = valor;
-          precio.classList.add('guardado');
-          setTimeout(() => precio.classList.remove('guardado'), 800);
-        }
-      });
+      const precio = campoPrecio(p);
 
       const interruptor = crear('label', 'switch');
       interruptor.title = 'Mostrar en la carta';
@@ -533,6 +519,43 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   buscarPlato.addEventListener('input', pintarPlatos);
+
+  // ---------- Cambiar el precio de un plato ----------
+  // Si el plato ya está en la tabla, se actualiza su precio. Si solo estaba
+  // escrito en menu.html, se crea su fila con el precio nuevo y la carta, la
+  // portada, la reserva y el chatbot toman ese precio (cartaVisible / menu.js).
+  function campoPrecio(p) {
+    const precio = crear('input');
+    precio.type = 'number';
+    precio.min = '0';
+    precio.max = '9999';
+    precio.step = '0.5';
+    precio.value = p.precio ?? '';
+    precio.placeholder = 'S/';
+    precio.title = 'Precio en soles: escribe el nuevo y presiona Enter';
+    precio.setAttribute('aria-label', 'Precio de ' + p.nombre);
+    precio.addEventListener('change', async () => {
+      const valor = precio.value === '' ? null : Number(precio.value);
+      if (valor != null && (!Number.isFinite(valor) || valor < 0 || valor > 9999)) {
+        precio.value = p.precio ?? '';
+        return alert('Escribe un precio entre 0 y 9999.');
+      }
+      precio.disabled = true;
+      const { error } = p.deLaCarta
+        ? await db.from('platos').insert({ nombre: p.nombre, categoria: p.categoria, precio: valor, imagen: p.imagen, visible: true })
+        : await db.from('platos').update({ precio: valor }).eq('id', p.id);
+      precio.disabled = false;
+      if (error) {
+        precio.value = p.precio ?? '';
+        return alert('No se pudo cambiar el precio: ' + error.message);
+      }
+      p.precio = valor;
+      if (p.deLaCarta) return cargarPlatos(); // ahora el plato ya tiene su fila en la tabla
+      precio.classList.add('guardado');
+      setTimeout(() => precio.classList.remove('guardado'), 800);
+    });
+    return precio;
+  }
 
   // ---------- Cambiar la foto de un plato ya publicado ----------
   // Sube la foto nueva a Storage. Si el plato ya está en la tabla, se actualiza

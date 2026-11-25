@@ -117,6 +117,7 @@
 
 /* Interruptor (switch) hecho solo con CSS */
 .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+.switch-espacio { display: inline-block; width: 40px; flex-shrink: 0; }
 .switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 1; }
 .switch span { position: absolute; inset: 0; border-radius: 22px; background: #cfc6bb; transition: background 0.25s ease; }
 .switch span::before {
