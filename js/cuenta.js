@@ -93,6 +93,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     pintarResumen();
   }
 
+  // preferencias puede venir como lista o como texto; vacía no se muestra
+  const textoPreferencias = (r) => (Array.isArray(r.preferencias) ? r.preferencias.join(', ') : String(r.preferencias || '')).trim();
+
   function pintarReservas() {
     const visibles = reservas.filter((r) => {
       if (filtro === 'proximas') return (r.fecha >= hoyISO && (r.estado === 'pendiente' || r.estado === 'confirmada')) || conOferta(r);
@@ -127,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const info = crear('div', 'reserva-info');
       info.append(
         crear('h3', '', `${r.paquete ? 'Paquete ' + r.paquete : r.tipo} · ${r.personas} ${r.personas === 1 ? 'persona' : 'personas'}`),
-        crear('p', '', `${hora12(r.hora)} · ${r.ubicacion}${r.mesa ? ((r.mesas_extra || []).length ? ' · Mesas juntas ' : ' · Mesa ') + [r.mesa, ...(r.mesas_extra || [])].join(' + ') : ''}${r.preferencias ? ' · ' + r.preferencias : ''}`)
+        crear('p', '', `${hora12(r.hora)} · ${r.ubicacion}${r.mesa ? ((r.mesas_extra || []).length ? ' · Mesas juntas ' : ' · Mesa ') + [r.mesa, ...(r.mesas_extra || [])].join(' + ') : ''}${textoPreferencias(r) ? ' · ' + textoPreferencias(r) : ''}`)
       );
       if (r.descuento) info.append(crear('p', 'reserva-descuento', `🎁 Tienes ${r.descuento}% de descuento en tu consumo`));
       if (r.motivo) info.append(crear('p', 'reserva-motivo', 'Motivo: ' + r.motivo));
