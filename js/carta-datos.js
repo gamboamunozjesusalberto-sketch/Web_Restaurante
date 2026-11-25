@@ -264,3 +264,22 @@ function platoParaBebida(bebida, carta = CARTA) {
     && p.precio != null && comboDelPlato(p) === combo);
   return plato ? { plato, razon: combo.razon } : null;
 }
+
+// ---------- Pedido armado desde la Carta ----------
+// La ficha de cada plato (efectos.js) va guardando los platos elegidos en este
+// navegador; el formulario de reserva (contacto.js) los recoge al abrirse.
+const PEDIDO_CLAVE = 'puntoAsadoPedido';
+const PEDIDO_MAX = 15;
+function leerPedido() {
+  try {
+    const lista = JSON.parse(localStorage.getItem(PEDIDO_CLAVE) || '[]');
+    return Array.isArray(lista) ? lista.filter((n) => typeof n === 'string' && n.length <= 80).slice(0, PEDIDO_MAX) : [];
+  } catch (e) { return []; }
+}
+function guardarPedido(lista) {
+  try {
+    if (lista.length) localStorage.setItem(PEDIDO_CLAVE, JSON.stringify(lista.slice(0, PEDIDO_MAX)));
+    else localStorage.removeItem(PEDIDO_CLAVE);
+  } catch (e) { /* sin almacenamiento: el pedido solo vive en esta página */ }
+  document.dispatchEvent(new CustomEvent('pedido-cambio', { detail: lista }));
+}

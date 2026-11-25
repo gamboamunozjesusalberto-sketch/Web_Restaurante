@@ -256,14 +256,64 @@ function cartaInteractiva(sinMovimiento) {
         </div>
         <div class="ficha-pie">
           <strong class="ficha-precio"></strong>
-          <a class="btn btn-celeste ficha-reservar" href="contacto.html#reserva"><i class="bi bi-calendar-plus" aria-hidden="true"></i> Lo quiero en mi reserva</a>
+          <div class="ficha-botones">
+            <button type="button" class="btn btn-celeste ficha-agregar"><i class="bi bi-plus-lg" aria-hidden="true"></i> <span>Agregar a mi pedido</span></button>
+            <a class="btn btn-outline-pill-celeste ficha-reservar" href="contacto.html#reserva"><i class="bi bi-calendar-plus" aria-hidden="true"></i> <span>Reservar</span></a>
+          </div>
         </div>
+        <p class="ficha-pedido-nota"></p>
       </div>
     </article>`;
   document.body.append(ficha);
   const CATEGORIAS = { entradas: 'Para comenzar', parrilla: 'A la parrilla', platos: 'Nuestros platos', postres: 'Postres', vinos: 'Vinos', bebidas: 'Bebidas' };
   const vinos = () => datos.filter((p) => p.categoria === 'vinos');
   let ultimoFoco = null;
+
+  // ---------- pedido: se pueden juntar varios platos antes de reservar ----------
+  let platoAbierto = '';
+  const btnAgregar = ficha.querySelector('.ficha-agregar');
+  const notaPedido = ficha.querySelector('.ficha-pedido-nota');
+  const textoPlatos = (n) => `${n} ${n === 1 ? 'plato' : 'platos'}`;
+  function pintarBotonPedido() {
+    const lista = typeof leerPedido === 'function' ? leerPedido() : [];
+    const esta = lista.includes(platoAbierto);
+    btnAgregar.classList.toggle('agregado', esta);
+    btnAgregar.querySelector('i').className = esta ? 'bi bi-check-lg' : 'bi bi-plus-lg';
+    btnAgregar.querySelector('span').textContent = esta ? 'En tu pedido (quitar)' : 'Agregar a mi pedido';
+    ficha.querySelector('.ficha-reservar span').textContent = lista.length ? `Reservar con ${textoPlatos(lista.length)}` : 'Reservar';
+    notaPedido.textContent = lista.length ? `Tu pedido: ${lista.join(', ')}.` : '';
+    notaPedido.hidden = !lista.length;
+  }
+  btnAgregar.addEventListener('click', () => {
+    if (typeof leerPedido !== 'function' || !platoAbierto) return;
+    const lista = leerPedido();
+    const i = lista.indexOf(platoAbierto);
+    if (i >= 0) lista.splice(i, 1);
+    else if (lista.length >= PEDIDO_MAX) { notaPedido.hidden = false; notaPedido.textContent = `Puedes anotar hasta ${PEDIDO_MAX} platos.`; return; }
+    else lista.push(platoAbierto);
+    guardarPedido(lista);
+    pintarBotonPedido();
+  });
+
+  // barra "Mi pedido" en la Carta: aparece cuando hay platos elegidos
+  if (document.querySelector('.menu-block') && typeof leerPedido === 'function') {
+    const barra = document.createElement('a');
+    barra.className = 'pedido-barra';
+    barra.href = 'contacto.html#reserva';
+    barra.innerHTML = '<i class="bi bi-bag-check" aria-hidden="true"></i> <span></span> <strong>Reservar <i class="bi bi-arrow-right" aria-hidden="true"></i></strong>';
+    document.body.append(barra);
+    const pintarBarra = () => {
+      const n = leerPedido().length;
+      barra.hidden = !n;
+      barra.querySelector('span').textContent = `Mi pedido: ${textoPlatos(n)}`;
+      const flotante = document.querySelector('.reservar-flotante');
+      if (flotante) flotante.classList.toggle('con-pedido', n > 0);
+    };
+    pintarBarra();
+    document.addEventListener('pedido-cambio', pintarBarra);
+    window.addEventListener('pageshow', pintarBarra); // al volver con el botón Atrás
+    window.addEventListener('storage', (e) => { if (e.key === PEDIDO_CLAVE) { pintarBarra(); pintarBotonPedido(); } });
+  }
 
   function abrir(tarjeta) {
     const nombre = tarjeta.querySelector('h3').textContent.trim();
@@ -309,7 +359,8 @@ function cartaInteractiva(sinMovimiento) {
     trago.querySelector('span').textContent = textoTrago;
     ficha.querySelector('.ficha-chef').hidden = vino.hidden && trago.hidden;
     ficha.querySelector('.ficha-precio').textContent = tarjeta.querySelector('.parrilla-price')?.textContent || '';
-    ficha.querySelector('.ficha-reservar').href = `contacto.html?plato=${encodeURIComponent(nombre)}#reserva`;
+    platoAbierto = nombre;
+    pintarBotonPedido();
 
     ultimoFoco = document.activeElement;
     ficha.hidden = false;

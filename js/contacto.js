@@ -375,8 +375,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------- "¿qué piensas pedir?" ----------
   const selectPlato = document.getElementById('r-plato');
   const listaPedido = document.getElementById('pedido-lista');
-  const pedido = [];
+  // empieza con los platos que el cliente fue agregando desde la Carta
+  const pedido = typeof leerPedido === 'function' ? leerPedido() : [];
   const MAX_PEDIDO = 15;
+  const recordarPedido = () => { if (typeof guardarPedido === 'function') guardarPedido(pedido); };
   const NOMBRES_CATEGORIA = { entradas: 'Para comenzar', parrilla: 'A la parrilla', platos: 'Nuestros platos', postres: 'Postres', vinos: 'Vinos', bebidas: 'Bebidas' };
 
   function llenarPlatos(lista) {
@@ -402,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
       quitar.type = 'button';
       quitar.setAttribute('aria-label', 'Quitar ' + nombre);
       quitar.innerHTML = '<i class="bi bi-x-lg" aria-hidden="true"></i>';
-      quitar.addEventListener('click', () => { pedido.splice(i, 1); pintarPedido(); });
+      quitar.addEventListener('click', () => { pedido.splice(i, 1); recordarPedido(); pintarPedido(); });
       li.append(quitar);
       listaPedido.append(li);
     });
@@ -414,16 +416,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pedido.includes(nombre)) return;
     if (pedido.length >= MAX_PEDIDO) return mostrar(`Puedes anotar hasta ${MAX_PEDIDO} platos.`);
     pedido.push(nombre);
+    recordarPedido();
     selectPlato.value = '';
     pintarPedido();
   });
 
-  // viene de la ficha de un plato en la Carta: contacto.html?plato=Bife%20Ancho#reserva
+  // enlaces viejos con un solo plato: contacto.html?plato=Bife%20Ancho#reserva
   const platoUrl = new URLSearchParams(location.search).get('plato');
-  if (platoUrl && typeof CARTA !== 'undefined' && CARTA.some((p) => p.nombre === platoUrl)) {
+  if (platoUrl && platoUrl.length <= 80 && !pedido.includes(platoUrl) && pedido.length < MAX_PEDIDO) {
     pedido.push(platoUrl);
-    pintarPedido();
+    recordarPedido();
   }
+  pintarPedido();
 
   // la lista base es la carta; si el admin agregó platos en el Panel, también salen
   // (sin los platos que el admin quitó de la carta)
@@ -568,6 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pintarHorarios();
     form.elements.mensaje.value = '';
     pedido.length = 0;
+    recordarPedido();
     pintarPedido();
     elegirPaquete('');
     feedback.classList.add('ok');
